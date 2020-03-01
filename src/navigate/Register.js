@@ -158,7 +158,7 @@ export default class Register extends Component {
             <TouchableHighlight
               style={styles.buttonContainer}
               onPress={this.Event_Register}>
-              <Text style={{ color: '#ffffff'}}>SUBMIT</Text>
+              <Text style={{ color: '#ffffff'}}>REGISTER</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
-    width: 250,
+    width: 150,
     borderRadius: 30,
     borderWidth: 1,
     backgroundColor: '#CA5353',

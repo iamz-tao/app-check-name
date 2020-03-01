@@ -4,7 +4,7 @@ import LoginScreen from './LoginScreen'
 import Register from './Register'
 
 const AppNavigator = createStackNavigator({
-    Home:{screen:LoginScreen},
+    Login:{screen:LoginScreen},
     Register:{screen:Register}
 })
 
