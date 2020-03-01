@@ -75,6 +75,7 @@ class LoginScreen extends Component {
           onPress={() => {
             const {email, password} = this.state;
             props.Login({email: email, password: password});
+            this.props.navigation.navigate('StudentHomePage')
           }}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableHighlight>
