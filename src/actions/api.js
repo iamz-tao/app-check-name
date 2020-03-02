@@ -20,6 +20,7 @@ async function Login(data) {
     const responseJson = await response.json();
     if (responseJson.message === 'PASS') {
       resolve(responseJson);
+      
     } else {
       reject(responseJson);
     }
