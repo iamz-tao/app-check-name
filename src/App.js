@@ -6,29 +6,19 @@
  * @flow
  */
 
-import React,{Component} from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  StatusBar,
-  TextInput,
-  Button,
-  Alert,
-  Image,
-  TouchableHighlight
-} from 'react-native';
+import React, {Component} from 'react';
 
-import AppNavigator from './navigate/AppNavigator'
+import AppNavigator from './navigate/AppNavigator';
+import NavigationServices from './navigate/NavigationServices';
 
 export default class App extends Component {
   render() {
     return (
-      <AppNavigator/>
+      <AppNavigator
+        ref={navigatorRef => {
+          NavigationServices.setTopLevelNavigator(navigatorRef);
+        }}
+      />
     );
   }
 }
-
-
