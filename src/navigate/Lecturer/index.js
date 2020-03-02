@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-class StudentHomePage extends Component {
+class LecturerHomePage extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -47,7 +47,7 @@ class StudentHomePage extends Component {
       );
     }
     return (
-      <ScrollView>
+      <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight style={styles.btnLogout}>
@@ -56,7 +56,6 @@ class StudentHomePage extends Component {
           </View>
 
           <View style={styles.containerWrapper}>
-            {/* <View style={{height: 18}} /> */}
             <Avatar
               rounded
               size="xlarge"
@@ -68,37 +67,65 @@ class StudentHomePage extends Component {
             />
             <View style={{height: 8}} />
             <Text style={(styles.styleText, {color: '#1D697C'})}>
-              Phiyada Srikhenkan
+              Thanakit ABC
             </Text>
-            <Text style={styles.styleText}>STUDENT</Text>
+            <Text style={styles.styleText}>Lecturer</Text>
 
             <View style={{height: 24}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('StudentSubjectRegister')
+                  this.props.navigation.navigate('OpenSection')
                 }>
-                <Text style={styles.LabelText}>SUBJECT REGISTER</Text>
+                <Text style={styles.LabelText}>OPEN SECTION</Text>
               </TouchableHighlight>
-              <View style={{width: 20}} />
+              <View style={{width: 16}} />
               <TouchableHighlight
-                style={styles.buttonCheckIn}
+                style={styles.buttonOpenClass}
+                onPress={
+                  () => this.props.navigation.navigate('OpenSection')
+                }>
+                <Text style={styles.LabelText}>OPEN CLASS</Text>
+              </TouchableHighlight>
+              <View style={{width: 16}} />
+              <TouchableHighlight
+                style={styles.buttonCloseClass}
                 onPress={
                   () => {}
                   //   this.onClickListener('Student_subject_register')
                 }>
-                <Text style={styles.LabelText}>ATTEND CLASS</Text>
+                <Text style={styles.LabelText}>CLOSE CLASS</Text>
               </TouchableHighlight>
             </View>
 
-            <TouchableHighlight
-              style={styles.buttonMySubject}
-              onPress={() => {
-                //   this.onClickListener('Student_subject_register')
-              }}>
-              <Text style={styles.LabelText}>MY SUBJECT</Text>
-            </TouchableHighlight>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <TouchableHighlight
+                style={styles.buttonMySubject}
+                onPress={() => {
+                  //   this.onClickListener('Student_subject_register')
+                }}>
+                <Text style={styles.LabelText}>MY SUBJECT</Text>
+              </TouchableHighlight>
+              <View style={{width: 16}} />
+              <TouchableHighlight
+                style={styles.buttonBeacon}
+                onPress={
+                  () => {}
+                  //   this.onClickListener('Student_subject_register')
+                }>
+                <Text style={styles.LabelText}>BEACON</Text>
+              </TouchableHighlight>
+              <View style={{width: 16}} />
+              <TouchableHighlight
+                style={styles.buttonStudentApprove}
+                onPress={
+                  () => {}
+                  //   this.onClickListener('Student_subject_register')
+                }>
+                <Text style={styles.LabelText}>STUDENT APPROVE</Text>
+              </TouchableHighlight>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -119,7 +146,7 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StudentHomePage);
+)(LecturerHomePage);
 
 const styles = StyleSheet.create({
   container: {
@@ -156,25 +183,29 @@ const styles = StyleSheet.create({
     borderRadius: 21,
   },
   buttonMenu: {
-    height: 116,
+    height: 96,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    width: 116,
+    width: 96,
     borderWidth: 1,
     padding: 8,
     borderColor: '#F5B7B1',
     backgroundColor: '#F5B7B1',
     borderRadius: 18,
   },
-  buttonCheckIn: {
-    height: 116,
+  styleColor: {
+    borderColor: '#F5B7B1',
+    backgroundColor: '#F5B7B1',
+  },
+  buttonBeacon: {
+    height: 96,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    width: 116,
+    width: 96,
     padding: 8,
     borderWidth: 1,
     borderColor: '#ECC7E6',
@@ -182,16 +213,55 @@ const styles = StyleSheet.create({
     borderRadius: 18,
   },
   buttonMySubject: {
-    height: 116,
+    height: 96,
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 20,
-    width: 116,
+    width: 96,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#F4CD98',
-    backgroundColor: '#F4CD98',
+    borderColor: '#ACCAB4',
+    backgroundColor: '#ACCAB4',
+    borderRadius: 18,
+  },
+  buttonOpenClass: {
+    height: 96,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 96,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#85C4D1',
+    backgroundColor: '#85C4D1',
+    borderRadius: 18,
+  },
+  buttonCloseClass: {
+    height: 96,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 96,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#B3A7FF',
+    backgroundColor: '#B3A7FF',
+    borderRadius: 18,
+  },
+  buttonStudentApprove: {
+    height: 96,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    width: 96,
+    padding: 8,
+    borderWidth: 1,
+    borderColor: '#CA5353',
+    backgroundColor: '#CA5353',
     borderRadius: 18,
   },
   LabelTitle: {

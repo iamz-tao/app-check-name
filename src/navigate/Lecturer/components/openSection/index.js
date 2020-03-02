@@ -12,7 +12,7 @@ import {
   Picker,
 } from 'react-native';
 
-export default class StudentSubjectRegister extends Component {
+export default class OpenSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -68,7 +68,7 @@ export default class StudentSubjectRegister extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>SUBJECT REGISTER</Text>
+            <Text style={styles.styleHeader}>OPEN SECTION</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
             YEAR / SEMESTER : 2563 / 1
@@ -91,26 +91,42 @@ export default class StudentSubjectRegister extends Component {
                 </Picker>
               </View>
             </View>
-          </View>
-          <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SECTION :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={pickerValues}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({
-                      pickerValues: itemValue,
-                    })
-                  }>
-                  <Picker.Item label="Select Section" value="" />
-                  <Picker.Item label="Html" value="Html" />
-                  <Picker.Item label="Java" value="Java" />
-                </Picker>
+              <View style={{flex: 1, paddingBottom: 12}}>
+                <Text style={styles.styleLabel}>LATE TIME (Minutes) :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Late Time"
+                  onChangeText={firstname => this.setState({firstname})}
+                />
               </View>
+              <View style={{flex: 1, paddingBottom: 12}}>
+                <Text style={styles.styleLabel}>ABSENT TIME (Minutes) :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Absent Time"
+                  onChangeText={firstname => this.setState({firstname})}
+                />
+              </View>
+              <View style={{flex: 1, paddingBottom: 12}}>
+                <Text style={styles.styleLabel}>TOTAL MARK :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Total Mark"
+                  onChangeText={firstname => this.setState({firstname})}
+                />
+              </View>
+              <View style={{flex: 1, paddingBottom: 12}}>
+                <Text style={styles.styleLabel}>SECTION NUMBER :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Section Number"
+                  onChangeText={firstname => this.setState({firstname})}
+                />
+              </View> 
             </View>
           </View>
+
           <View style={{display: 'flex', paddingLeft: 16, width: 340}}>
             <View style={{flexDirection: 'row'}}>
               <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}>
@@ -125,17 +141,16 @@ export default class StudentSubjectRegister extends Component {
               </Text>
             </View>
           </View>
-            <View style={styles.btnWrapper}>
-              <TouchableHighlight
-                style={styles.btnCancel}
-                onPress={() => this.props.navigation.navigate('StudentHomePage')}
-                >
-                <Text style={{color: '#949494'}}>CANCEL</Text>
-              </TouchableHighlight>
-              <TouchableHighlight style={styles.btnReq}>
-                <Text style={{color: 'white'}}>REQUEST</Text>
-              </TouchableHighlight>
-            </View>
+          <View style={styles.btnWrapper}>
+            <TouchableHighlight
+              style={styles.btnCancel}
+              onPress={() => this.props.navigation.navigate('StudentHomePage')}>
+              <Text style={{color: '#949494'}}>CANCEL</Text>
+            </TouchableHighlight>
+            <TouchableHighlight style={styles.btnReq}>
+              <Text style={{color: 'white'}}>REQUEST</Text>
+            </TouchableHighlight>
+          </View>
         </View>
       </ScrollView>
     );
@@ -166,9 +181,9 @@ const styles = StyleSheet.create({
   },
   btnWrapper: {
     display: 'flex',
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    flexDirection: 'row', 
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
     marginTop: 20,
   },
   btnReq: {

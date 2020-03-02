@@ -1,3 +1,4 @@
+import {StackActions} from '@react-navigation/native'
 
 async function Login(data) {
   return new Promise(async (resolve, reject) => {

@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import NavigationServices from './NavigationServices'
 import {
   SafeAreaView,
   StyleSheet,
@@ -75,7 +76,9 @@ class LoginScreen extends Component {
           onPress={() => {
             const {email, password} = this.state;
             props.Login({email: email, password: password});
-            this.props.navigation.navigate('StudentHomePage')
+            // this.props.navigation.navigate('StudentHomePage')
+            // this.props.navigation.navigate('LecturerHomePage')
+            NavigationServices.navigate('StudentHomePage')
           }}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableHighlight>

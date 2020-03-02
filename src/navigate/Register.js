@@ -61,8 +61,8 @@ export default class Register extends Component {
     );
     const responseJson = await response.json();
     if (responseJson.Error === undefined) {
-      Alert.alert('ADD Success');
-      this.props.navigation.navigate('Home');
+      // Alert.alert('ADD Success');
+      this.props.navigation.navigate('Login');
     } else {
       Alert.alert(`${responseJson.Error}`);
     }
