@@ -103,8 +103,8 @@ export default class Register extends Component {
                   borderRadius: 21,
                   height: 45,
                 }}
-                selectedButtonStyle={{ 
-                    backgroundColor: '#CA5353',
+                selectedButtonStyle={{
+                  backgroundColor: '#CA5353',
                 }}
                 onPress={this.updateIndex}
                 selectedIndex={selectedIndex}
@@ -112,22 +112,22 @@ export default class Register extends Component {
               />
             </View>
             <View style={styles.inputContainerGroup}>
-            <View style={{ paddingRight: 16, flex: 1}}>
-              <Text style={styles.styleLabel}>FIRSTNAME :</Text>
-              <TextInput
-                style={styles.inputs}
-                placeholder="Firstname"
-                onChangeText={firstname => this.setState({firstname})}
-              />
-            </View>
-            <View style={{ flex: 1}}>
-              <Text style={styles.styleLabel}>LASTNAME :</Text>
-              <TextInput
-                style={styles.inputs}
-                placeholder="Lastname"
-                onChangeText={lastname => this.setState({lastname})}
-              />
-            </View>
+              <View style={{paddingRight: 16, flex: 1}}>
+                <Text style={styles.styleLabel}>FIRSTNAME :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Firstname"
+                  onChangeText={firstname => this.setState({firstname})}
+                />
+              </View>
+              <View style={{flex: 1}}>
+                <Text style={styles.styleLabel}>LASTNAME :</Text>
+                <TextInput
+                  style={styles.inputs}
+                  placeholder="Lastname"
+                  onChangeText={lastname => this.setState({lastname})}
+                />
+              </View>
             </View>
             <View style={styles.inputContainer}>
               <Text style={styles.styleLabel}>PHONE NUMBER :</Text>
@@ -149,6 +149,7 @@ export default class Register extends Component {
               <Text style={styles.styleLabel}>PASSWORD :</Text>
               <TextInput
                 style={styles.inputs}
+                secureTextEntry={true}
                 placeholder="Password"
                 onChangeText={password => this.setState({password})}
               />
@@ -156,7 +157,7 @@ export default class Register extends Component {
             <TouchableHighlight
               style={styles.buttonContainer}
               onPress={this.Event_Register}>
-              <Text style={{ color: '#ffffff'}}>REGISTER</Text>
+              <Text style={{color: '#ffffff'}}>REGISTER</Text>
             </TouchableHighlight>
           </View>
         </View>

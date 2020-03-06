@@ -1,4 +1,4 @@
-import {LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE} from '../constrant';
+import {LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE} from '../constant';
 import {Api} from './api';
 
 export const login = () => ({

@@ -1,4 +1,4 @@
-import {LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE} from '../constrant';
+import {LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE} from '../constant';
 
 const initialState = {
   data: [],
