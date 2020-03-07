@@ -75,7 +75,6 @@ class StudentHomePage extends Component {
                   this.props.navigation.navigate('StudentSubjectRegister', {
                     LoginReducer,
                     StudentGetSubjectRegis,
-                    xxx: 'ssss'
                   })
                 }>
                 <Text style={styles.LabelText}>SUBJECT REGISTER</Text>

@@ -38,7 +38,6 @@ export const Login = params => {
     Api.Login(params)
       .then(result => {
         dispatch(login_success(JSON.stringify(result)));
-        // console.log('api',JSON.stringify(result));
       })
       .catch(err => {
         dispatch(login_failure(err));
@@ -48,14 +47,11 @@ export const Login = params => {
 
 //Subject Student
 export const StudentGetSubjectRegis = params => {
-  // console.log(params,'paramss')
   return dispatch => {
     dispatch(studentGetSubjectRegis(params));
     Api.StudentGetSubjectRegister(params)
       .then(result => {
-        console.log('xxxxx',result)
-        // dispatch(studentSetSubjectRegis(JSON.stringify(result)));
-        // console.log('subject',JSON.stringify(result)) 
+        dispatch(studentSetSubjectRegis(JSON.stringify(result)));
       })
       .catch(err => {
         console.log('error>>>',err)
