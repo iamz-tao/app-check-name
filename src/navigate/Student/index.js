@@ -10,6 +10,8 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
+import {StudentGetSubjectRegis} from '../../actions'
+
 class StudentHomePage extends Component {
   constructor(props) {
     super(props);
@@ -20,24 +22,17 @@ class StudentHomePage extends Component {
   }
 
   componentDidMount() {
-    // const {
-    //   LoginReducer: {token},
-    // } = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
   }
 
   render() {
     const {
       LoginReducer: {
         data: {token},
+        fetching,
       },
+      LoginReducer,
+      StudentGetSubjectRegis,
     } = this.props;
-    const {
-      LoginReducer: {fetching},
-    } = this.props;
-
     if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
@@ -77,7 +72,11 @@ class StudentHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('StudentSubjectRegister')
+                  this.props.navigation.navigate('StudentSubjectRegister', {
+                    LoginReducer,
+                    StudentGetSubjectRegis,
+                    xxx: 'ssss'
+                  })
                 }>
                 <Text style={styles.LabelText}>SUBJECT REGISTER</Text>
               </TouchableHighlight>
@@ -113,7 +112,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  //   Login,
+  StudentGetSubjectRegis,
 };
 
 export default connect(

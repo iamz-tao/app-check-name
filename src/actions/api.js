@@ -47,6 +47,36 @@ async function Login(data) {
   });
 }
 
+async function StudentGetSubjectRegister(data) {
+  // console.log('data>>>',data)
+  const token = data.token
+  return new Promise(async (resolve, reject) => {
+    console.log('zzz')
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjectByStudent',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+       
+      },
+    );
+    const responseJson = await response.json();
+console.log('ressss',responseJson)
+
+    // if (responseJson.message === 'PASS') {
+    //   console.log('passssss')
+    //   resolve(responseJson);
+    // } else {
+    //   reject(responseJson);
+    // }
+  });
+}
+
 export const Api = {
   Login,
+  StudentGetSubjectRegister,
 };

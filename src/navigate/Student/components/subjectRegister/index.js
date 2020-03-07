@@ -12,12 +12,48 @@ import {
   Picker,
 } from 'react-native';
 
+
 export default class StudentSubjectRegister extends Component {
   constructor(props) {
     super(props);
     this.state = {
       pickerValues: '',
     };
+  }
+
+  componentDidMount() {
+    const {
+      LoginReducer: {data: {token}},
+      StudentGetSubjectRegis,
+    } = this.props.navigation.state.params;
+    // console.log(token)
+    // console.log('thisss pors',this.props)
+    // if (!token) {
+      // this.props.navigation.navigate('Login');
+    // } else {
+      StudentGetSubjectRegis({
+        token,
+      })
+    // }
+    // fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjectByStudent', {
+    //      method: 'GET',
+    //     headers: {
+    //       Accept: 'application/json',
+    //       'Content-Type': 'application/json',
+    //       token,
+    //     },
+    //   })
+    //   .then((response) => response.json())
+    //   .then((responseJson) => {
+    //      console.log(responseJson);
+    //      this.setState({
+    //         data: responseJson
+    //      })
+    //   })
+    //   .catch((error) => {
+    //      console.error(error);
+    //   });
+ 
   }
 
   handleSelect = () => {
@@ -59,6 +95,7 @@ export default class StudentSubjectRegister extends Component {
 
   render() {
     const {pickerValues} = this.state;
+    // console.log('propss>>',this.props.navigation.state.params)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -141,6 +178,7 @@ export default class StudentSubjectRegister extends Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
