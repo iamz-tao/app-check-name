@@ -93,6 +93,21 @@ class LoginScreen extends Component {
   }
 }
 
+//use to add reducer state to props
+const mapStateToProps = state => ({
+  LoginReducer: state.LoginReducer,
+});
+
+//use to add action(dispatch) to props
+const mapDispatchToProps = {
+  Login,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LoginScreen);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -165,17 +180,4 @@ const styles = StyleSheet.create({
   },
 });
 
-//use to add reducer state to props
-const mapStateToProps = state => ({
-  LoginReducer: state.LoginReducer,
-});
 
-//use to add action(dispatch) to props
-const mapDispatchToProps = {
-  Login,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(LoginScreen);
