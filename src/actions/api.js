@@ -3,6 +3,7 @@ import NavigationServices from '../navigate/NavigationServices';
 
 import {Alert} from 'react-native';
 
+// Auth
 async function Login(data) {
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
@@ -47,8 +48,9 @@ async function Login(data) {
   });
 }
 
+// Student
 async function StudentGetSubjectRegister(data) {
-  const token = data.token
+  const token = data.token;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
       'https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjectByStudent',
@@ -59,7 +61,6 @@ async function StudentGetSubjectRegister(data) {
           'Content-Type': 'application/json',
           token,
         },
-       
       },
     );
     const responseJson = await response.json();
@@ -71,7 +72,36 @@ async function StudentGetSubjectRegister(data) {
   });
 }
 
+async function RegisterSubject(data) {
+  const token = data.token;
+  const section_id = data.section_id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/subjectRegister',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          section_id,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
+  RegisterSubject,
 };

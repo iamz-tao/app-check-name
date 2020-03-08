@@ -4,6 +4,9 @@ import {
   LOGIN_FAILURE,
   GET_SUBJECT_REGIS_STD,
   SET_SUBJECT_REGIS_STD,
+  REGISTER_SUBJECT_REQUEST,
+  REGISTER_SUBJECT_REQUEST_SUCCESS,
+  REGISTER_SUBJECT_REQUEST_FAILED,
 } from '../constant';
 import {Api} from './api';
 
@@ -30,6 +33,21 @@ export const studentSetSubjectRegis = payload => ({
   payload,
   type: SET_SUBJECT_REGIS_STD,
 });
+
+export const registerSubject = payload => ({
+  payload,
+  type: REGISTER_SUBJECT_REQUEST,
+})
+
+export const registerSubjectSuccess = payload => ({
+  payload,
+  type: REGISTER_SUBJECT_REQUEST_SUCCESS,
+})
+
+export const registerSubjectFailed = payload => ({
+  payload,
+  type: REGISTER_SUBJECT_REQUEST_FAILED,
+})
 
 // Auth
 export const Login = params => {
@@ -59,3 +77,16 @@ export const StudentGetSubjectRegis = params => {
       });
   };
 };
+
+export const RegisterSubject = params => {
+  return dispatch => {
+    dispatch(registerSubject(params));
+    Api.RegisterSubject(params)
+      .then(result => {
+        dispatch(registerSubjectSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(registerSubjectFailed(err));
+      });
+  }
+}

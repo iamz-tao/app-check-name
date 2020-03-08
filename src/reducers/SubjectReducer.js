@@ -1,10 +1,16 @@
-import {SET_SUBJECT_REGIS_STD, GET_SUBJECT_REGIS_STD} from '../constant';
+import {
+  SET_SUBJECT_REGIS_STD, 
+  GET_SUBJECT_REGIS_STD,
+  REGISTER_SUBJECT_REQUEST_SUCCESS,
+  REGISTER_SUBJECT_REQUEST_FAILED,
+} from '../constant';
 
 const initialState = {
   subjects: [],
   err: [],
   isError: false,
   fetching: true,
+  status: null,
 };
 
 export default (state = initialState, action) => {
@@ -15,6 +21,15 @@ export default (state = initialState, action) => {
     case SET_SUBJECT_REGIS_STD: {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, data: data.data};
+    }
+
+    case REGISTER_SUBJECT_REQUEST_SUCCESS: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: true, status: data.status.dataStatus};
+    }
+
+    case REGISTER_SUBJECT_REQUEST_FAILED: {
+      return {...state, fetching: false, isError: true, status: 'FAILURE'};
     }
 
     default:

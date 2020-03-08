@@ -12,7 +12,11 @@ import {
   Alert,
   TouchableHighlight,
   Picker,
+  Modal,
+  Image,
 } from 'react-native';
+
+import {RegisterSubject} from '../../../../actions';
 
 class StudentSubjectRegister extends Component {
   constructor(props) {
@@ -22,6 +26,8 @@ class StudentSubjectRegister extends Component {
       section: [],
       subject_code: '',
       subject_name: '',
+      token: '',
+      modalVisible: false,
     };
   }
 
@@ -35,10 +41,21 @@ class StudentSubjectRegister extends Component {
     if (!token) {
       this.props.navigation.navigate('Login');
     } else {
+      this.setState({
+        token,
+      });
       StudentGetSubjectRegis({
         token,
       });
     }
+  }
+
+  setModalVisible(status) {
+  if (status === 'SUCCESS'){
+    this.setState({modalVisible: false});
+  } else {
+    this.setState({modalVisible: true});
+  }
   }
 
   handleSelect = () => {
@@ -49,9 +66,18 @@ class StudentSubjectRegister extends Component {
     alert(select);
   };
 
+  handleSubmit = (token,section_id) => {
+    const {RegisterSubject} = this.props
+    RegisterSubject({
+      token,
+      section_id,
+    })
+  }
+
   render() {
-    const {pickerValues, section} = this.state;
+    const {pickerValues, section, token} = this.state;
     const subjects = this.props.Subjects.data;
+    const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
@@ -59,6 +85,7 @@ class StudentSubjectRegister extends Component {
     let day = '';
     let secondTime = '';
     let day2: '';
+    let section_id: '';
     if (subjects !== undefined) {
       subjects.map((s, i) => {
         subjectsArr.push({
@@ -83,6 +110,7 @@ class StudentSubjectRegister extends Component {
       );
 
       if (secIndex > -1) {
+        section_id = subjects[index].sections[secIndex].id;
         teacher_name = subjects[index].sections[secIndex].teacher_name;
         time = `${subjects[index].sections[secIndex].Time[0].start_time} - ${
           subjects[index].sections[secIndex].Time[0].end_time
@@ -93,11 +121,8 @@ class StudentSubjectRegister extends Component {
             subjects[index].sections[secIndex].Time[1].start_time
           } - ${subjects[index].sections[secIndex].Time[1].end_time}`;
           day2 = subjects[index].sections[secIndex].Time[1].day;
-
         }
       }
-
-      // console.log(subjects[index].sections.findIndex(s=> s.section_number === section));
     }
     if (subjects === undefined) {
       return (
@@ -107,10 +132,41 @@ class StudentSubjectRegister extends Component {
         </View>
       );
     }
-    // console.log('subject', subjectsArr);
-    // console.log('subjectsArr', sectionArr);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
+        <View>
+          <Modal
+            animationType="slide"
+            transparent={false}
+            visible={this.state.modalVisible}
+            presentationStyle="pageSheet">
+            <View style={styles.ModalWrapper}>
+              <View style={styles.DetailModalWrapper}>
+                <View style={{width: '100%', alignItems: 'center'}}>
+                  <Image
+                    style={styles.CustomImg}
+                    source={require('../../../../../android/statics/images/icon-failure.png')}
+                  />
+                  <View style={{height: 36}} />
+                  <Text style={styles.styleLabelFail}>
+                    SUBJECT REGISTER FAILED
+                  </Text>
+                  <Text style={styles.styleLabel}>
+                    You have already registered with subject.
+                  </Text>
+                  <View style={{height: 26}} />
+                  <TouchableHighlight
+                    style={styles.btnReq}
+                    onPress={() => {
+                      this.setState({modalVisible: !this.state.modalVisible});
+                    }}>
+                    <Text style={{color: 'white'}}>OK</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight style={styles.btnLogout}>
@@ -135,13 +191,12 @@ class StudentSubjectRegister extends Component {
                       pickerValues: itemValue,
                     })
                   }>
+                  <Picker.Item label="Select Section" value="" />
+
                   {subjectsArr.length > 0 &&
                     subjectsArr.map(s => (
                       <Picker.Item label={s.label} value={s.value} />
                     ))}
-                  {subjectsArr.length === 0 && (
-                    <Picker.Item label="Select Section" value="" />
-                  )}
                 </Picker>
               </View>
             </View>
@@ -153,25 +208,25 @@ class StudentSubjectRegister extends Component {
                 <Picker
                   style={{height: 45}}
                   selectedValue={section}
-                  onValueChange={(itemValue, itemIndex) =>
+                  onValueChange={(itemValue, itemIndex) => {
                     this.setState({
                       section: itemValue,
-                    })
-                  }>
+                    });
+                  }}>
+                  <Picker.Item label="Select Section" value="" />
+
                   {sectionArr.length > 0 &&
                     sectionArr.map(sec => (
                       <Picker.Item label={sec.label} value={sec.value} />
                     ))}
-                  {sectionArr.length === 0 && (
-                    <Picker.Item label="Select Section" value="" />
-                  )}
                 </Picker>
               </View>
             </View>
           </View>
           <View style={{display: 'flex', paddingLeft: 16, width: 340}}>
             <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {width: 116, alignSelf: 'center'})}>
+              <Text
+                style={(styles.styleLabel, {width: 116, alignSelf: 'center'})}>
                 Lecturer Name :{' '}
               </Text>
               <Text style={{flex: 1}}>{teacher_name}</Text>
@@ -181,11 +236,10 @@ class StudentSubjectRegister extends Component {
               <Text style={(styles.styleLabel, {flex: 1})}>
                 {day} {time}
               </Text>
-              
             </View>
             <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {width: 116})}/>
-              
+              <Text style={(styles.styleLabel, {width: 116})} />
+
               <Text style={(styles.styleLabel, {flex: 1})}>
                 {day2} {secondTime}
               </Text>
@@ -194,10 +248,18 @@ class StudentSubjectRegister extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('StudentHomePage')}>
+              onPress={() =>
+                this.props.navigation.navigate('StudentSubjectRegister')
+              }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.btnReq}>
+            <TouchableHighlight
+              style={styles.btnReq}
+              onPress={() => {
+               this.handleSubmit(token,section_id)
+               this.setModalVisible(statusReq)
+              } 
+              }>
               <Text style={{color: 'white'}}>REQUEST</Text>
             </TouchableHighlight>
           </View>
@@ -216,7 +278,7 @@ const mapStateToProps = state => {
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  // Login,
+  RegisterSubject,
 };
 
 export default connect(
@@ -246,6 +308,25 @@ const styles = StyleSheet.create({
     width: 68,
     height: 36,
     borderRadius: 21,
+  },
+  CustomImg: {
+    width: 116,
+    height: 116,
+    top: 20,
+  },
+  ModalWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  DetailModalWrapper: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#EBEAEA',
+    borderRadius: 19,
   },
   loadingWrapper: {
     display: 'flex',
@@ -310,6 +391,14 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     display: 'flex',
     paddingLeft: 12,
+  },
+  styleLabelFail: {
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 21,
+    display: 'flex',
+    paddingLeft: 12,
+    color: '#CA5353',
   },
   styleInputWrapper: {
     display: 'flex',
