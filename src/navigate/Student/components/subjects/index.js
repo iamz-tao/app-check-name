@@ -16,7 +16,19 @@ import {
   Image,
 } from 'react-native';
 
-import {RegisterSubject} from '../../../../actions';
+import SubjectList from './components/listSubject';
+
+const Header = () => (
+  <View style={styles.Header}>
+    <View style={styles.HeaderWrapper}>
+      <Text>SUBJECT</Text>
+    </View>
+    <View style={styles.HeaderWrapper}>
+      <Text>STATUS</Text>
+    </View>
+    <View style={{width: '11%'}} />
+  </View>
+);
 
 class StudentListSubject extends Component {
   constructor(props) {
@@ -31,31 +43,14 @@ class StudentListSubject extends Component {
     };
   }
 
-  componentDidMount() {
-    const {
-      LoginReducer: {
-        data: {token},
-      },
-      StudentGetSubjectRegis,
-    } = this.props.navigation.state.params;
-    if (!token) {
-      this.props.navigation.navigate('Login');
-    } else {
-      this.setState({
-        token,
-      });
-      StudentGetSubjectRegis({
-        token,
-      });
-    }
-  }
+  componentDidMount() {}
 
   setModalVisible(status) {
-  if (status === 'SUCCESS'){
-    this.setState({modalVisible: false});
-  } else {
-    this.setState({modalVisible: true});
-  }
+    if (status === 'SUCCESS') {
+      this.setState({modalVisible: false});
+    } else {
+      this.setState({modalVisible: true});
+    }
   }
 
   handleSelect = () => {
@@ -66,107 +61,19 @@ class StudentListSubject extends Component {
     alert(select);
   };
 
-  handleSubmit = (token,section_id) => {
-    const {RegisterSubject} = this.props
-    RegisterSubject({
-      token,
-      section_id,
-    })
-  }
+  handleSubmit = (token, section_id) => {};
 
   render() {
-    const {pickerValues, section, token} = this.state;
-    const subjects = this.props.Subjects.data;
-    const statusReq = this.props.Subjects.status;
-    const subjectsArr = [];
-    const sectionArr = [];
-    let teacher_name = '';
-    let time = '';
-    let day = '';
-    let secondTime = '';
-    let day2: '';
-    let section_id: '';
-    if (subjects !== undefined) {
-      subjects.map((s, i) => {
-        subjectsArr.push({
-          label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
-          value: s.Subject.subject_code,
-        });
-      });
-    }
-    if (pickerValues.length > 0 && subjects !== undefined) {
-      const {section} = this.state;
-      const index = subjects.findIndex(
-        s => s.Subject.subject_code === pickerValues,
-      );
-      subjects[index].sections.map(sec => {
-        sectionArr.push({
-          label: sec.section_number,
-          value: sec.section_number,
-        });
-      });
-      const secIndex = subjects[index].sections.findIndex(
-        s => s.section_number === section,
-      );
-
-      if (secIndex > -1) {
-        section_id = subjects[index].sections[secIndex].id;
-        teacher_name = subjects[index].sections[secIndex].teacher_name;
-        time = `${subjects[index].sections[secIndex].Time[0].start_time} - ${
-          subjects[index].sections[secIndex].Time[0].end_time
-        }`;
-        day = subjects[index].sections[secIndex].Time[0].day;
-        if (subjects[index].sections[secIndex].Time.length > 1) {
-          secondTime = `${
-            subjects[index].sections[secIndex].Time[1].start_time
-          } - ${subjects[index].sections[secIndex].Time[1].end_time}`;
-          day2 = subjects[index].sections[secIndex].Time[1].day;
-        }
-      }
-    }
-    if (subjects === undefined) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <DotsLoader color="#CA5353" />
-          <TextLoader text="Loading" />
-        </View>
-      );
-    }
+    // if (subjects === undefined) {
+    //   return (
+    //     <View style={styles.loadingWrapper}>
+    //       <DotsLoader color="#CA5353" />
+    //       <TextLoader text="Loading" />
+    //     </View>
+    //   );
+    // }
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
-        <View>
-          <Modal
-            animationType="slide"
-            transparent={false}
-            visible={this.state.modalVisible}
-            presentationStyle="pageSheet">
-            <View style={styles.ModalWrapper}>
-              <View style={styles.DetailModalWrapper}>
-                <View style={{width: '100%', alignItems: 'center'}}>
-                  <Image
-                    style={styles.CustomImg}
-                    source={require('../../../../../android/statics/images/icon-failure.png')}
-                  />
-                  <View style={{height: 36}} />
-                  <Text style={styles.styleLabelFail}>
-                    SUBJECT REGISTER FAILED
-                  </Text>
-                  <Text style={styles.styleLabel}>
-                    You have already registered with subject.
-                  </Text>
-                  <View style={{height: 26}} />
-                  <TouchableHighlight
-                    style={styles.btnReq}
-                    onPress={() => {
-                      this.setState({modalVisible: !this.state.modalVisible});
-                    }}>
-                    <Text style={{color: 'white'}}>OK</Text>
-                  </TouchableHighlight>
-                </View>
-              </View>
-            </View>
-          </Modal>
-        </View>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight style={styles.btnLogout}>
@@ -174,93 +81,21 @@ class StudentListSubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>SUBJECT REGISTER</Text>
+            <Text style={styles.styleHeader}>MY SUBJECT</Text>
           </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : 2563 / 1
-          </Text>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={pickerValues}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({
-                      pickerValues: itemValue,
-                    })
-                  }>
-                  <Picker.Item label="Select Section" value="" />
+          <View style={{height: 16}} />
 
-                  {subjectsArr.length > 0 &&
-                    subjectsArr.map(s => (
-                      <Picker.Item label={s.label} value={s.value} />
-                    ))}
-                </Picker>
-              </View>
-            </View>
-          </View>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SECTION :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={section}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                      section: itemValue,
-                    });
-                  }}>
-                  <Picker.Item label="Select Section" value="" />
-
-                  {sectionArr.length > 0 &&
-                    sectionArr.map(sec => (
-                      <Picker.Item label={sec.label} value={sec.value} />
-                    ))}
-                </Picker>
-              </View>
-            </View>
-          </View>
-          <View style={{display: 'flex', paddingLeft: 16, width: 340}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={(styles.styleLabel, {width: 116, alignSelf: 'center'})}>
-                Lecturer Name :{' '}
-              </Text>
-              <Text style={{flex: 1}}>{teacher_name}</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {width: 116})}>Date/Time :</Text>
-              <Text style={(styles.styleLabel, {flex: 1})}>
-                {day} {time}
-              </Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {width: 116})} />
-
-              <Text style={(styles.styleLabel, {flex: 1})}>
-                {day2} {secondTime}
-              </Text>
-            </View>
-          </View>
+          <Header />
+          <View style={{height: 8}} />
+          <SubjectList />
           <View style={styles.btnWrapper}>
-            <TouchableHighlight
-              style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('StudentSubjectRegister')
-              }>
-              <Text style={{color: '#949494'}}>CANCEL</Text>
-            </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-               this.handleSubmit(token,section_id)
-               this.setModalVisible(statusReq)
-              } 
-              }>
-              <Text style={{color: 'white'}}>REQUEST</Text>
+                //  this.handleSubmit(token,section_id)
+                //  this.setModalVisible(statusReq)
+              }}>
+              <Text style={{color: 'white'}}>OK</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -272,13 +107,13 @@ class StudentListSubject extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    Subjects: state.subjectReducer,
+    // Subjects: state.subjectReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  RegisterSubject,
+  // RegisterSubject,
 };
 
 export default connect(
@@ -376,6 +211,15 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingRight: 8,
+  },
+  HeaderWrapper: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  Header: {
+    width: '90%',
+    display: 'flex',
+    flexDirection: 'row',
   },
   styleHeader: {
     display: 'flex',
