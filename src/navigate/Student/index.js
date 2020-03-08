@@ -93,7 +93,7 @@ class StudentHomePage extends Component {
             <TouchableHighlight
               style={styles.buttonMySubject}
               onPress={() => {
-                //   this.onClickListener('Student_subject_register')
+                this.props.navigation.navigate('StudentListSubject')
               }}>
               <Text style={styles.LabelText}>MY SUBJECT</Text>
             </TouchableHighlight>
