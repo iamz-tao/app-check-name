@@ -20,45 +20,11 @@ export default class OpenSection extends Component {
     };
   }
 
-  handleSelect = () => {
-    const select = this.state.pickerValues;
-    if (select === '') {
-      alert('Please select!');
-    }
-    alert(select);
-  };
 
-  //   Event_Register = async () => {
-  //     const response = await fetch(
-  //       'https://us-central1-kpscheckin.cloudfunctions.net/api/register',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           id: this.state.id,
-  //           firstname: this.state.firstname,
-  //           lastname: this.state.lastname,
-  //           email: this.state.email,
-  //           password: this.state.password,
-  //           role: this.state.role,
-  //           mobile: this.state.mobile,
-  //         }),
-  //       },
-  //     );
-  //     const responseJson = await response.json();
-  //     if (responseJson.Error === undefined) {
-  //       Alert.alert('ADD Success');
-  //       this.props.navigation.navigate('Home');
-  //     } else {
-  //       Alert.alert(`${responseJson.Error}`);
-  //     }
-  //   };
 
   render() {
     const {pickerValues} = this.state;
+    const {token} = this.props.navigation.state.params;
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -152,7 +118,7 @@ export default class OpenSection extends Component {
           <View style={{display: 'flex', width: '100%', alignItems: 'center', marginTop: 14}}>
              <TouchableHighlight
           style={styles.buttonAddSubject}
-          onPress={() => this.props.navigation.navigate('CreateSubject')}>
+          onPress={() => this.props.navigation.navigate('CreateSubject',{token})}>
           <Text style={{textDecorationLine: 'underline', color: '#738497' }}>New Subject?</Text>
         </TouchableHighlight>
           </View>

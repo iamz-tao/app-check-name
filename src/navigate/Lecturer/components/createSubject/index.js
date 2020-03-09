@@ -13,17 +13,52 @@ import {
   Picker,
 } from 'react-native';
 
-class CreateSubject extends Component {
+import SuccessModal from '../../../../components/successModal'
+import {CreateSubject} from '../../../../actions';
+class LecturerCreateSubject extends Component {
   constructor(props) {
     super(props);
     this.state = {
       subject_code: '',
-      subjetc_name: '',
+      subject_name: '',
+      modalVisible: false,
     };
   }
+
+  componentDidMount() {
+    const {token} = this.props.navigation.state.params;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
+  }
+
+  setModalVisible = () => {
+      const {modalVisible} = this.state;
+      this.setState({modalVisible: !modalVisible});
+    }
+
+  handleSubmit = () => {
+    const {CreateSubject} = this.props;
+    const {token} = this.props.navigation.state.params;
+    const {subject_code, subject_name} = this.state;
+    CreateSubject({
+      token,
+      subject_name,
+      subject_code,
+    });
+    this.setModalVisible();
+    this.setState({
+      subject_code: '',
+      subject_name: '',
+    });
+  };
+
   render() {
+      const {modalVisible} = this.state
+      const {status} = this.props.createSubject
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
+          <SuccessModal msg={'Create new subject complete.'} setModalVisible={this.setModalVisible} modalVisible={modalVisible} status={status}/>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight style={styles.btnLogout}>
@@ -33,25 +68,22 @@ class CreateSubject extends Component {
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>CREATE SUBJECT</Text>
           </View>
-          {/* <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : 2563 / 1
-          </Text> */}
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
               <View style={{flex: 1, paddingBottom: 12}}>
                 <Text style={styles.styleLabel}>SUBJECT CODE :</Text>
                 <TextInput
                   style={styles.inputs}
-                  placeholder="Late Time"
-                  onChangeText={firstname => this.setState({subject_code})}
+                  placeholder="Subject Code"
+                  onChangeText={subject_code => this.setState({subject_code})}
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
                 <Text style={styles.styleLabel}>SUBJECT NAME :</Text>
                 <TextInput
                   style={styles.inputs}
-                  placeholder="Absent Time"
-                  onChangeText={firstname => this.setState({subjetc_name})}
+                  placeholder="Subject Name"
+                  onChangeText={subject_name => this.setState({subject_name})}
                 />
               </View>
             </View>
@@ -60,10 +92,14 @@ class CreateSubject extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('LecturerHomePage')}>
+              onPress={() =>
+                this.props.navigation.navigate('LecturerHomePage')
+              }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.btnReq}>
+            <TouchableHighlight
+              style={styles.btnReq}
+              onPress={() => this.handleSubmit()}>
               <Text style={{color: 'white'}}>CREATE</Text>
             </TouchableHighlight>
           </View>
@@ -74,19 +110,21 @@ class CreateSubject extends Component {
 }
 
 //use to add reducer state to props
-const mapStateToProps = state => ({
-    LoginReducer: state.LoginReducer,
-  });
-  
-  //use to add action(dispatch) to props
-  const mapDispatchToProps = {
-
+const mapStateToProps = state => {
+  return {
+    createSubject: state.subjectReducer,
   };
-  
-  export default connect(
-    mapStateToProps,
-    mapDispatchToProps,
-  )(CreateSubject);
+};
+
+//use to add action(dispatch) to props
+const mapDispatchToProps = {
+  CreateSubject,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(LecturerCreateSubject);
 
 const styles = StyleSheet.create({
   container: {

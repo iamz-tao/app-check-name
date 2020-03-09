@@ -25,7 +25,7 @@ class LecturerHomePage extends Component {
     } = this.props;
     // if (!token) {
     //   this.props.navigation.navigate('Login');
-    // } 
+    // }
   }
 
   render() {
@@ -46,7 +46,7 @@ class LecturerHomePage extends Component {
         </View>
       );
     }
- 
+
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -76,15 +76,21 @@ class LecturerHomePage extends Component {
             <View style={{display: 'flex', flexDirection: 'row'}}>
               <TouchableHighlight
                 style={styles.buttonMenu}
-                onPress={() => this.props.navigation.navigate('OpenSection')}>
+                onPress={() =>
+                  this.props.navigation.navigate('OpenSection', {
+                    token,
+                  })
+                }>
                 <Text style={styles.LabelText}>OPEN SECTION</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonOpenClass}
-                onPress={() => this.props.navigation.navigate('OpenClass',{
-                  token,
-                })}>
+                onPress={() =>
+                  this.props.navigation.navigate('OpenClass', {
+                    token,
+                  })
+                }>
                 <Text style={styles.LabelText}>OPEN CLASS</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
@@ -119,7 +125,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonStudentApprove}
                 onPress={() => {
-                  this.props.navigation.navigate('StudentApprove',{
+                  this.props.navigation.navigate('StudentApprove', {
                     token,
                   });
                 }}>

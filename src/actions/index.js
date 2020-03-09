@@ -11,6 +11,9 @@ import {
   SET_CURRENT_YEAR,
   GET_STUDENT_APPROVE,
   SET_STUDENT_APPROVE,
+  CREATE_SUBJECT,
+  CREATE_SUBJECT_FAILED,
+  CREATE_SUBJECT_SUCCESS,
 } from '../constant';
 import {Api} from './api';
 
@@ -73,6 +76,22 @@ export const setStudentApprove = payload => ({
   type: SET_STUDENT_APPROVE,
 })
 
+export const createSubject = payload => ({
+  payload,
+  type: CREATE_SUBJECT,
+})
+
+export const createSubjectSuccess = payload => ({
+  payload,
+  type: CREATE_SUBJECT_SUCCESS,
+})
+
+export const createSubjectFailed = payload => ({
+  payload,
+  type: CREATE_SUBJECT_FAILED,
+})
+
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -130,7 +149,7 @@ export const RegisterSubject = params => {
   }
 }
 
-//Approve
+// Lecturer
 export const GetStudentApprove = params => {
   return dispatch => {
     dispatch(getStudentApprove(params));
@@ -141,6 +160,19 @@ export const GetStudentApprove = params => {
       .catch(err => {
         console.log('error>>>',err)
         // dispatch(login_failure(err));
+      });
+  };
+};
+
+export const CreateSubject = params => {
+  return dispatch => {
+    dispatch(createSubject());
+    Api.CreateSubject(params)
+      .then(result => {
+        dispatch(createSubjectSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(createSubjectFailed(err));
       });
   };
 };
