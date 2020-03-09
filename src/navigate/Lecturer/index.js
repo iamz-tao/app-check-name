@@ -115,10 +115,11 @@ class LecturerHomePage extends Component {
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonBeacon}
-                onPress={
-                  () => {}
-                  //   this.onClickListener('Student_subject_register')
-                }>
+                onPress={() => {
+                  this.props.navigation.navigate('Beacon', {
+                    token,
+                  });
+                }}>
                 <Text style={styles.LabelText}>BEACON</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />

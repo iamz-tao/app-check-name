@@ -11,6 +11,8 @@ import StudentApprove from './Lecturer/components/studentApprove';
 import ListStudentApprove from './Lecturer/components/studentApprove/components/listStudentApprove';
 import OpenClass from './Lecturer/components/openClass';
 import CreateSubject from './Lecturer/components/createSubject';
+import Beacon from './Lecturer/components/beacon';
+import CreateNewBeacon from './Lecturer/components/beacon/createNewBeacon';
 
 const optsNavigation = {
   initialRouteName: 'Login',
@@ -29,6 +31,8 @@ const AppNavigator = createStackNavigator(
     ListStudentApprove: {screen: ListStudentApprove},
     OpenClass: {screen: OpenClass},
     CreateSubject: {screen: CreateSubject},
+    Beacon: {screen: Beacon},
+    CreateNewBeacon: {screen: CreateNewBeacon},
   },
   optsNavigation,
 );
