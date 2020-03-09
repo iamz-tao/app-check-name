@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux';
 import {Avatar, ButtonGroup} from 'react-native-elements';
 
 import {
@@ -12,53 +13,15 @@ import {
   Picker,
 } from 'react-native';
 
-export default class OpenSection extends Component {
+class CreateSubject extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickerValues: '',
+      subject_code: '',
+      subjetc_name: '',
     };
   }
-
-  handleSelect = () => {
-    const select = this.state.pickerValues;
-    if (select === '') {
-      alert('Please select!');
-    }
-    alert(select);
-  };
-
-  //   Event_Register = async () => {
-  //     const response = await fetch(
-  //       'https://us-central1-kpscheckin.cloudfunctions.net/api/register',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           id: this.state.id,
-  //           firstname: this.state.firstname,
-  //           lastname: this.state.lastname,
-  //           email: this.state.email,
-  //           password: this.state.password,
-  //           role: this.state.role,
-  //           mobile: this.state.mobile,
-  //         }),
-  //       },
-  //     );
-  //     const responseJson = await response.json();
-  //     if (responseJson.Error === undefined) {
-  //       Alert.alert('ADD Success');
-  //       this.props.navigation.navigate('Home');
-  //     } else {
-  //       Alert.alert(`${responseJson.Error}`);
-  //     }
-  //   };
-
   render() {
-    const {pickerValues} = this.state;
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -68,100 +31,63 @@ export default class OpenSection extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>OPEN SECTION</Text>
+            <Text style={styles.styleHeader}>CREATE SUBJECT</Text>
           </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+          {/* <Text style={(styles.styleLabel, {paddingLeft: 16})}>
             YEAR / SEMESTER : 2563 / 1
-          </Text>
+          </Text> */}
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={pickerValues}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({
-                      pickerValues: itemValue,
-                    })
-                  }>
-                  <Picker.Item label="Select Subject" value="" />
-                  <Picker.Item label="Html" value="Html" />
-                  <Picker.Item label="Java" value="Java" />
-                </Picker>
-              </View>
-            </View>
-            <View style={styles.inputContainer}>
               <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>LATE TIME (Minutes) :</Text>
+                <Text style={styles.styleLabel}>SUBJECT CODE :</Text>
                 <TextInput
                   style={styles.inputs}
                   placeholder="Late Time"
-                  onChangeText={firstname => this.setState({firstname})}
+                  onChangeText={firstname => this.setState({subject_code})}
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>ABSENT TIME (Minutes) :</Text>
+                <Text style={styles.styleLabel}>SUBJECT NAME :</Text>
                 <TextInput
                   style={styles.inputs}
                   placeholder="Absent Time"
-                  onChangeText={firstname => this.setState({firstname})}
+                  onChangeText={firstname => this.setState({subjetc_name})}
                 />
               </View>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>TOTAL MARK :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Total Mark"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
-              </View>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>SECTION NUMBER :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Section Number"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
-              </View> 
             </View>
           </View>
 
-          <View style={{display: 'flex', paddingLeft: 36, width: '100%'}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}>
-                DETAIL :{' '}
-              </Text>
-              <Text style={{flex: 2}}>Th 09.00 AM - 10.30 AM</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}/>
-              <Text style={{flex: 2}}>Tue 10.30 AM - 12.00 PM</Text>
-            </View>
-          </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => this.props.navigation.navigate('LecturerHomePage')}>
-              <Text style={{color: '#949494'}}>CANCEL</Text>
+              <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
             <TouchableHighlight style={styles.btnReq}>
-              <Text style={{color: 'white'}}>OPEN</Text>
+              <Text style={{color: 'white'}}>CREATE</Text>
             </TouchableHighlight>
           </View>
-          <View style={{display: 'flex', width: '100%', alignItems: 'center', marginTop: 14}}>
-             <TouchableHighlight
-          style={styles.buttonAddSubject}
-          onPress={() => this.props.navigation.navigate('CreateSubject')}>
-          <Text style={{textDecorationLine: 'underline', color: '#738497' }}>New Subject?</Text>
-        </TouchableHighlight>
-          </View>
-         
         </View>
       </ScrollView>
     );
   }
 }
+
+//use to add reducer state to props
+const mapStateToProps = state => ({
+    LoginReducer: state.LoginReducer,
+  });
+  
+  //use to add action(dispatch) to props
+  const mapDispatchToProps = {
+
+  };
+  
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(CreateSubject);
+
 const styles = StyleSheet.create({
   container: {
     position: 'relative',

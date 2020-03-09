@@ -7,6 +7,10 @@ import {
   REGISTER_SUBJECT_REQUEST,
   REGISTER_SUBJECT_REQUEST_SUCCESS,
   REGISTER_SUBJECT_REQUEST_FAILED,
+  GET_CURRENT_YEAR,
+  SET_CURRENT_YEAR,
+  GET_STUDENT_APPROVE,
+  SET_STUDENT_APPROVE,
 } from '../constant';
 import {Api} from './api';
 
@@ -49,6 +53,26 @@ export const registerSubjectFailed = payload => ({
   type: REGISTER_SUBJECT_REQUEST_FAILED,
 })
 
+export const getCurrentYear = payload => ({
+  payload,
+  type: GET_CURRENT_YEAR,
+})
+
+export const setCurrentYear = payload => ({
+  payload,
+  type: SET_CURRENT_YEAR,
+})
+
+export const getStudentApprove = payload => ({
+  payload,
+  type: GET_STUDENT_APPROVE,
+})
+
+export const setStudentApprove = payload => ({
+  payload,
+  type: SET_STUDENT_APPROVE,
+})
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -59,6 +83,21 @@ export const Login = params => {
       })
       .catch(err => {
         dispatch(login_failure(err));
+      });
+  };
+};
+
+// Year
+export const GetCurrentYear = params => {
+  return dispatch => {
+    dispatch(getCurrentYear(params));
+    Api.GetCurrentYear(params)
+      .then(result => {
+        dispatch(setCurrentYear(JSON.stringify(result)));
+      })
+      .catch(err => {
+        console.log('error>>>',err)
+        // dispatch(login_failure(err));
       });
   };
 };
@@ -90,3 +129,18 @@ export const RegisterSubject = params => {
       });
   }
 }
+
+//Approve
+export const GetStudentApprove = params => {
+  return dispatch => {
+    dispatch(getStudentApprove(params));
+    Api.GetStudentApprove(params)
+      .then(result => {
+        dispatch(setStudentApprove(JSON.stringify(result)));
+      })
+      .catch(err => {
+        console.log('error>>>',err)
+        // dispatch(login_failure(err));
+      });
+  };
+};

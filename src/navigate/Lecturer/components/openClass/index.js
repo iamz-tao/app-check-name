@@ -1,5 +1,7 @@
 import React, {Component} from 'react';
 import {Avatar, ButtonGroup} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {DotsLoader, TextLoader} from 'react-native-indicator';
 
 import {
   StyleSheet,
@@ -10,55 +12,61 @@ import {
   Alert,
   TouchableHighlight,
   Picker,
+  Modal,
+  Image,
 } from 'react-native';
 
-export default class OpenSection extends Component {
+import {GetCurrentYear} from '../../../../actions';
+
+class OpenClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickerValues: '',
+      pickerValues: [],
+      section: [],
+      subject_code: '',
+      subject_name: '',
+      token: '',
     };
   }
 
-  handleSelect = () => {
-    const select = this.state.pickerValues;
-    if (select === '') {
-      alert('Please select!');
+  componentDidMount() {
+    const {token} = this.props.navigation.state.params;
+    const {GetCurrentYear} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
     }
-    alert(select);
+    GetCurrentYear({
+      token,
+    });
+   
+  }
+
+  handleSubmit = (token, section_id) => {
+    // const {RegisterSubject} = this.props
+    // RegisterSubject({
+    //   token,
+    //   section_id,
+    // })
   };
 
-  //   Event_Register = async () => {
-  //     const response = await fetch(
-  //       'https://us-central1-kpscheckin.cloudfunctions.net/api/register',
-  //       {
-  //         method: 'POST',
-  //         headers: {
-  //           Accept: 'application/json',
-  //           'Content-Type': 'application/json',
-  //         },
-  //         body: JSON.stringify({
-  //           id: this.state.id,
-  //           firstname: this.state.firstname,
-  //           lastname: this.state.lastname,
-  //           email: this.state.email,
-  //           password: this.state.password,
-  //           role: this.state.role,
-  //           mobile: this.state.mobile,
-  //         }),
-  //       },
-  //     );
-  //     const responseJson = await response.json();
-  //     if (responseJson.Error === undefined) {
-  //       Alert.alert('ADD Success');
-  //       this.props.navigation.navigate('Home');
-  //     } else {
-  //       Alert.alert(`${responseJson.Error}`);
-  //     }
-  //   };
-
   render() {
-    const {pickerValues} = this.state;
+    const {pickerValues, section, token} = this.state;
+    const {
+      currentYear: {year, semester},
+      fetching,
+    } = this.props.currentYear;
+    const sem = semester === 'SECOND' ? 2 : semester === 'FIRST' ? 1 : 'SUMMER';
+
+    if (fetching) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -68,10 +76,10 @@ export default class OpenSection extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>OPEN SECTION</Text>
+            <Text style={styles.styleHeader}>OPEN CLASS</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : 2563 / 1
+            YEAR / SEMESTER : {year} / {sem}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -86,82 +94,100 @@ export default class OpenSection extends Component {
                     })
                   }>
                   <Picker.Item label="Select Subject" value="" />
-                  <Picker.Item label="Html" value="Html" />
-                  <Picker.Item label="Java" value="Java" />
+
+                  {/* {subjectsArr.length > 0 &&
+                    subjectsArr.map(s => (
+                      <Picker.Item label={s.label} value={s.value} />
+                    ))} */}
                 </Picker>
               </View>
             </View>
+          </View>
+          <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>LATE TIME (Minutes) :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Late Time"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
+              <Text style={styles.styleLabel}>SELECT SECTION :</Text>
+              <View style={styles.stylePicker}>
+                <Picker
+                  style={{height: 45}}
+                  selectedValue={section}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({
+                      section: itemValue,
+                    });
+                  }}>
+                  <Picker.Item label="Select Section" value="" />
+
+                  {/* {sectionArr.length > 0 &&
+                    sectionArr.map(sec => (
+                      <Picker.Item label={sec.label} value={sec.value} />
+                    ))} */}
+                </Picker>
               </View>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>ABSENT TIME (Minutes) :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Absent Time"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
-              </View>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>TOTAL MARK :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Total Mark"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
-              </View>
-              <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>SECTION NUMBER :</Text>
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Section Number"
-                  onChangeText={firstname => this.setState({firstname})}
-                />
-              </View> 
             </View>
           </View>
+          <View style={styles.styleInputWrapper}>
+            <View style={styles.inputContainer}>
+              <Text style={styles.styleLabel}>SELECT BEACON :</Text>
+              <View style={styles.stylePicker}>
+                <Picker
+                  style={{height: 45}}
+                  selectedValue={section}
+                  onValueChange={(itemValue, itemIndex) => {
+                    this.setState({
+                      section: itemValue,
+                    });
+                  }}>
+                  <Picker.Item label="Select Beacon" value="" />
 
-          <View style={{display: 'flex', paddingLeft: 36, width: '100%'}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}>
-                DETAIL :{' '}
-              </Text>
-              <Text style={{flex: 2}}>Th 09.00 AM - 10.30 AM</Text>
-            </View>
-            <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}/>
-              <Text style={{flex: 2}}>Tue 10.30 AM - 12.00 PM</Text>
+                  {/* {sectionArr.length > 0 &&
+                    sectionArr.map(sec => (
+                      <Picker.Item label={sec.label} value={sec.value} />
+                    ))} */}
+                </Picker>
+              </View>
             </View>
           </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('LecturerHomePage')}>
+              onPress={() =>
+                this.props.navigation.navigate('LecturerHomePage')
+              }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.btnReq}>
+            <TouchableHighlight
+              style={styles.btnReq}
+              onPress={() => {
+                //    this.handleSubmit(token,section_id)
+                //    this.setModalVisible(statusReq)
+              }}>
               <Text style={{color: 'white'}}>OPEN</Text>
             </TouchableHighlight>
           </View>
-          <View style={{display: 'flex', width: '100%', alignItems: 'center', marginTop: 14}}>
-             <TouchableHighlight
-          style={styles.buttonAddSubject}
-          onPress={() => this.props.navigation.navigate('CreateSubject')}>
-          <Text style={{textDecorationLine: 'underline', color: '#738497' }}>New Subject?</Text>
-        </TouchableHighlight>
-          </View>
-         
         </View>
       </ScrollView>
     );
   }
 }
+
+//use to add reducer state to props
+const mapStateToProps = state => {
+  return {
+    currentYear: state.yearReducer,
+    // subjects: state.subjectReducer,
+  };
+};
+
+//use to add action(dispatch) to props
+const mapDispatchToProps = {
+  GetCurrentYear,
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(OpenClass);
+
 const styles = StyleSheet.create({
   container: {
     position: 'relative',
@@ -184,6 +210,32 @@ const styles = StyleSheet.create({
     width: 68,
     height: 36,
     borderRadius: 21,
+  },
+  CustomImg: {
+    width: 116,
+    height: 116,
+    top: 20,
+  },
+  ModalWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  DetailModalWrapper: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#EBEAEA',
+    borderRadius: 19,
+  },
+  loadingWrapper: {
+    display: 'flex',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
   btnWrapper: {
     display: 'flex',
@@ -242,6 +294,14 @@ const styles = StyleSheet.create({
     display: 'flex',
     paddingLeft: 12,
   },
+  styleLabelFail: {
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 21,
+    display: 'flex',
+    paddingLeft: 12,
+    color: '#CA5353',
+  },
   styleInputWrapper: {
     display: 'flex',
     alignItems: 'center',
@@ -252,7 +312,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     width: 300,
-    marginBottom: 12,
+    marginBottom: 8,
     flexDirection: 'column',
     display: 'flex',
   },
@@ -305,14 +365,5 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(36, 52, 69, 0.5)',
     borderRadius: 21,
     color: '#738497',
-  },
-  buttonAddSubject: {
-    height: 45,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 20,
-    width: 150,
-    borderRadius: 30,
   },
 });
