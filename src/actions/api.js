@@ -48,6 +48,30 @@ async function Login(data) {
   });
 }
 
+// Year
+async function GetCurrentYear(data) {
+  const token = data.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/getCurrentYear',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 // Student
 async function StudentGetSubjectRegister(data) {
   const token = data.token;
@@ -100,8 +124,65 @@ async function RegisterSubject(data) {
   });
 }
 
+// Lecturer
+async function GetStudentApprove(data) {
+  const token = data.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjects',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function CreateSubject(data) {
+  const token = data.token;
+  const subject_code = data.subject_code;
+  const subject_name = data.subject_name;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/createSubject',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          subject_code,
+          subject_name,
+          approved_status: 'PENDING',
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
   RegisterSubject,
+  GetCurrentYear,
+  GetStudentApprove,
+  CreateSubject,
 };

@@ -7,6 +7,10 @@ import StudentSubjectRegister from './Student/components/subjectRegister';
 import LecturerHomePage from './Lecturer';
 import OpenSection from './Lecturer/components/openSection';
 import StudentListSubject from './Student/components/subjects';
+import StudentApprove from './Lecturer/components/studentApprove';
+import ListStudentApprove from './Lecturer/components/studentApprove/components/listStudentApprove';
+import OpenClass from './Lecturer/components/openClass';
+import CreateSubject from './Lecturer/components/createSubject';
 
 const optsNavigation = {
   initialRouteName: 'Login',
@@ -21,6 +25,10 @@ const AppNavigator = createStackNavigator(
     LecturerHomePage: {screen: LecturerHomePage},
     OpenSection: {screen: OpenSection},
     StudentListSubject: {screen: StudentListSubject},
+    StudentApprove: {screen: StudentApprove},
+    ListStudentApprove: {screen: ListStudentApprove},
+    OpenClass: {screen: OpenClass},
+    CreateSubject: {screen: CreateSubject},
   },
   optsNavigation,
 );

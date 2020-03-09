@@ -20,9 +20,9 @@ class LecturerHomePage extends Component {
   }
 
   componentDidMount() {
-    // const {
-    //   LoginReducer: {token},
-    // } = this.props;
+    const {
+      LoginReducer: {token},
+    } = this.props;
     // if (!token) {
     //   this.props.navigation.navigate('Login');
     // }
@@ -46,6 +46,7 @@ class LecturerHomePage extends Component {
         </View>
       );
     }
+
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -76,15 +77,19 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('OpenSection')
+                  this.props.navigation.navigate('OpenSection', {
+                    token,
+                  })
                 }>
                 <Text style={styles.LabelText}>OPEN SECTION</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonOpenClass}
-                onPress={
-                  () => this.props.navigation.navigate('OpenSection')
+                onPress={() =>
+                  this.props.navigation.navigate('OpenClass', {
+                    token,
+                  })
                 }>
                 <Text style={styles.LabelText}>OPEN CLASS</Text>
               </TouchableHighlight>
@@ -119,10 +124,11 @@ class LecturerHomePage extends Component {
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonStudentApprove}
-                onPress={
-                  () => {}
-                  //   this.onClickListener('Student_subject_register')
-                }>
+                onPress={() => {
+                  this.props.navigation.navigate('StudentApprove', {
+                    token,
+                  });
+                }}>
                 <Text style={styles.LabelText}>STUDENT APPROVE</Text>
               </TouchableHighlight>
             </View>
@@ -208,8 +214,8 @@ const styles = StyleSheet.create({
     width: 96,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#ECC7E6',
-    backgroundColor: '#ECC7E6',
+    borderColor: '#F177E5',
+    backgroundColor: '#F177E5',
     borderRadius: 18,
   },
   buttonMySubject: {
@@ -276,7 +282,7 @@ const styles = StyleSheet.create({
   LabelText: {
     fontWeight: 'normal',
     width: '100%',
-    fontSize: 18,
+    fontSize: 16,
     lineHeight: 21,
     display: 'flex',
     alignItems: 'center',

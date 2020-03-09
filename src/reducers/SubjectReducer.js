@@ -3,6 +3,11 @@ import {
   GET_SUBJECT_REGIS_STD,
   REGISTER_SUBJECT_REQUEST_SUCCESS,
   REGISTER_SUBJECT_REQUEST_FAILED,
+  GET_STUDENT_APPROVE,
+  SET_STUDENT_APPROVE,
+  CREATE_SUBJECT,
+  CREATE_SUBJECT_SUCCESS,
+  CREATE_SUBJECT_FAILED,
 } from '../constant';
 
 const initialState = {
@@ -32,6 +37,26 @@ export default (state = initialState, action) => {
       return {...state, fetching: false, isError: true, status: 'FAILURE'};
     }
 
+    case GET_STUDENT_APPROVE:
+      return {...state, fetching: true, subjects: null};
+
+    case SET_STUDENT_APPROVE: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, subjects: data.data};
+    }
+
+    case CREATE_SUBJECT: {
+      return {...state, fetching: false, status: null};
+    }
+  
+    case CREATE_SUBJECT_SUCCESS: {
+      // const data = JSON.parse(action.payload);
+      return {...state, fetching: true, status: 'SUCCESS'};
+    }
+
+    case CREATE_SUBJECT_FAILED: {
+      return {...state, fetching: true, status: 'FAILURE'};
+    }
     default:
       return state;
   }

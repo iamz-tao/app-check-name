@@ -1,7 +1,7 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
-
+import NavigationServices from '../../../../../NavigationServices';
 import {
   StyleSheet,
   ScrollView,
@@ -17,39 +17,42 @@ import {
 
 const SubjectList = props => {
   return (
-    <View style={styles.Column}>
-      <View style={styles.Wrapper}>
-        <View style={styles.Column}>
-          <View style={styles.ItemWrapper}>
-            <View style={styles.Row}>
-              <View style={(styles.ListDetail, {flex: 2})}>
-                <Text View style={styles.ItemSpan}>
-                  Digital Labolatory 
-                </Text>
-              </View>
-              <View style={styles.SubjectList, {flex: 1}}>
-                <Text View style={styles.ItemSpan}>
-                 <Text style={{ color:'#0038FF'}}> Pending </Text>
-                </Text>
-              </View>
-              <View style={styles.SubjectList, {flex: 1, alignItems: 'flex-end', paddingRight: 8}}>
-              <TouchableHighlight
-              style={styles.btnDrop}
-              onPress={() => {
-              //  this.handleSubmit(token,section_id)
-              //  this.setModalVisible(statusReq)
-              } 
-              }>
-              <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
-            </TouchableHighlight>
-                {/* <Text>xxxxx</Text> */}
+    <ScrollView style={{backgroundColor: '#ffffff'}}>
+      <View style={styles.Column}>
+        <View style={styles.Wrapper}>
+          <View style={styles.Column}>
+            <View style={styles.ItemWrapper}>
+              <View style={styles.Row}>
+                <View style={(styles.ListDetail, {flex: 2})}>
+                  <Text View style={styles.ItemSpan}>
+                    Digital Labolatory
+                  </Text>
+                </View>
+                <View style={(styles.SubjectList, {flex: 1})}>
+                  <Text View style={styles.ItemSpan}>
+                    <Text style={{color: '#0038FF'}}> Pending </Text>
+                  </Text>
+                </View>
+                <View
+                  style={
+                    (styles.SubjectList,
+                    {flex: 1, alignItems: 'flex-end', paddingRight: 8})
+                  }>
+                  <TouchableHighlight
+                    style={styles.btnDrop}
+                    onPress={() => {
+                      NavigationServices.navigate('StudentSubjectRegister');
+                    }}>
+                    <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
+                  </TouchableHighlight>
+                  {/* <Text>xxxxx</Text> */}
+                </View>
               </View>
             </View>
           </View>
         </View>
       </View>
-    </View>
-    // console.log('xxx')
+    </ScrollView>
   );
 };
 
