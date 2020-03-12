@@ -20,7 +20,10 @@ export default class OpenSection extends Component {
     };
   }
 
-
+  // handleLogout = () => {
+  //   const {Logout} = this.props;
+  //   Logout({});
+  // };
 
   render() {
     const {pickerValues} = this.state;

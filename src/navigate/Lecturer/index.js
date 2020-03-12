@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
+import {Logout} from '../../actions'
 class LecturerHomePage extends Component {
   constructor(props) {
     super(props);
@@ -27,6 +28,12 @@ class LecturerHomePage extends Component {
     //   this.props.navigation.navigate('Login');
     // }
   }
+
+  handleLogout = () => {
+    const {Logout} = this.props
+    Logout({})
+  }
+
 
   render() {
     const {
@@ -51,7 +58,7 @@ class LecturerHomePage extends Component {
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight style={styles.btnLogout} onPress={() => {this.handleLogout()}} >
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -147,7 +154,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  //   Login,
+    Logout,
 };
 
 export default connect(

@@ -1,6 +1,7 @@
 export const LOGIN = "LOGIN"
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS"
 export const LOGIN_FAILURE = "LOGIN_FAILURE"
+export const LOGOUT = 'LOGOUT'
 
 export const GET_SUBJECT_REGIS_STD = 'student/GET_SUBJECT_REGIS_STD'
 export const SET_SUBJECT_REGIS_STD = 'student/SET_SUBJECT_REGIS_STD'

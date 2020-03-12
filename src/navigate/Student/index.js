@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {StudentGetSubjectRegis} from '../../actions'
+import {StudentGetSubjectRegis, Logout} from '../../actions';
 
 class StudentHomePage extends Component {
   constructor(props) {
@@ -21,8 +21,12 @@ class StudentHomePage extends Component {
     };
   }
 
-  componentDidMount() {
-  }
+  componentDidMount() {}
+
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
 
   render() {
     const {
@@ -45,7 +49,11 @@ class StudentHomePage extends Component {
       <ScrollView>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -93,7 +101,7 @@ class StudentHomePage extends Component {
             <TouchableHighlight
               style={styles.buttonMySubject}
               onPress={() => {
-                this.props.navigation.navigate('StudentListSubject')
+                this.props.navigation.navigate('StudentListSubject');
               }}>
               <Text style={styles.LabelText}>MY SUBJECT</Text>
             </TouchableHighlight>
@@ -112,6 +120,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   StudentGetSubjectRegis,
+  Logout,
 };
 
 export default connect(
