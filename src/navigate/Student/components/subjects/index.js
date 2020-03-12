@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 
 import SubjectList from './components/listSubject';
+import {Logout} from '../../../../actions';
 
 const Header = () => (
   <View style={styles.Header}>
@@ -63,6 +64,11 @@ class StudentListSubject extends Component {
 
   handleSubmit = (token, section_id) => {};
 
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
+
   render() {
     // if (subjects === undefined) {
     //   return (
@@ -76,7 +82,11 @@ class StudentListSubject extends Component {
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -114,6 +124,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   // RegisterSubject,
+  Logout,
 };
 
 export default connect(

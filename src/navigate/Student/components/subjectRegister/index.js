@@ -16,7 +16,7 @@ import {
   Image,
 } from 'react-native';
 
-import {RegisterSubject} from '../../../../actions';
+import {RegisterSubject, Logout} from '../../../../actions';
 
 class StudentSubjectRegister extends Component {
   constructor(props) {
@@ -51,11 +51,11 @@ class StudentSubjectRegister extends Component {
   }
 
   setModalVisible(status) {
-  if (status === 'SUCCESS'){
-    this.setState({modalVisible: false});
-  } else {
-    this.setState({modalVisible: true});
-  }
+    if (status === 'SUCCESS') {
+      this.setState({modalVisible: false});
+    } else {
+      this.setState({modalVisible: true});
+    }
   }
 
   handleSelect = () => {
@@ -66,13 +66,18 @@ class StudentSubjectRegister extends Component {
     alert(select);
   };
 
-  handleSubmit = (token,section_id) => {
-    const {RegisterSubject} = this.props
+  handleSubmit = (token, section_id) => {
+    const {RegisterSubject} = this.props;
     RegisterSubject({
       token,
       section_id,
-    })
-  }
+    });
+  };
+
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
 
   render() {
     const {pickerValues, section, token} = this.state;
@@ -169,7 +174,11 @@ class StudentSubjectRegister extends Component {
         </View>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -256,10 +265,9 @@ class StudentSubjectRegister extends Component {
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-               this.handleSubmit(token,section_id)
-               this.setModalVisible(statusReq)
-              } 
-              }>
+                this.handleSubmit(token, section_id);
+                this.setModalVisible(statusReq);
+              }}>
               <Text style={{color: 'white'}}>REQUEST</Text>
             </TouchableHighlight>
           </View>
@@ -279,6 +287,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   RegisterSubject,
+  Logout,
 };
 
 export default connect(

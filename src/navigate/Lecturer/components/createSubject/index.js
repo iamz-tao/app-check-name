@@ -13,8 +13,8 @@ import {
   Picker,
 } from 'react-native';
 
-import SuccessModal from '../../../../components/successModal'
-import {CreateSubject} from '../../../../actions';
+import SuccessModal from '../../../../components/successModal';
+import {CreateSubject, Logout} from '../../../../actions';
 class LecturerCreateSubject extends Component {
   constructor(props) {
     super(props);
@@ -33,9 +33,9 @@ class LecturerCreateSubject extends Component {
   }
 
   setModalVisible = () => {
-      const {modalVisible} = this.state;
-      this.setState({modalVisible: !modalVisible});
-    }
+    const {modalVisible} = this.state;
+    this.setState({modalVisible: !modalVisible});
+  };
 
   handleSubmit = () => {
     const {CreateSubject} = this.props;
@@ -53,15 +53,29 @@ class LecturerCreateSubject extends Component {
     });
   };
 
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
+
   render() {
-      const {modalVisible} = this.state
-      const {status} = this.props.createSubject
+    const {modalVisible} = this.state;
+    const {status} = this.props.createSubject;
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
-          <SuccessModal msg={'Create new subject complete.'} setModalVisible={this.setModalVisible} modalVisible={modalVisible} status={status}/>
+        <SuccessModal
+          msg={'Create new subject complete.'}
+          setModalVisible={this.setModalVisible}
+          modalVisible={modalVisible}
+          status={status}
+        />
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -119,6 +133,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   CreateSubject,
+  Logout,
 };
 
 export default connect(

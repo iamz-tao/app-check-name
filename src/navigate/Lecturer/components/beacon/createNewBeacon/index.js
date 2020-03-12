@@ -23,6 +23,7 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
+import {Logout} from '../../../../../actions'
 
 const element = (data, index) => (
   <TouchableOpacity onPress={() => this._alertIndex(index)}>
@@ -60,6 +61,11 @@ class CreateNewBeacon extends Component {
     Alert.alert(`This is row ${index + 1}`);
   }
 
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
+
   render() {
     const {pickerValues, section, token} = this.state;
     // const {
@@ -80,7 +86,7 @@ class CreateNewBeacon extends Component {
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight style={styles.btnLogout} onPress={() => {this.handleLogout()}}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -145,6 +151,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
+  Logout,
 };
 
 export default connect(

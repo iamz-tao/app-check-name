@@ -23,6 +23,7 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
+import {Logout} from '../../../../actions';
 
 const element = (data, index) => (
   <TouchableOpacity onPress={() => this._alertIndex(index)}>
@@ -62,6 +63,11 @@ class Beacon extends Component {
     Alert.alert(`This is row ${index + 1}`);
   }
 
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
+
   render() {
     const {pickerValues, section, token} = this.state;
     // const {
@@ -78,12 +84,15 @@ class Beacon extends Component {
     //   );
     // }
 
-
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -91,17 +100,25 @@ class Beacon extends Component {
             <Text style={styles.styleHeader}>BEACON</Text>
           </View>
           {/* <View style={styles.containerTest}> */}
-            <View style={{width: 300, height: 300, padding: 8, borderWidth: 1, borderRadius: 18, display: 'flex', alignItems: 'center', borderColor: '#D0CDCD'}}>
-              <View style={{width: 286, height: 32, padding: 4, borderBottomWidth: 1, marginBottom: 6, display: 'flex', flexDirection: 'row',alignItems: 'center', borderColor: '#D0CDCD'}}>
-                <Text style={{ flex: 1}}>NAME</Text>
-                <Text style={{ flex: 1}}>STATUS</Text>
-              </View>
-              <View style={{width: 286, height: 20, padding: 2, flexDirection: 'row'}}>
-                <Text style={{ flex: 1}}>xxxxxxxx</Text>
-                 <Text style={{ flex: 1}}>ACTIVE</Text>
-                 </View>
-              <View style={{width: 286, height: 20, padding: 2}}><Text>xxxxxxxx</Text></View>
+          <View style={styles.ViewWrapper}>
+            <View style={styles.ViewHeader}>
+              <Text style={{flex: 1}}>NAME</Text>
+              <Text style={{flex: 1}}>STATUS</Text>
             </View>
+            <View
+              style={{
+                width: 286,
+                height: 20,
+                padding: 2,
+                flexDirection: 'row',
+              }}>
+              <Text style={{flex: 1}}>xxxxxxxx</Text>
+              <Text style={{flex: 1}}>ACTIVE</Text>
+            </View>
+            <View style={{width: 286, height: 20, padding: 2}}>
+              <Text>xxxxxxxx</Text>
+            </View>
+          </View>
 
           <View style={styles.btnWrapper}>
             <TouchableHighlight
@@ -139,6 +156,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
+  Logout,
 };
 
 export default connect(
@@ -155,16 +173,48 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
+  ViewWrapper: {
+    width: 300,
+    height: 300,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 18,
+    display: 'flex',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  ViewHeader: {
+    width: 286,
+    height: 32,
+    padding: 4,
+    borderBottomWidth: 1,
+    marginBottom: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
   containerTest: {
     flex: 1,
     padding: 16,
     paddingTop: 30,
     backgroundColor: '#FFFFFF',
   },
-  head: {height: 40, backgroundColor: '#FFFFFF' ,borderWidth: 0.3, borderColor: '#D0CDCD'},// borderTopLeftRadius: 18, borderTopRightRadius: 18},
+  head: {
+    height: 40,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderColor: '#D0CDCD',
+  }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
   text: {margin: 6, color: '#525252'},
   textHeader: {margin: 6, color: '#000000'},
-  row: {flexDirection: 'row', backgroundColor: '#FFFFFF',borderWidth: 0.3, borderTopWidth: 0, borderColor: '#D0CDCD'},
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderTopWidth: 0,
+    borderColor: '#D0CDCD',
+  },
   btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
   btnText: {textAlign: 'center', color: 'black'},
   btnLogout: {

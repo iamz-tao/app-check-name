@@ -14,8 +14,10 @@ import {
   CREATE_SUBJECT,
   CREATE_SUBJECT_FAILED,
   CREATE_SUBJECT_SUCCESS,
+  LOGOUT,
 } from '../constant';
 import {Api} from './api';
+import NavigationServices from '../navigate/NavigationServices'
 
 export const login = () => ({
   type: LOGIN,
@@ -91,6 +93,11 @@ export const createSubjectFailed = payload => ({
   type: CREATE_SUBJECT_FAILED,
 })
 
+export const logout = payload => ({
+  payload,
+  type: LOGOUT,
+})
+
 
 // Auth
 export const Login = params => {
@@ -103,6 +110,13 @@ export const Login = params => {
       .catch(err => {
         dispatch(login_failure(err));
       });
+  };
+};
+
+export const Logout = params => {
+  return dispatch => {
+    dispatch(logout());
+    NavigationServices.navigate('Login');
   };
 };
 

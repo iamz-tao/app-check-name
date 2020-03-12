@@ -16,7 +16,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GetCurrentYear} from '../../../../actions';
+import {GetCurrentYear, Logout} from '../../../../actions';
 
 class OpenClass extends Component {
   constructor(props) {
@@ -39,7 +39,6 @@ class OpenClass extends Component {
     GetCurrentYear({
       token,
     });
-   
   }
 
   handleSubmit = (token, section_id) => {
@@ -48,6 +47,11 @@ class OpenClass extends Component {
     //   token,
     //   section_id,
     // })
+  };
+
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
   };
 
   render() {
@@ -71,7 +75,11 @@ class OpenClass extends Component {
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -181,6 +189,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   GetCurrentYear,
+  Logout,
 };
 
 export default connect(

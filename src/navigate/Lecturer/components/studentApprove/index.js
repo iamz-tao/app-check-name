@@ -16,7 +16,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GetCurrentYear, GetStudentApprove} from '../../../../actions';
+import {GetCurrentYear, GetStudentApprove, Logout} from '../../../../actions';
 
 class StudentApprove extends Component {
   constructor(props) {
@@ -44,6 +44,11 @@ class StudentApprove extends Component {
     });
   }
 
+  handleLogout = () => {
+    const {Logout} = this.props;
+    Logout({});
+  };
+
   handleSubmit = (token, section_id) => {
     // const {RegisterSubject} = this.props
     // RegisterSubject({
@@ -58,7 +63,7 @@ class StudentApprove extends Component {
       currentYear: {year, semester},
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjects;
-    const {fetching} =  this.props.subjects;
+    const {fetching} = this.props.subjects;
     // const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
@@ -75,26 +80,23 @@ class StudentApprove extends Component {
     //     });
     //   });
     // }
-    [...new Set(subjects)]
-    if(subjects !==  null){
+    [...new Set(subjects)];
+    if (subjects !== null) {
       subjects.map((s, i) => {
-        subjectCode.push(
-         s.Subject.subject_code
-        );
+        subjectCode.push(s.Subject.subject_code);
       });
-      subjectCode.filter((item,index) => subjectCode.indexOf(item) === index)
-      subjectCode.reduce((uni,item) => uni.includes(item) ? uni : [...uni, item], [])
+      subjectCode.filter((item, index) => subjectCode.indexOf(item) === index);
+      subjectCode.reduce(
+        (uni, item) => (uni.includes(item) ? uni : [...uni, item]),
+        [],
+      );
       subjects.map((s, i) => {
-        subjectName.push(
-         s.Subject.subject_name
-        );
+        subjectName.push(s.Subject.subject_name);
       });
 
-      subjectName.filter((item,index) => subjectName.indexOf(item) === index)
+      subjectName.filter((item, index) => subjectName.indexOf(item) === index);
       // console.log(subjectName.reduce((uni,item) => uni.includes(item) ? uni : [...uni, item], []))
-
     }
-
 
     if (fetching) {
       return (
@@ -108,7 +110,11 @@ class StudentApprove extends Component {
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout}>
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -173,7 +179,7 @@ class StudentApprove extends Component {
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                this.props.navigation.navigate('ListStudentApprove')
+                this.props.navigation.navigate('ListStudentApprove');
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }}>
@@ -198,6 +204,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   GetCurrentYear,
   GetStudentApprove,
+  Logout,
 };
 
 export default connect(
