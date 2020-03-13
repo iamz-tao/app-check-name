@@ -16,7 +16,7 @@ import {
   Image,
 } from 'react-native';
 
-import {GetCurrentYear, GetStudentApprove, Logout} from '../../../../actions';
+import {GetCurrentYear, GetSubjectsApprove, Logout} from '../../../../actions';
 
 class StudentApprove extends Component {
   constructor(props) {
@@ -26,20 +26,19 @@ class StudentApprove extends Component {
       section: [],
       subject_code: '',
       subject_name: '',
-      token: '',
     };
   }
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
-    const {GetCurrentYear, GetStudentApprove} = this.props;
+    const {GetCurrentYear, GetSubjectsApprove} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
     GetCurrentYear({
       token,
     });
-    GetStudentApprove({
+    GetSubjectsApprove({
       token,
     });
   }
@@ -58,44 +57,35 @@ class StudentApprove extends Component {
   };
 
   render() {
-    const {pickerValues, section, token} = this.state;
+    const {pickerValues, section} = this.state;
+    const {token} = this.props.navigation.state.params;
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
-    const subjects = this.props.subjects.subjects;
+    const subjects = this.props.subjects.subjectsApprove;
     const {fetching} = this.props.subjects;
     // const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
-    let subjectOption = [];
-    let subjectName = [];
-    let subjectCode = [];
     const sem = semester === 'SECOND' ? 2 : semester === 'FIRST' ? 1 : 'SUMMER';
-    let section_id: '';
-    // if (subjects !== undefined) {
-    //   subjects.map((s, i) => {
-    //     subjectsArr.push({
-    //       label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
-    //       value: s.id,
-    //     });
-    //   });
-    // }
-    [...new Set(subjects)];
     if (subjects !== null) {
       subjects.map((s, i) => {
-        subjectCode.push(s.Subject.subject_code);
+        subjectsArr.push({
+          label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
+          value: s.Subject.subject_code,
+        });
       });
-      subjectCode.filter((item, index) => subjectCode.indexOf(item) === index);
-      subjectCode.reduce(
-        (uni, item) => (uni.includes(item) ? uni : [...uni, item]),
-        [],
-      );
-      subjects.map((s, i) => {
-        subjectName.push(s.Subject.subject_name);
-      });
+    }
 
-      subjectName.filter((item, index) => subjectName.indexOf(item) === index);
-      // console.log(subjectName.reduce((uni,item) => uni.includes(item) ? uni : [...uni, item], []))
+    if (subjects !== null && pickerValues !== '') {
+      subjects
+        .filter(s => s.Subject.subject_code === pickerValues)
+        .map((s, i) => {
+          sectionArr.push({
+            label: `${s.sections[i].section_number}`,
+            value: s.sections[i].id,
+          });
+        });
     }
 
     if (fetching) {
@@ -160,10 +150,10 @@ class StudentApprove extends Component {
                   }}>
                   <Picker.Item label="Select Section" value="" />
 
-                  {/* {sectionArr.length > 0 &&
+                  {sectionArr.length > 0 &&
                     sectionArr.map(sec => (
                       <Picker.Item label={sec.label} value={sec.value} />
-                    ))} */}
+                    ))}
                 </Picker>
               </View>
             </View>
@@ -179,7 +169,10 @@ class StudentApprove extends Component {
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                this.props.navigation.navigate('ListStudentApprove');
+                this.props.navigation.navigate('ListStudentApprove',{
+                  id: section,
+                  token,
+                });
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }}>
@@ -203,7 +196,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   GetCurrentYear,
-  GetStudentApprove,
+  GetSubjectsApprove,
   Logout,
 };
 

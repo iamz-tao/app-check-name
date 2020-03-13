@@ -53,8 +53,8 @@ class ListStudentApprove extends Component {
   }
 
   componentDidMount() {
-    // const {token} = this.props.navigation.state.params;
-    // const {GetCurrentYear, GetStudentApprove} = this.props;
+    const {token} = this.props.navigation.state.params;
+    const {GetCurrentYear, GetStudentApprove} = this.props;
     // if (!token) {
     //   this.props.navigation.navigate('Login');
     // }
@@ -83,7 +83,9 @@ class ListStudentApprove extends Component {
   }
 
   render() {
-    const {pickerValues, section, token} = this.state;
+    const {token} = this.props.navigation.state.params;
+    // const {pickerValues, section, token} = this.state;
+    console.log(this.props.navigation.state.params);
     // const {
     //   currentYear: {year, semester},
     // } = this.props.currentYear;
@@ -146,9 +148,7 @@ class ListStudentApprove extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
-              }>
+              onPress={() => this.props.navigation.navigate('StudentApprove')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
             <TouchableHighlight

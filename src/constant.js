@@ -14,6 +14,8 @@ export const SET_CURRENT_YEAR = 'SET_CURRENT_YEAR'
 
 export const GET_STUDENT_APPROVE = 'lecturer/GET_STUDENT_APPROVE'
 export const SET_STUDENT_APPROVE = 'lecturer/SET_STUDENT_APPROVE'
+export const GET_SUBJECT_TEACH = 'lecturer/GET_SUBJECT_TEACH'
+export const SET_SUBJECT_TEACH = 'lecturer/SET_SUBJECT_TEACH'
 
 export const CREATE_SUBJECT = 'lecturer/CREATE_SUBJECT'
 export const CREATE_SUBJECT_SUCCESS = 'lecturer/CREATE_SUBJECT_SUCCESS'

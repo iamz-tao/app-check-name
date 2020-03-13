@@ -8,10 +8,14 @@ import {
   CREATE_SUBJECT,
   CREATE_SUBJECT_SUCCESS,
   CREATE_SUBJECT_FAILED,
+  GET_SUBJECT_TEACH,
+  SET_SUBJECT_TEACH,
 } from '../constant';
 
 const initialState = {
   subjects: [],
+  subjectsApprove: null,
+  studentsInSection: null,
   err: [],
   isError: false,
   fetching: true,
@@ -37,12 +41,12 @@ export default (state = initialState, action) => {
       return {...state, fetching: false, isError: true, status: 'FAILURE'};
     }
 
-    case GET_STUDENT_APPROVE:
-      return {...state, fetching: true, subjects: null};
+    case GET_SUBJECT_TEACH:
+      return {...state, fetching: true, subjectsApprove: null};
 
-    case SET_STUDENT_APPROVE: {
+    case SET_SUBJECT_TEACH: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: false, subjects: data.data};
+      return {...state, fetching: false, subjectsApprove: data.data};
     }
 
     case CREATE_SUBJECT: {
@@ -50,13 +54,21 @@ export default (state = initialState, action) => {
     }
   
     case CREATE_SUBJECT_SUCCESS: {
-      // const data = JSON.parse(action.payload);
       return {...state, fetching: true, status: 'SUCCESS'};
     }
 
     case CREATE_SUBJECT_FAILED: {
       return {...state, fetching: true, status: 'FAILURE'};
     }
+
+    case GET_STUDENT_APPROVE:
+      return {...state, fetching: true, studentsInSection: null};
+
+    case SET_STUDENT_APPROVE: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, studentsInSection: data.data};
+    }
+
     default:
       return state;
   }

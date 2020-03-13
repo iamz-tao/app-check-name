@@ -125,11 +125,35 @@ async function RegisterSubject(data) {
 }
 
 // Lecturer
-async function GetStudentApprove(data) {
+async function GetSubjectsApprove(data) {
   const token = data.token;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
-      'https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjects',
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/ListSectionTeacher',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function GetStudentsApprove(data) {
+  const token = data.token;
+  const id = data.id
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/pSl7uv9ZE6Ap8TO1FQzt/${id}`,
       {
         method: 'GET',
         headers: {
@@ -183,6 +207,7 @@ export const Api = {
   StudentGetSubjectRegister,
   RegisterSubject,
   GetCurrentYear,
-  GetStudentApprove,
+  GetSubjectsApprove,
   CreateSubject,
+  GetStudentsApprove,
 };

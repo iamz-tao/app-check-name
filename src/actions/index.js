@@ -15,6 +15,8 @@ import {
   CREATE_SUBJECT_FAILED,
   CREATE_SUBJECT_SUCCESS,
   LOGOUT,
+  GET_SUBJECT_TEACH,
+  SET_SUBJECT_TEACH
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices'
@@ -68,14 +70,24 @@ export const setCurrentYear = payload => ({
   type: SET_CURRENT_YEAR,
 })
 
-export const getStudentApprove = payload => ({
+export const getStudentsApprove = payload => ({
   payload,
   type: GET_STUDENT_APPROVE,
 })
 
-export const setStudentApprove = payload => ({
+export const setStudentsApprove = payload => ({
   payload,
   type: SET_STUDENT_APPROVE,
+})
+
+export const getSubjectsApprove = payload => ({
+  payload,
+  type: GET_SUBJECT_TEACH,
+})
+
+export const setSubjectsApprove = payload => ({
+  payload,
+  type: SET_SUBJECT_TEACH,
 })
 
 export const createSubject = payload => ({
@@ -164,12 +176,26 @@ export const RegisterSubject = params => {
 }
 
 // Lecturer
-export const GetStudentApprove = params => {
+export const GetSubjectsApprove = params => {
   return dispatch => {
-    dispatch(getStudentApprove(params));
-    Api.GetStudentApprove(params)
+    dispatch(getSubjectsApprove(params));
+    Api.GetSubjectsApprove(params)
       .then(result => {
-        dispatch(setStudentApprove(JSON.stringify(result)));
+        dispatch(setSubjectsApprove(JSON.stringify(result)));
+      })
+      .catch(err => {
+        console.log('error>>>',err)
+        // dispatch(login_failure(err));
+      });
+  };
+};
+
+export const GetStudentsApprove = params => {
+  return dispatch => {
+    dispatch(getStudentsApprove(params));
+    Api.GetStudentsApprove(params)
+      .then(result => {
+        dispatch(setStudentsApprove(JSON.stringify(result)));
       })
       .catch(err => {
         console.log('error>>>',err)
