@@ -18,7 +18,8 @@ import SettingSection from './components/settingSection';
 import {
   GetCurrentYear,
   Logout,
-  StudentGetSubjectRegis,
+  GetSubjectOpenSection,
+  OpenSection as LecturerOpenSection,
 } from '../../../../actions';
 
 class OpenSection extends Component {
@@ -31,24 +32,27 @@ class OpenSection extends Component {
       absent_time: '',
       total_mark: '',
       section_number: '',
-      start_time: '',
-      end_time: '',
-      day: '',
-      start_time2: '',
-      end_time2: '',
-      day2: '',
+      sday: '',
+      fday: '',
+      e_time: '',
+      s_time: '',
+      e_time2: '',
+      s_time2: '',
     };
   }
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
-    const {GetSubjects} = this.props;
+    const {GetSubjectOpenSection} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
-    // GetSubjects({
-    //   token,
-    // });
+    GetCurrentYear({
+      token,
+    });
+    GetSubjectOpenSection({
+      token,
+    });
   }
 
   handleLogout = () => {
@@ -61,17 +65,84 @@ class OpenSection extends Component {
     this.setState({modalVisible: !modalVisible});
   };
 
+  handleSetting = (data) => {
+    const {modalVisible} = this.state;
+    const {fday, sday, s_time, e_time, s_time2, e_time2} = data;
+    this.setState({
+      modalVisible: !modalVisible,
+      fday,
+      sday,
+      s_time,
+      e_time,
+      s_time2,
+      e_time2,
+    });
+  };
+
+  handleSubmit = () => {
+    const {
+      pickerValues,
+      late_time,
+      absent_time,
+      total_mark,
+      section_number,
+      fday,
+      sday,
+      s_time,
+      e_time,
+      s_time2,
+      e_time2,
+    } = this.state;
+    const students = this.props.subjects.subjects;
+    const {token} = this.props.navigation.state.params;
+    const {LecturerOpenSection} = this.props
+    const Subject = students.filter(s => s.id === pickerValues);
+    const Time = [];
+    if (s_time2 !== null && e_time2 !== null) {
+      Time.push([
+        {
+          day: fday,
+          start_time: s_time,
+          end_time: e_time,
+        },
+      ]);
+    } else {
+      Time.push([
+        {
+          day: fday,
+          start_time: s_time,
+          end_time: e_time,
+        },
+        {
+          day: sday,
+          start_time: s_time2,
+          end_time: e_time2,
+        },
+      ]);
+    }
+
+    const payload = {
+      Subject,
+      section_number,
+      Time,
+      time_late: late_time,
+      time_absent: absent_time,
+      total_mark,
+    };
+    // LecturerOpenSection({
+    //   token,
+    //   payload,
+    // })
+  }
+
   render() {
     const {pickerValues, modalVisible} = this.state;
     const {token} = this.props.navigation.state.params;
-    // const subjects = this.props.Subjects.data;
-
+    const subjects = this.props.subjects.subjects;
     const {
       currentYear: {year, semester},
-      fetching,
     } = this.props.currentYear;
-
-    if (fetching) {
+    if (subjects === null) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -85,6 +156,7 @@ class OpenSection extends Component {
         <SettingSection
           setModalVisible={this.setModalVisible}
           modalVisible={modalVisible}
+          handleSetting={this.handleSetting}
         />
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
@@ -112,9 +184,13 @@ class OpenSection extends Component {
                       pickerValues: itemValue,
                     })
                   }>
-                  <Picker.Item label="Select Subject" value="" />
-                  <Picker.Item label="Html" value="Html" />
-                  <Picker.Item label="Java" value="Java" />
+                  {subjects !== null &&
+                    subjects.map(s => (
+                      <Picker.Item
+                        label={`${s.subject_code} ${s.subject_name}`}
+                        value={s.id}
+                      />
+                    ))}
                 </Picker>
               </View>
             </View>
@@ -152,7 +228,9 @@ class OpenSection extends Component {
                     onChangeText={firstname => this.setState({firstname})}
                   />
                   <Text>&nbsp;</Text>
-                  <TouchableHighlight style={styles.btnSetting}>
+                  <TouchableHighlight
+                    style={styles.btnSetting}
+                    onPress={() => this.setModalVisible()}>
                     <Text style={{color: '#FFFFFF', fontSize: 10}}>
                       SETTING
                     </Text>
@@ -222,8 +300,9 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   GetCurrentYear,
-  GetSubjects: StudentGetSubjectRegis,
+  GetSubjectOpenSection,
   Logout,
+  LecturerOpenSection,
 };
 
 export default connect(

@@ -256,6 +256,56 @@ async function RejectStudent(data) {
   });
 }
 
+async function GetSubjectOpenSection(data) {
+  const token = data.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/ListSubjects',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function OpenSection(data) {
+  const token = data.token;
+  const payload = data.payload;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/subject_register',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -266,4 +316,6 @@ export const Api = {
   GetStudentsApprove,
   ApproveStudent,
   RejectStudent,
+  GetSubjectOpenSection,
+  OpenSection,
 };
