@@ -22,8 +22,8 @@ class StudentApprove extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickerValues: [],
-      section: [],
+      pickerValues: '',
+      section: '',
       subject_code: '',
       subject_name: '',
     };
@@ -48,13 +48,6 @@ class StudentApprove extends Component {
     Logout({});
   };
 
-  handleSubmit = (token, section_id) => {
-    // const {RegisterSubject} = this.props
-    // RegisterSubject({
-    //   token,
-    //   section_id,
-    // })
-  };
 
   render() {
     const {pickerValues, section} = this.state;
@@ -64,7 +57,6 @@ class StudentApprove extends Component {
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjectsApprove;
     const {fetching} = this.props.subjects;
-    // const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
     const sem = semester === 'SECOND' ? 2 : semester === 'FIRST' ? 1 : 'SUMMER';
@@ -105,7 +97,7 @@ class StudentApprove extends Component {
               onPress={() => {
                 this.handleLogout();
               }}>
-              <Text style={{color: 'white'}}>Logout</Text>
+              <Text style={{color: 'white' }}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
@@ -168,13 +160,12 @@ class StudentApprove extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
+              disabled={pickerValues === '' || section === ''}
               onPress={() => {
                 this.props.navigation.navigate('ListStudentApprove',{
                   id: section,
                   token,
                 });
-                //    this.handleSubmit(token,section_id)
-                //    this.setModalVisible(statusReq)
               }}>
               <Text style={{color: 'white'}}>OK</Text>
             </TouchableHighlight>
@@ -238,7 +229,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   DetailModalWrapper: {
