@@ -32,7 +32,7 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SUBJECT_REGIS_STD:
-      return {...state, fetching: true, data: []};
+      return {...state, fetching: true, data: null};
 
     case SET_SUBJECT_REGIS_STD: {
       const data = JSON.parse(action.payload);

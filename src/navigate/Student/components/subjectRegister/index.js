@@ -16,7 +16,7 @@ import {
   Image,
 } from 'react-native';
 
-import {RegisterSubject, Logout} from '../../../../actions';
+import {RegisterSubject, Logout, GetCurrentYear} from '../../../../actions';
 
 class StudentSubjectRegister extends Component {
   constructor(props) {
@@ -44,6 +44,9 @@ class StudentSubjectRegister extends Component {
       this.setState({
         token,
       });
+      GetCurrentYear({
+        token,
+      })
       StudentGetSubjectRegis({
         token,
       });
@@ -81,6 +84,9 @@ class StudentSubjectRegister extends Component {
 
   render() {
     const {pickerValues, section, token} = this.state;
+    const {
+      currentYear: {year, semester},
+    } = this.props.currentYear;
     const subjects = this.props.Subjects.data;
     const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
@@ -91,7 +97,7 @@ class StudentSubjectRegister extends Component {
     let secondTime = '';
     let day2: '';
     let section_id: '';
-    if (subjects !== undefined) {
+    if (subjects !== null) {
       subjects.map((s, i) => {
         subjectsArr.push({
           label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
@@ -99,7 +105,7 @@ class StudentSubjectRegister extends Component {
         });
       });
     }
-    if (pickerValues.length > 0 && subjects !== undefined) {
+    if (pickerValues.length > 0 && subjects !== null) {
       const {section} = this.state;
       const index = subjects.findIndex(
         s => s.Subject.subject_code === pickerValues,
@@ -129,7 +135,7 @@ class StudentSubjectRegister extends Component {
         }
       }
     }
-    if (subjects === undefined) {
+    if (subjects === null) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -186,7 +192,7 @@ class StudentSubjectRegister extends Component {
             <Text style={styles.styleHeader}>SUBJECT REGISTER</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : 2563 / 1
+            YEAR / SEMESTER : {year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -257,9 +263,7 @@ class StudentSubjectRegister extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('StudentSubjectRegister')
-              }>
+              onPress={() => this.props.navigation.navigate('StudentHomePage')}>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight
@@ -280,12 +284,14 @@ class StudentSubjectRegister extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
+    currentYear: state.yearReducer,
     Subjects: state.subjectReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  GetCurrentYear,
   RegisterSubject,
   Logout,
 };

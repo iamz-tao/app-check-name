@@ -22,7 +22,6 @@ async function Login(data) {
     );
 
     const responseJson = await response.json();
-    console.log(responseJson)
     if (responseJson.message === 'PASS') {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
