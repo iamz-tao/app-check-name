@@ -21,13 +21,15 @@ import {Logout} from '../../../../actions';
 
 const Header = () => (
   <View style={styles.Header}>
-    <View style={styles.HeaderWrapper}>
-      <Text>SUBJECT</Text>
+    <View style={styles.HeaderWrapper,{width: 156}}>
+      <Text style={{paddingLeft: 8}}>SUBJECT</Text>
     </View>
+    {/* <View style={{width: 36}}>
+    </View> */}
     <View style={styles.HeaderWrapper}>
       <Text>STATUS</Text>
     </View>
-    <View style={{width: '11%'}} />
+    <View style={{width: '12%'}} />
   </View>
 );
 
@@ -94,8 +96,9 @@ class StudentListSubject extends Component {
             <Text style={styles.styleHeader}>MY SUBJECT</Text>
           </View>
           <View style={{height: 16}} />
-
+          <View style={styles.btnWrapper}>
           <Header />
+          </View>
           <View style={{height: 8}} />
           <SubjectList />
           <View style={styles.btnWrapper}>
@@ -228,9 +231,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   Header: {
-    width: '90%',
+    width: 300,
     display: 'flex',
     flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   styleHeader: {
     display: 'flex',

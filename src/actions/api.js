@@ -31,7 +31,7 @@ async function Login(data) {
       } else {
         Alert.alert(
           'Login failed!',
-          '	Email or password is not valid.',
+          `You don't have permission to access application.`,
           [
             {
               text: 'Cancel',
@@ -43,6 +43,18 @@ async function Login(data) {
         );
       }
     } else {
+      Alert.alert(
+        'Login failed!',
+        responseJson.message,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {text: 'OK'},
+        ],
+        {cancelable: false},
+      );
       reject(responseJson);
     }
   });

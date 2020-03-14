@@ -23,12 +23,17 @@ const SubjectList = props => {
           <View style={styles.Column}>
             <View style={styles.ItemWrapper}>
               <View style={styles.Row}>
-                <View style={(styles.ListDetail, {flex: 2})}>
+                <View style={(styles.ListDetail, {minWidth: 130})}>
                   <Text View style={styles.ItemSpan}>
                     Digital Labolatory
                   </Text>
                 </View>
-                <View style={(styles.SubjectList, {flex: 1})}>
+                <View style={(styles.ListDetail, {width: 36})}>
+                  <Text View style={styles.ItemSpan}>
+                    701
+                  </Text>
+                </View>
+                <View style={(styles.SubjectList, {width: 66})}>
                   <Text View style={styles.ItemSpan}>
                     <Text style={{color: '#0038FF'}}> Pending </Text>
                   </Text>
@@ -36,7 +41,7 @@ const SubjectList = props => {
                 <View
                   style={
                     (styles.SubjectList,
-                    {flex: 1, alignItems: 'flex-end', paddingRight: 8})
+                    {width: 56, alignItems: 'flex-end', paddingRight: 8})
                   }>
                   <TouchableHighlight
                     style={styles.btnDrop}
@@ -111,7 +116,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#CA5353',
     borderColor: '#CA5353',
     color: '#ffffff',
-    width: 52,
+    width: 42,
     height: 22,
     borderRadius: 21,
   },
