@@ -78,7 +78,7 @@ class SettingSection extends Component {
   render() {
     const {pickerValues, addDay, fday, sday, date,e_time, s_time, e_time2, s_time2} = this.state;
     const {setModalVisible, modalVisible, handleSetting} = this.props;
-    console.log('value',this.props)
+    // console.log('value',this.props)
     return (
       <View>
         <Modal
