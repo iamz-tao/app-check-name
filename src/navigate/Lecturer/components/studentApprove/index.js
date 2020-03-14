@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -8,12 +7,8 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
   Picker,
-  Modal,
-  Image,
 } from 'react-native';
 
 import {GetCurrentYear, GetSubjectsApprove, Logout} from '../../../../actions';
@@ -223,19 +218,6 @@ const styles = StyleSheet.create({
     width: 116,
     height: 116,
     top: 20,
-  },
-  ModalWrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignSelf: 'center',
-    flex: 1,
-    alignItems: 'center',
-  },
-  DetailModalWrapper: {
-    width: 300,
-    height: 300,
-    backgroundColor: '#EBEAEA',
-    borderRadius: 19,
   },
   loadingWrapper: {
     display: 'flex',
