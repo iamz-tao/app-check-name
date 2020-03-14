@@ -125,11 +125,35 @@ async function RegisterSubject(data) {
 }
 
 // Lecturer
-async function GetStudentApprove(data) {
+async function GetSubjectsApprove(data) {
   const token = data.token;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
-      'https://us-central1-kpscheckin.cloudfunctions.net/api/getSubjects',
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/ListSectionTeacher',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function GetStudentsApprove(data) {
+  const token = data.token;
+  const id = data.id
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/ListStudentInSection/${id}`,
       {
         method: 'GET',
         headers: {
@@ -178,11 +202,68 @@ async function CreateSubject(data) {
   });
 }
 
+async function ApproveStudent(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/approveStudent',
+      {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function RejectStudent(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/rejectStudent',
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          id,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
   RegisterSubject,
   GetCurrentYear,
-  GetStudentApprove,
+  GetSubjectsApprove,
   CreateSubject,
+  GetStudentsApprove,
+  ApproveStudent,
+  RejectStudent,
 };

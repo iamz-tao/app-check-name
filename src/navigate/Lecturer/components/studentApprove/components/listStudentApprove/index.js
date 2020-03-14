@@ -23,15 +23,12 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout} from '../../../../../../actions';
-
-const element = (data, index) => (
-  <TouchableOpacity onPress={() => this._alertIndex(index)}>
-    <View style={styles.btn}>
-      <Text style={styles.btnText}>button</Text>
-    </View>
-  </TouchableOpacity>
-);
+import {
+  Logout,
+  GetStudentsApprove,
+  ApproveStudent,
+  RejectStudent,
+} from '../../../../../../actions';
 
 class ListStudentApprove extends Component {
   constructor(props) {
@@ -43,27 +40,22 @@ class ListStudentApprove extends Component {
       subject_name: '',
       token: '',
       tableHead: ['NAME', 'STATUS'],
-      tableData: [
-        ['Phiyada Srikhenkan', 'APPROVE'],
-        ['Pensri Wang', 'WAIT'],
-        ['Krittaphas Wisessing', 'REJECT'],
-        ['Chutimon Khem', 'APPROVE'],
-      ],
     };
   }
 
   componentDidMount() {
-    // const {token} = this.props.navigation.state.params;
-    // const {GetCurrentYear, GetStudentApprove} = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
+    const {token, id} = this.props.navigation.state.params;
+    const {GetCurrentYear, GetStudentsApprove} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
     // GetCurrentYear({
     //   token,
     // });
-    // GetStudentApprove({
-    //   token,
-    // });
+    GetStudentsApprove({
+      token,
+      id,
+    });
   }
 
   handleLogout = () => {
@@ -82,22 +74,43 @@ class ListStudentApprove extends Component {
     Alert.alert(`This is row ${index + 1}`);
   }
 
+  handleApprove = idStd => {
+    const {token} = this.props.navigation.state.params;
+    const {ApproveStudent} = this.props;
+    const id = [idStd];
+    ApproveStudent({
+      id,
+      token,
+    });
+  };
+
+  handleReject = idStd => {
+    const {token} = this.props.navigation.state.params;
+    const {RejectStudent} = this.props;
+    const id = [idStd];
+    RejectStudent({
+      id,
+      token,
+    });
+  };
+
   render() {
-    const {pickerValues, section, token} = this.state;
-    // const {
-    //   currentYear: {year, semester},
-    // } = this.props.currentYear;
-    // const {fetching} =  this.props.subjects;
+    const students = this.props.subjects.studentsInSection;
+    if (!students) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
 
-    // if (fetching) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
-
+    const subject = students === null ? '-' : students.subject_name;
+    const section = students === null ? '-' : students.section_number;
+    const studentArr = [];
+    // students.students.map(s => {
+    //   studentArr.push
+    // })
     const state = this.state;
 
     return (
@@ -116,39 +129,90 @@ class ListStudentApprove extends Component {
             <Text style={styles.styleHeader}>STUDENTS LIST</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            SUBJECT : &nbsp; &nbsp; <Text>Digiatl Technology Labolatory</Text>
+            SUBJECT : &nbsp; &nbsp; <Text>{subject}</Text>
           </Text>
 
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            SECTION : &nbsp; &nbsp; <Text>701</Text>
+            SECTION : &nbsp; &nbsp; <Text>{section}</Text>
           </Text>
-          <View style={styles.containerTest}>
-            <Table borderStyle={{borderColor: 'transparent'}}>
-              <Row
-                data={state.tableHead}
-                style={styles.head}
-                textStyle={styles.textHeader}
+
+          {students.students !== null && students.students.size === 0 ? (
+            <View style={styles.NotFound}>
+              <Image
+                style={styles.CustomImg}
+                source={require('../../../../../../../android/statics/images/nodata.png')}
               />
-              {state.tableData.map((rowData, index) => (
-                <TableWrapper key={index} style={styles.row}>
-                  {rowData.map((cellData, cellIndex) => (
-                    <Cell
-                      key={cellIndex}
-                      data={cellData}
-                      textStyle={styles.text}
-                    />
-                  ))}
-                </TableWrapper>
-              ))}
-            </Table>
-          </View>
+              <Text>There are no students in this class.</Text>
+            </View>
+          ) : (
+            <View style={styles.containerTest}>
+              <Table>
+                <Row
+                  data={state.tableHead}
+                  style={styles.head}
+                  textStyle={styles.textHeader}
+                />
+                {students.students.map((s, index) => (
+                  <TableWrapper style={styles.row}>
+                    <View
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        margin: 6,
+                        width: '100%',
+                      }}>
+                      <View style={{width: 156}}>
+                        <Text>
+                          {s.firstname} {s.lastname}
+                        </Text>
+                      </View>
+                      <View style={{flex: 1}}>
+                        {s.status === 'APPROVE' ? (
+                          <View
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              flex: 1,
+                              width: '100%',
+                              alignItems: 'center',
+                            }}>
+                            <Text style={{color: '#1AB433'}}>{s.status}</Text>
+                          </View>
+                        ) : (
+                          <View style={styles.customStatus}>
+                            <TouchableHighlight
+                              style={styles.btnApprove}
+                              onPress={() => {
+                                this.handleApprove(s.request_id);
+                              }}>
+                              <Text style={{color: 'white', fontSize: 10}}>
+                                APPROVE
+                              </Text>
+                            </TouchableHighlight>
+                            <Text>&nbsp;</Text>
+                            <TouchableHighlight
+                              style={styles.btnDrop}
+                              onPress={() => {
+                                this.handleReject(s.request_id);
+                              }}>
+                              <Text style={{color: 'white', fontSize: 10}}>
+                                REJECT
+                              </Text>
+                            </TouchableHighlight>
+                          </View>
+                        )}
+                      </View>
+                    </View>
+                  </TableWrapper>
+                ))}
+              </Table>
+            </View>
+          )}
 
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
-              }>
+              onPress={() => this.props.navigation.navigate('StudentApprove')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
             <TouchableHighlight
@@ -178,7 +242,9 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   // GetCurrentYear,
-  // GetStudentApprove,
+  ApproveStudent,
+  RejectStudent,
+  GetStudentsApprove,
   Logout,
 };
 
@@ -196,6 +262,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
+  customStatus: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 1,
+    width: '100%',
+    alignItems: 'center',
+  },
   containerTest: {
     flex: 1,
     padding: 16,
@@ -207,7 +280,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 0.3,
     borderColor: '#D0CDCD',
-  }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
+  },
   text: {margin: 6, color: '#525252'},
   textHeader: {margin: 6, color: '#000000'},
   row: {
@@ -236,15 +309,42 @@ const styles = StyleSheet.create({
   CustomImg: {
     width: 116,
     height: 116,
-    top: 20,
+  },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
   },
   ModalWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  btnApprove: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2C9644',
+    borderColor: '#2C9644',
+    borderWidth: 1,
+    color: '#ffffff',
+    width: 54,
+    height: 24,
+    borderRadius: 21,
+  },
+  btnDrop: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#AA3D3D',
+    borderColor: '#AA3D3D',
+    borderWidth: 1,
+    color: '#ffffff',
+    width: 52,
+    height: 24,
+    borderRadius: 21,
   },
   DetailModalWrapper: {
     width: 300,
