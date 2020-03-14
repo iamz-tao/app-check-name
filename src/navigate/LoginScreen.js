@@ -16,6 +16,7 @@ import {
 } from 'react-native';
 // import ku_logo from '../../android/'
 
+
 import {Login} from '../actions';
 
 class LoginScreen extends Component {
@@ -28,7 +29,7 @@ class LoginScreen extends Component {
   }
 
   render() {
-    const props = this.props;
+    const props = this.props
     return (
       <View style={styles.container}>
         <Image

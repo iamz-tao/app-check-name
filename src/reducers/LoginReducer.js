@@ -6,6 +6,7 @@ const initialState = {
   err: [],
   isError: false,
   fetching: true,
+  status: null,
 };
 
 export default (state = initialState, action) => {
@@ -15,11 +16,17 @@ export default (state = initialState, action) => {
 
     case LOGIN_SUCCESS: {
       const data = JSON.parse(action.payload);
-      return {...state, isLogin: false, fetching: false, data: data.data};
+      return {
+        ...state,
+        isLogin: false,
+        fetching: false,
+        data: data.data,
+        status: 'SUCCESS',
+      };
     }
 
     case LOGIN_FAILURE:
-      return {...state, isError: true, err: action.payload};
+      return {...state, isError: true, err: action.payload, status: 'FAILURE'};
 
     case LOGOUT:
       return {...state, isError: true, data: []};

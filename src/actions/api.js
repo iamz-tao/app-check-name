@@ -22,6 +22,7 @@ async function Login(data) {
     );
 
     const responseJson = await response.json();
+    console.log(responseJson)
     if (responseJson.message === 'PASS') {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
@@ -31,7 +32,7 @@ async function Login(data) {
       } else {
         Alert.alert(
           'Login failed!',
-          '	Email or password is not valid.',
+          `You don't have permission to access application.`,
           [
             {
               text: 'Cancel',
@@ -43,6 +44,18 @@ async function Login(data) {
         );
       }
     } else {
+      Alert.alert(
+        'Login failed!',
+        responseJson.message,
+        [
+          {
+            text: 'Cancel',
+            style: 'cancel',
+          },
+          {text: 'OK'},
+        ],
+        {cancelable: false},
+      );
       reject(responseJson);
     }
   });
