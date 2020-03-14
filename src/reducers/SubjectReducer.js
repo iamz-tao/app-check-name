@@ -10,6 +10,11 @@ import {
   CREATE_SUBJECT_FAILED,
   GET_SUBJECT_TEACH,
   SET_SUBJECT_TEACH,
+  APPROVE_STUDENT,
+  APPROVE_STUDENT_SUCCESS,
+  REJECT_STUDENT,
+  REJECT_STUDENT_SUCCESS,
+  REQUEST_ERROR,
 } from '../constant';
 
 const initialState = {
@@ -67,6 +72,34 @@ export default (state = initialState, action) => {
     case SET_STUDENT_APPROVE: {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, studentsInSection: data.data};
+    }
+
+    case APPROVE_STUDENT: {
+      return {...state, fetching: true, status: null};
+    }
+
+    case REJECT_STUDENT: {
+      return {...state, fetching: true, status: null};
+    }
+    
+    case APPROVE_STUDENT_SUCCESS: {
+      const id = action.payload.id[0]
+      const students = state.studentsInSection.students
+      const index = students.findIndex(s => s.request_id === id)
+      students[index].status = 'APPROVE'
+      return {...state, fetching: false, status: 'SUCCESS'}
+    }
+
+    case REJECT_STUDENT_SUCCESS: {
+      const id = action.payload.id[0]
+      const students = state.studentsInSection.students
+      const index = students.findIndex(s => s.request_id === id)
+      students.splice(index,1)
+      return {...state, fetching: false, status: 'SUCCESS'}
+    }
+
+    case REQUEST_ERROR: {
+      return {...state, fetching: true, isError: true, status: 'FAILURE'};
     }
 
     default:

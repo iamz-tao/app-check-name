@@ -16,7 +16,12 @@ import {
   CREATE_SUBJECT_SUCCESS,
   LOGOUT,
   GET_SUBJECT_TEACH,
-  SET_SUBJECT_TEACH
+  SET_SUBJECT_TEACH,
+  APPROVE_STUDENT,
+  APPROVE_STUDENT_SUCCESS,
+  REJECT_STUDENT,
+  REJECT_STUDENT_SUCCESS,
+  REQUEST_ERROR,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices'
@@ -34,6 +39,11 @@ export const login_failure = payload => ({
   payload,
   type: LOGIN_FAILURE,
 });
+
+export const requestError = payload => ({
+  payload,
+  type: REQUEST_ERROR,
+})
 
 export const studentGetSubjectRegis = payload => ({
   payload,
@@ -110,6 +120,25 @@ export const logout = payload => ({
   type: LOGOUT,
 })
 
+export const approveStudent = payload => ({
+  payload,
+  type: APPROVE_STUDENT,
+})
+
+export const approveStudentSuccess = payload => ({
+  payload,
+  type: APPROVE_STUDENT_SUCCESS,
+})
+
+export const rejectStudent = payload => ({
+  payload,
+  type: REJECT_STUDENT,
+})
+
+export const rejectStudentSuccess = payload => ({
+  payload,
+  type: REJECT_STUDENT_SUCCESS,
+})
 
 // Auth
 export const Login = params => {
@@ -141,8 +170,8 @@ export const GetCurrentYear = params => {
         dispatch(setCurrentYear(JSON.stringify(result)));
       })
       .catch(err => {
-        console.log('error>>>',err)
-        // dispatch(login_failure(err));
+        // console.log('error>>>',err)
+        dispatch(requestError(err));
       });
   };
 };
@@ -156,8 +185,8 @@ export const StudentGetSubjectRegis = params => {
         dispatch(studentSetSubjectRegis(JSON.stringify(result)));
       })
       .catch(err => {
-        console.log('error>>>',err)
-        // dispatch(login_failure(err));
+        // console.log('error>>>',err)
+        dispatch(requestError(err));
       });
   };
 };
@@ -184,8 +213,8 @@ export const GetSubjectsApprove = params => {
         dispatch(setSubjectsApprove(JSON.stringify(result)));
       })
       .catch(err => {
-        console.log('error>>>',err)
-        // dispatch(login_failure(err));
+        // console.log('error>>>',err)
+        dispatch(requestError(err));
       });
   };
 };
@@ -198,8 +227,8 @@ export const GetStudentsApprove = params => {
         dispatch(setStudentsApprove(JSON.stringify(result)));
       })
       .catch(err => {
-        console.log('error>>>',err)
-        // dispatch(login_failure(err));
+        // console.log('error>>>',err)
+        dispatch(requestError(err));
       });
   };
 };
@@ -216,3 +245,32 @@ export const CreateSubject = params => {
       });
   };
 };
+
+export const ApproveStudent = params => {
+  return dispatch => {
+    dispatch(approveStudent());
+    Api.ApproveStudent(params)
+      .then(result => {
+        dispatch(approveStudentSuccess(params));
+      })
+      .catch(err => {
+        // console.log('err>>',err)
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const RejectStudent = params => {
+  return dispatch => {
+    dispatch(rejectStudent());
+    Api.RejectStudent(params)
+      .then(result => {
+        dispatch(rejectStudentSuccess(params));
+      })
+      .catch(err => {
+        // console.log('err>>',err)
+        dispatch(requestError(err));
+      });
+  };
+};
+
