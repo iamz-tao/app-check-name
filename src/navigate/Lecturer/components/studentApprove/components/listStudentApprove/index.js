@@ -23,7 +23,7 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout} from '../../../../../../actions';
+import {Logout, GetStudentsApprove} from '../../../../../../actions';
 
 const element = (data, index) => (
   <TouchableOpacity onPress={() => this._alertIndex(index)}>
@@ -53,17 +53,18 @@ class ListStudentApprove extends Component {
   }
 
   componentDidMount() {
-    const {token} = this.props.navigation.state.params;
-    const {GetCurrentYear, GetStudentApprove} = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
+    const {token, id} = this.props.navigation.state.params;
+    const {GetCurrentYear, GetStudentsApprove} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
     // GetCurrentYear({
     //   token,
     // });
-    // GetStudentApprove({
-    //   token,
-    // });
+    GetStudentsApprove({
+      token,
+      id,
+    });
   }
 
   handleLogout = () => {
@@ -83,23 +84,23 @@ class ListStudentApprove extends Component {
   }
 
   render() {
-    const {token} = this.props.navigation.state.params;
-    // const {pickerValues, section, token} = this.state;
-    console.log(this.props.navigation.state.params);
-    // const {
-    //   currentYear: {year, semester},
-    // } = this.props.currentYear;
-    // const {fetching} =  this.props.subjects;
+    const students = this.props.subjects.studentsInSection;
 
-    // if (fetching) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
+    if (!students) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
 
+    const subject = students === null ? '-' : students.subject_name;
+    const section = students === null ? '-' : students.section_number;
+    const studentArr = [];
+    // students.students.map(s => {
+    //   studentArr.push
+    // })
     const state = this.state;
 
     return (
@@ -118,29 +119,90 @@ class ListStudentApprove extends Component {
             <Text style={styles.styleHeader}>STUDENTS LIST</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            SUBJECT : &nbsp; &nbsp; <Text>Digiatl Technology Labolatory</Text>
+            SUBJECT : &nbsp; &nbsp; <Text>{subject}</Text>
           </Text>
 
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            SECTION : &nbsp; &nbsp; <Text>701</Text>
+            SECTION : &nbsp; &nbsp; <Text>{section}</Text>
           </Text>
           <View style={styles.containerTest}>
-            <Table borderStyle={{borderColor: 'transparent'}}>
+            <Table>
               <Row
                 data={state.tableHead}
                 style={styles.head}
                 textStyle={styles.textHeader}
               />
-              {state.tableData.map((rowData, index) => (
-                <TableWrapper key={index} style={styles.row}>
-                  {rowData.map((cellData, cellIndex) => (
-                    <Cell
-                      key={cellIndex}
-                      data={cellData}
-                      textStyle={styles.text}
-                    />
-                  ))}
+              {students.students.map((s, index) => (
+                <TableWrapper style={styles.row}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      margin: 6,
+                      width: '100%',
+                    }}>
+                    <View style={{flex: 1}}>
+                      <Text>
+                        {s.firstname} {s.lastname}
+                      </Text>
+                    </View>
+                    <View>
+                      {s.status === 'APPROVE' ? (
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            flex: 1,
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <Text style={{color: '#1AB433'}}>{s.status}</Text>
+                        </View>
+                      ) : (
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            flex: 1,
+                            width: '100%',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                          }}>
+                          <TouchableHighlight
+                            style={styles.btnApprove}
+                            onPress={() => {
+                              // NavigationServices.navigate('StudentSubjectRegister');
+                            }}>
+                            <Text style={{color: 'white', fontSize: 10}}>
+                              APPROVE
+                            </Text>
+                          </TouchableHighlight>
+                          <Text>&nbsp;</Text>
+                          <TouchableHighlight
+                            style={styles.btnDrop}
+                            onPress={() => {
+                              // NavigationServices.navigate('StudentSubjectRegister');
+                            }}>
+                            <Text style={{color: 'white', fontSize: 10}}>
+                              REJECT
+                            </Text>
+                          </TouchableHighlight>
+                        </View>
+                      )}
+                    </View>
+                  </View>
                 </TableWrapper>
+                // <TableWrapper key={index} style={styles.row}>
+                //   <Text>xxxxx</Text>
+                //   {/* {rowData.map((cellData, cellIndex) => (
+                //     <Cell
+                //       key={cellIndex}
+                //       data={cellData}
+                //       textStyle={styles.text}
+                //     />
+                //   ))} */}
+                // </TableWrapper>
               ))}
             </Table>
           </View>
@@ -178,7 +240,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   // GetCurrentYear,
-  // GetStudentApprove,
+  GetStudentsApprove,
   Logout,
 };
 
@@ -243,8 +305,29 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
+  },
+  btnApprove: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#2C9644',
+    borderColor: '#2C9644',
+    borderWidth: 1,
+    color: '#ffffff',
+    width: 54,
+    height: 22,
+    borderRadius: 21,
+  },
+  btnDrop: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#AA3D3D',
+    borderColor: '#AA3D3D',
+    borderWidth: 1,
+    color: '#ffffff',
+    width: 52,
+    height: 22,
+    borderRadius: 21,
   },
   DetailModalWrapper: {
     width: 300,

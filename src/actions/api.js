@@ -153,7 +153,7 @@ async function GetStudentsApprove(data) {
   const id = data.id
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
-      `https://us-central1-kpscheckin.cloudfunctions.net/api/pSl7uv9ZE6Ap8TO1FQzt/${id}`,
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/ListStudentInSection/${id}`,
       {
         method: 'GET',
         headers: {
