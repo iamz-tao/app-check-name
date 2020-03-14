@@ -22,9 +22,14 @@ import {
   REJECT_STUDENT,
   REJECT_STUDENT_SUCCESS,
   REQUEST_ERROR,
+  GET_SUBJECT_OPEN_SECTION,
+  SET_SUBJECT_OPEN_SECTION,
+  OPEN_SECTION,
+  OPEN_SECTION_SUCCESS,
+  OPEN_SECTION_FAILED,
 } from '../constant';
 import {Api} from './api';
-import NavigationServices from '../navigate/NavigationServices'
+import NavigationServices from '../navigate/NavigationServices';
 
 export const login = () => ({
   type: LOGIN,
@@ -43,7 +48,7 @@ export const login_failure = payload => ({
 export const requestError = payload => ({
   payload,
   type: REQUEST_ERROR,
-})
+});
 
 export const studentGetSubjectRegis = payload => ({
   payload,
@@ -58,86 +63,111 @@ export const studentSetSubjectRegis = payload => ({
 export const registerSubject = payload => ({
   payload,
   type: REGISTER_SUBJECT_REQUEST,
-})
+});
 
 export const registerSubjectSuccess = payload => ({
   payload,
   type: REGISTER_SUBJECT_REQUEST_SUCCESS,
-})
+});
 
 export const registerSubjectFailed = payload => ({
   payload,
   type: REGISTER_SUBJECT_REQUEST_FAILED,
-})
+});
 
 export const getCurrentYear = payload => ({
   payload,
   type: GET_CURRENT_YEAR,
-})
+});
 
 export const setCurrentYear = payload => ({
   payload,
   type: SET_CURRENT_YEAR,
-})
+});
 
 export const getStudentsApprove = payload => ({
   payload,
   type: GET_STUDENT_APPROVE,
-})
+});
 
 export const setStudentsApprove = payload => ({
   payload,
   type: SET_STUDENT_APPROVE,
-})
+});
 
 export const getSubjectsApprove = payload => ({
   payload,
   type: GET_SUBJECT_TEACH,
-})
+});
 
 export const setSubjectsApprove = payload => ({
   payload,
   type: SET_SUBJECT_TEACH,
-})
+});
 
 export const createSubject = payload => ({
   payload,
   type: CREATE_SUBJECT,
-})
+});
 
 export const createSubjectSuccess = payload => ({
   payload,
   type: CREATE_SUBJECT_SUCCESS,
-})
+});
 
 export const createSubjectFailed = payload => ({
   payload,
   type: CREATE_SUBJECT_FAILED,
-})
+});
 
 export const logout = payload => ({
   payload,
   type: LOGOUT,
-})
+});
 
 export const approveStudent = payload => ({
   payload,
   type: APPROVE_STUDENT,
-})
+});
 
 export const approveStudentSuccess = payload => ({
   payload,
   type: APPROVE_STUDENT_SUCCESS,
-})
+});
 
 export const rejectStudent = payload => ({
   payload,
   type: REJECT_STUDENT,
-})
+});
 
 export const rejectStudentSuccess = payload => ({
   payload,
   type: REJECT_STUDENT_SUCCESS,
+});
+
+export const getSubjectOpenSection = payload => ({
+  payload,
+  type: GET_SUBJECT_OPEN_SECTION,
+});
+
+export const setSubjectOpenSection = payload => ({
+  payload,
+  type: SET_SUBJECT_OPEN_SECTION,
+});
+
+export const openSection = payload => ({
+  payload,
+  type: OPEN_SECTION,
+})
+
+export const openSectionSuccess = payload => ({
+  payload,
+  type: OPEN_SECTION_SUCCESS,
+})
+
+export const openSectionFailed = payload => ({
+  payload,
+  type: OPEN_SECTION_FAILED,
 })
 
 // Auth
@@ -201,8 +231,8 @@ export const RegisterSubject = params => {
       .catch(err => {
         dispatch(registerSubjectFailed(err));
       });
-  }
-}
+  };
+};
 
 // Lecturer
 export const GetSubjectsApprove = params => {
@@ -274,3 +304,28 @@ export const RejectStudent = params => {
   };
 };
 
+export const GetSubjectOpenSection = params => {
+  return dispatch => {
+    dispatch(getSubjectOpenSection());
+    Api.GetSubjectOpenSection(params)
+      .then(result => {
+        dispatch(setSubjectOpenSection(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const OpenSection = params => {
+  return dispatch => {
+    dispatch(openSection());
+    Api.OpenSection(params)
+      .then(result => {
+        dispatch(openSectionSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(openSectionFailed(err));
+      });
+  };
+};

@@ -15,10 +15,12 @@ import {
   REJECT_STUDENT,
   REJECT_STUDENT_SUCCESS,
   REQUEST_ERROR,
+  GET_SUBJECT_OPEN_SECTION,
+  SET_SUBJECT_OPEN_SECTION,
 } from '../constant';
 
 const initialState = {
-  subjects: [],
+  subjects: null,
   subjectsApprove: null,
   studentsInSection: null,
   err: [],
@@ -96,6 +98,15 @@ export default (state = initialState, action) => {
       const index = students.findIndex(s => s.request_id === id)
       students.splice(index,1)
       return {...state, fetching: false, status: 'SUCCESS'}
+    }
+
+    case GET_SUBJECT_OPEN_SECTION: {
+      return {...state, fetching: true, subjects: null};
+    }
+
+    case SET_SUBJECT_OPEN_SECTION: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, subjects: data.data};
     }
 
     case REQUEST_ERROR: {
