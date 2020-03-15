@@ -11,6 +11,8 @@ import {
   TextInput,
   Alert,
   TouchableHighlight,
+  PermissionsAndroid,
+  DeviceEventEmitter,
   Picker,
   Modal,
   Image,
