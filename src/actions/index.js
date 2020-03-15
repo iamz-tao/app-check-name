@@ -29,6 +29,8 @@ import {
   OPEN_SECTION_FAILED,
   GET_ALL_BEACON,
   SET_ALL_BEACON,
+  GET_SUBJECT_REGISTRATION,
+  SET_SUBJECT_REGISTRATION,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -182,6 +184,16 @@ export const setAllBeacon = payload => ({
   type: SET_ALL_BEACON,
 })
 
+export const getSubjectRegistration = payload => ({
+  payload,
+  type: GET_SUBJECT_REGISTRATION,
+})
+
+export const setSubjectRegistration = payload => ({
+  payload,
+  type: SET_SUBJECT_REGISTRATION,
+})
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -242,6 +254,19 @@ export const RegisterSubject = params => {
       })
       .catch(err => {
         dispatch(registerSubjectFailed(err));
+      });
+  };
+};
+
+export const GetSubjectRegistration = params => {
+  return dispatch => {
+    dispatch(getSubjectRegistration(params));
+    Api.GetSubjectRegistration(params)
+      .then(result => {
+        dispatch(setSubjectRegistration(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
       });
   };
 };

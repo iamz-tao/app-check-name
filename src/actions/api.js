@@ -136,6 +136,30 @@ async function RegisterSubject(data) {
   });
 }
 
+async function GetSubjectRegistration(data) {
+  const token = data.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/ListRegistration',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 // Lecturer
 async function GetSubjectsApprove(data) {
   const token = data.token;
@@ -354,4 +378,5 @@ export const Api = {
   GetSubjectOpenSection,
   OpenSection,
   GetAllBeacon,
+  GetSubjectRegistration,
 };

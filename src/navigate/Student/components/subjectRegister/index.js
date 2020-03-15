@@ -16,7 +16,12 @@ import {
   Image,
 } from 'react-native';
 
-import {RegisterSubject, Logout, GetCurrentYear} from '../../../../actions';
+import {
+  RegisterSubject,
+  Logout,
+  GetCurrentYear,
+  StudentGetSubjectRegis,
+} from '../../../../actions';
 
 class StudentSubjectRegister extends Component {
   constructor(props) {
@@ -36,8 +41,9 @@ class StudentSubjectRegister extends Component {
       LoginReducer: {
         data: {token},
       },
-      StudentGetSubjectRegis,
+      // StudentGetSubjectRegis,
     } = this.props.navigation.state.params;
+    const {StudentGetSubjectRegis, GetCurrentYear} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     } else {
@@ -46,19 +52,15 @@ class StudentSubjectRegister extends Component {
       });
       GetCurrentYear({
         token,
-      })
+      });
       StudentGetSubjectRegis({
         token,
       });
     }
   }
 
-  setModalVisible(status) {
-    if (status === 'SUCCESS') {
-      this.setState({modalVisible: false});
-    } else {
+  setModalVisible() {
       this.setState({modalVisible: true});
-    }
   }
 
   handleSelect = () => {
@@ -87,7 +89,7 @@ class StudentSubjectRegister extends Component {
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
-    const subjects = this.props.Subjects.data;
+    const {subjects} = this.props.Subjects;
     const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
@@ -135,7 +137,7 @@ class StudentSubjectRegister extends Component {
         }
       }
     }
-    if (subjects === null) {
+    if (subjects === null || statusReq === null) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -152,24 +154,48 @@ class StudentSubjectRegister extends Component {
             visible={this.state.modalVisible}
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
-              <View style={styles.DetailModalWrapper}>
+              <View style={styles.DetailModalSuccessWrapper}>
                 <View style={{width: '100%', alignItems: 'center'}}>
-                  <Image
-                    style={styles.CustomImg}
-                    source={require('../../../../../android/statics/images/icon-failure.png')}
-                  />
-                  <View style={{height: 36}} />
-                  <Text style={styles.styleLabelFail}>
-                    SUBJECT REGISTER FAILED
-                  </Text>
-                  <Text style={styles.styleLabel}>
-                    You have already registered with subject.
-                  </Text>
-                  <View style={{height: 26}} />
+                  {statusReq === 'SUCCESS' && (
+                    <View style={{alignItems: 'center'}}>
+                      <Image
+                        style={styles.CustomImg}
+                        source={require('../../../../../android/statics/images/success.png')}
+                      />
+                      <View style={{height: 36}} />
+                      <Text style={styles.styleLabelFail}>
+                        SUBJECT REGISTER SUCCESS
+                      </Text>
+                      <Text style={styles.styleLabel}>
+                        You have permission to check name in this subject.
+                      </Text>
+                    </View>
+                  )}
+                  {statusReq === 'FAILURE' && (
+                    <View style={{alignItems: 'center'}}>
+                      <Image
+                        style={styles.CustomImg}
+                        source={require('../../../../../android/statics/images/icon-failure.png')}
+                      />
+                      <View style={{height: 36}} />
+                      <Text style={styles.styleLabelFail}>
+                        SUBJECT REGISTER FAILED
+                      </Text>
+                      <Text style={styles.styleLabel}>
+                        You have already registered with subject.
+                      </Text>
+                    </View>
+                  )}
+                  <View style={{height: 16}} />
                   <TouchableHighlight
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({modalVisible: !this.state.modalVisible});
+                      if (statusReq === 'SUCCESS') {
+                        this.props.navigation.navigate('StudentListSubject',{
+                          token,
+                        })
+                      }
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
@@ -270,7 +296,7 @@ class StudentSubjectRegister extends Component {
               style={styles.btnReq}
               onPress={() => {
                 this.handleSubmit(token, section_id);
-                this.setModalVisible(statusReq);
+                this.setModalVisible();
               }}>
               <Text style={{color: 'white'}}>REQUEST</Text>
             </TouchableHighlight>
@@ -293,6 +319,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   GetCurrentYear,
   RegisterSubject,
+  StudentGetSubjectRegis,
   Logout,
 };
 
@@ -334,13 +361,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   DetailModalWrapper: {
     width: 300,
     height: 300,
     backgroundColor: '#EBEAEA',
+    borderRadius: 19,
+  },
+  DetailModalSuccessWrapper: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#F7F7F7',
+    borderColor: '#EBEAEA',
     borderRadius: 19,
   },
   loadingWrapper: {
@@ -406,6 +439,7 @@ const styles = StyleSheet.create({
     lineHeight: 21,
     display: 'flex',
     paddingLeft: 12,
+    alignItems: 'center',
   },
   styleLabelFail: {
     fontSize: 16,

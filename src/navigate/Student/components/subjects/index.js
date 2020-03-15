@@ -17,19 +17,22 @@ import {
 } from 'react-native';
 
 import SubjectList from './components/listSubject';
-import {Logout} from '../../../../actions';
+import {Logout, GetSubjectRegistration} from '../../../../actions';
 
 const Header = () => (
   <View style={styles.Header}>
-    <View style={styles.HeaderWrapper,{width: 156}}>
+    <View style={styles.HeaderWrapper,{width: 106}}>
       <Text style={{paddingLeft: 8}}>SUBJECT</Text>
     </View>
     {/* <View style={{width: 36}}>
     </View> */}
     <View style={styles.HeaderWrapper}>
+      <Text>SECTION</Text>
+    </View>
+    <View style={styles.HeaderWrapper}>
       <Text>STATUS</Text>
     </View>
-    <View style={{width: '12%'}} />
+    <View style={{width: '18%'}} />
   </View>
 );
 
@@ -46,7 +49,16 @@ class StudentListSubject extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const {token} = this.props.navigation.state.params;
+    const {GetSubjectRegistration} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
+    GetSubjectRegistration({
+      token,
+    })
+  }
 
   setModalVisible(status) {
     if (status === 'SUCCESS') {
@@ -72,14 +84,16 @@ class StudentListSubject extends Component {
   };
 
   render() {
-    // if (subjects === undefined) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
+    const {subjects} = this.props.subjects
+    if (!subjects) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+    // console.log('this.props',this.props)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -100,13 +114,12 @@ class StudentListSubject extends Component {
           <Header />
           </View>
           <View style={{height: 8}} />
-          <SubjectList />
+          <SubjectList subjects={subjects} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                //  this.handleSubmit(token,section_id)
-                //  this.setModalVisible(statusReq)
+                this.props.navigation.navigate('StudentHomePage')
               }}>
               <Text style={{color: 'white'}}>OK</Text>
             </TouchableHighlight>
@@ -120,13 +133,13 @@ class StudentListSubject extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    // Subjects: state.subjectReducer,
+    subjects: state.subjectReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  // RegisterSubject,
+  GetSubjectRegistration,
   Logout,
 };
 
