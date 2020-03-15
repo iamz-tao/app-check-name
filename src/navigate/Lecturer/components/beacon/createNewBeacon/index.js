@@ -24,6 +24,12 @@ import {
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
 import {Logout} from '../../../../../actions'
+import Beacons from 'react-native-beacons-manager';
+import BluetoothState from 'react-native-bluetooth-state-manager';
+ import {checkLocationStatus} from '../../../../../AuthBeacon/func'
+
+//check Bluetooth
+BluetoothState.requestToEnable();
 
 const element = (data, index) => (
   <TouchableOpacity onPress={() => this._alertIndex(index)}>
@@ -33,6 +39,32 @@ const element = (data, index) => (
   </TouchableOpacity>
 );
 
+const requestLocationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      {
+        title: 'Location Permission',
+        message:
+          'This example app needs to access your location in order to use bluetooth beacons.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    } else {
+      // permission denied
+      return false;
+    }
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+}
+
+
 class CreateNewBeacon extends Component {
   constructor(props) {
     super(props);
@@ -40,34 +72,73 @@ class CreateNewBeacon extends Component {
       pickerValues: [],
       section: [],
       token: '',
+      isScanning: false,
+      beacon: [],
     };
   }
 
-  componentDidMount() {
-    // const {token} = this.props.navigation.state.params;
-    // const {GetCurrentYear, GetStudentApprove} = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
-    // GetCurrentYear({
-    //   token,
-    // });
-    // GetStudentApprove({
-    //   token,
-    // });
+  async componentDidMount() {
+
+    this.beaconsDidRange = null;
+
+    const request_permission = await requestLocationPermission();
+    checkLocationStatus();
+
+    if (request_permission) {
+
+      Beacons.detectIBeacons();
+
+      Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
+        // console.log(data);
+      })
+      .catch((reason) => {
+          console.log(reason);
+        });
+
+      // Print a log of the detected iBeacons (1 per second)
+      this.beaconsDidRange = DeviceEventEmitter.addListener(
+        'beaconsDidRange',
+        (data) => {
+          this.setState({
+            beacon: data.beacons
+          })
+        }
+      );
+    }
+  }
+
+  componentWillUnmount() {
+    this.beaconsDidRange = null;
+    Beacons.stopRangingBeaconsInRegion('REGION');
   }
 
   _alertIndex(index) {
     Alert.alert(`This is row ${index + 1}`);
   }
 
-  handleLogout = () => {
-    const {Logout} = this.props;
-    Logout({});
-  };
+  renderemptyBeacon = () => {
+    return (
+      <View>
+        <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID : &nbsp; &nbsp;&nbsp; &nbsp;<Text></Text></Text>
+        <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR : &nbsp;<Text></Text></Text>
+        <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR : &nbsp;<Text></Text></Text>
+      </View>
+    );
+  }
 
+  
+  renderBeacon = () => {
+    return this.state.beacon.sort((a, b) => a.accuracy - b.accuracy).map((beacon, ind) => (
+      <View key={ind}>
+    <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :<Text>{beacon.uuid}</Text></Text>
+    <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR : &nbsp;<Text>{beacon.major}</Text></Text>
+    <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR : &nbsp;<Text>{beacon.minor}</Text></Text>
+    {/* <Text>Distance: {beacon.distance}</Text>       */}
+      </View>
+    ), this);
+  }
   render() {
-    const {pickerValues, section, token} = this.state;
+    const { pickerValues, section, token, beacon, isScanning } = this.state;
     // const {
     //   currentYear: {year, semester},
     // } = this.props.currentYear;
@@ -83,46 +154,44 @@ class CreateNewBeacon extends Component {
     // }
 
     return (
-      <ScrollView style={{backgroundColor: '#ffffff'}}>
+      <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
-          <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout} onPress={() => {this.handleLogout()}}>
-              <Text style={{color: 'white'}}>Logout</Text>
+          <View style={{ display: 'flex', alignItems: 'flex-end' }}>
+            <TouchableHighlight style={styles.btnLogout}>
+              <Text style={{ color: 'white' }}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <View style={{ width: 200}}>
-            <Text style={styles.styleHeader}>NEW BEACON</Text>
+            <View style={{ width: 200 }}>
+              <Text style={styles.styleHeader}>NEW BEACON</Text>
             </View>
             <TouchableHighlight
               style={styles.btnScan}
               onPress={() =>
-                console.log('scann')
+                this.setState({ isScanning: true })
               }>
-              <Text style={{color: '#FFFFFF'}}>SCAN</Text>
+              <Text style={{ color: '#FFFFFF' }}>SCAN</Text>
             </TouchableHighlight>
           </View>
-          <View style={{height: 16}}/>
-                <Text style={styles.styleLabel,{paddingLeft: 34}}>BEACON NAME :</Text>
-          <View style={{flex: 1, paddingBottom: 12,width: '100%', display: 'flex', alignItems: 'center'}}>
+          <View style={{ height: 16 }} />
+          <Text style={styles.styleLabel, { paddingLeft: 34 }}>BEACON NAME :</Text>
+          <View style={{ flex: 1, paddingBottom: 12, width: '100%', display: 'flex', alignItems: 'center' }}>
 
-                <TextInput
-                  style={styles.inputs}
-                  placeholder="Beacon Name"
-                  onChangeText={subject_name => this.setState({subject_name})}
-                />
-              </View>
-              <Text style={styles.styleLabel,{paddingLeft: 34}}>UUID : &nbsp; &nbsp;&nbsp; &nbsp;<Text>21545:fsf2:ds545:ds</Text></Text>
-              <Text style={styles.styleLabel,{paddingLeft: 34}}>MAJOR : &nbsp;<Text>248455</Text></Text>
-              <Text style={styles.styleLabel,{paddingLeft: 34}}>MINOR : &nbsp;<Text>97562</Text></Text>
-              
-              <View style={styles.btnWrapper}>
+            <TextInput
+              style={styles.inputs}
+              placeholder="Beacon Name"
+              onChangeText={subject_name => this.setState({ subject_name })}
+            />
+          </View>
+          {isScanning && beacon.length ? this.renderBeacon() : this.renderemptyBeacon()}
+
+          <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
                 this.props.navigation.navigate('Beacon')
               }>
-              <Text style={{color: '#949494'}}>BACK</Text>
+              <Text style={{ color: '#949494' }}>BACK</Text>
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
@@ -130,9 +199,9 @@ class CreateNewBeacon extends Component {
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }}>
-              <Text style={{color: 'white'}}>NEW</Text>
+              <Text style={{ color: 'white' }}>NEW</Text>
             </TouchableHighlight>
-            </View>
+          </View>
         </View>
       </ScrollView>
     );
@@ -174,12 +243,12 @@ const styles = StyleSheet.create({
     paddingTop: 30,
     backgroundColor: '#FFFFFF',
   },
-  head: {height: 40, backgroundColor: '#FFFFFF' ,borderWidth: 0.3, borderColor: '#D0CDCD'},// borderTopLeftRadius: 18, borderTopRightRadius: 18},
-  text: {margin: 6, color: '#525252'},
-  textHeader: {margin: 6, color: '#000000'},
-  row: {flexDirection: 'row', backgroundColor: '#FFFFFF',borderWidth: 0.3, borderTopWidth: 0, borderColor: '#D0CDCD'},
-  btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
-  btnText: {textAlign: 'center', color: 'black'},
+  head: { height: 40, backgroundColor: '#FFFFFF', borderWidth: 0.3, borderColor: '#D0CDCD' },// borderTopLeftRadius: 18, borderTopRightRadius: 18},
+  text: { margin: 6, color: '#525252' },
+  textHeader: { margin: 6, color: '#000000' },
+  row: { flexDirection: 'row', backgroundColor: '#FFFFFF', borderWidth: 0.3, borderTopWidth: 0, borderColor: '#D0CDCD' },
+  btn: { width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18 },
+  btnText: { textAlign: 'center', color: 'black' },
   btnLogout: {
     alignItems: 'center',
     alignContent: 'flex-end',
