@@ -14,7 +14,12 @@ export default (state = initialState, action) => {
 
     case SET_CURRENT_YEAR: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: false, currentYear: data.data};
+      return {
+        ...state,
+        fetching: false,
+        currentYear: data.data,
+        status: 'SUCCESS',
+      };
     }
 
     default:
