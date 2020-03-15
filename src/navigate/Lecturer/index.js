@@ -115,7 +115,9 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMySubject}
                 onPress={() => {
-                  //   this.onClickListener('Student_subject_register')
+                  this.props.navigation.navigate('MySubject', {
+                    token,
+                  });
                 }}>
                 <Text style={styles.LabelText}>MY SUBJECT</Text>
               </TouchableHighlight>
@@ -222,8 +224,8 @@ const styles = StyleSheet.create({
     width: 96,
     padding: 8,
     borderWidth: 1,
-    borderColor: '#F177E5',
-    backgroundColor: '#F177E5',
+    borderColor: '#FFCD89',
+    backgroundColor: '#FFCD89',
     borderRadius: 18,
   },
   buttonMySubject: {
