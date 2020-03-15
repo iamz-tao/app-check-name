@@ -31,5 +31,8 @@ export const SET_SUBJECT_OPEN_SECTION = 'lecturer/SET_SUBJECT_OPEN_SECTION'
 export const OPEN_SECTION = 'lecturer/OPEN_SECTION'
 export const OPEN_SECTION_SUCCESS = 'lecturer/OPEN_SECTION_SUCCESS'
 export const OPEN_SECTION_FAILED = 'lecturer/OPEN_SECTION_FAILED'
+export const GET_ALL_BEACON = 'lecturer/GET_ALL_BEACON'
+export const SET_ALL_BEACON = 'lecturer/SET_ALL_BEACON'
+
 
 

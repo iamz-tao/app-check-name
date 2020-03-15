@@ -17,12 +17,15 @@ import {
   REQUEST_ERROR,
   GET_SUBJECT_OPEN_SECTION,
   SET_SUBJECT_OPEN_SECTION,
+  GET_ALL_BEACON,
+  SET_ALL_BEACON,
 } from '../constant';
 
 const initialState = {
   subjects: null,
   subjectsApprove: null,
   studentsInSection: null,
+  beacons: null,
   err: [],
   isError: false,
   fetching: true,
@@ -107,6 +110,14 @@ export default (state = initialState, action) => {
     case SET_SUBJECT_OPEN_SECTION: {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, subjects: data.data};
+    }
+
+    case GET_ALL_BEACON:
+      return {...state, fetching: true, beacons: null};
+
+    case SET_ALL_BEACON: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, beacons: data.data};
     }
 
     case REQUEST_ERROR: {

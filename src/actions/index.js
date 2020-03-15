@@ -27,6 +27,8 @@ import {
   OPEN_SECTION,
   OPEN_SECTION_SUCCESS,
   OPEN_SECTION_FAILED,
+  GET_ALL_BEACON,
+  SET_ALL_BEACON,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -168,6 +170,16 @@ export const openSectionSuccess = payload => ({
 export const openSectionFailed = payload => ({
   payload,
   type: OPEN_SECTION_FAILED,
+})
+
+export const getAllBeacon = payload => ({
+  payload,
+  type: GET_ALL_BEACON,
+})
+
+export const setAllBeacon = payload => ({
+  payload,
+  type: SET_ALL_BEACON,
 })
 
 // Auth
@@ -326,6 +338,19 @@ export const OpenSection = params => {
       })
       .catch(err => {
         dispatch(openSectionFailed(err));
+      });
+  };
+};
+
+export const GetAllBeacon = params => {
+  return dispatch => {
+    dispatch(getAllBeacon());
+    Api.GetAllBeacon(params)
+      .then(result => {
+        dispatch(setAllBeacon(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
       });
   };
 };
