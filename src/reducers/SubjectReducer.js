@@ -22,6 +22,10 @@ import {
   REGISTER_SUBJECT_REQUEST,
   GET_SUBJECT_REGISTRATION,
   SET_SUBJECT_REGISTRATION,
+  OPEN_CLASS,
+  OPEN_CLASS_SUCCESS,
+  OPEN_SECTION_FAILED,
+  OPEN_CLASS_FAILED,
 } from '../constant';
 
 const initialState = {
@@ -142,6 +146,21 @@ export default (state = initialState, action) => {
     case SET_SUBJECT_REGISTRATION: {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, subjects: data.data};
+    }
+
+    case OPEN_CLASS: {
+      return {...state, fetching: false, status: null};
+    }
+
+    case OPEN_CLASS_SUCCESS: {
+      console.log('xxxx')
+      return {...state, fetching: true, status: 'SUCCESS'};
+    }
+
+    case OPEN_SECTION_FAILED: {
+      console.log('vvvv')
+
+      return {...state, fetching: true, status: 'FAILURE'};
     }
 
     default:

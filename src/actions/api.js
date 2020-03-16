@@ -365,6 +365,33 @@ async function GetAllBeacon(data) {
   });
 }
 
+async function OpenClass(data) {
+  const token = data.token;
+  const payload = data.payload;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/openClass',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -379,4 +406,5 @@ export const Api = {
   OpenSection,
   GetAllBeacon,
   GetSubjectRegistration,
+  OpenClass,
 };
