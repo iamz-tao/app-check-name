@@ -16,37 +16,59 @@ import {
   Image,
 } from 'react-native';
 
-import {GetCurrentYear, Logout} from '../../../../actions';
+import SuccessModal from '../../../../components/successModal';
+
+import {
+  GetCurrentYear,
+  Logout,
+  GetSubjectsApprove,
+  GetAllBeacon,
+  OpenClass as LecturerOpenClass,
+} from '../../../../actions';
 
 class OpenClass extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      pickerValues: [],
-      section: [],
+      pickerValues: '',
+      section_id: '',
       subject_code: '',
       subject_name: '',
       token: '',
+      beacon_id: '',
+      modalVisible: false,
     };
   }
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
-    const {GetCurrentYear} = this.props;
+    const {GetCurrentYear, GetSubjectsApprove,GetAllBeacon} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
     GetCurrentYear({
       token,
     });
+    GetSubjectsApprove({
+      token,
+    });
+    GetAllBeacon({
+      token,
+    });
   }
 
-  handleSubmit = (token, section_id) => {
-    // const {RegisterSubject} = this.props
-    // RegisterSubject({
-    //   token,
-    //   section_id,
-    // })
+  handleSubmit = (section_id, beacon_id) => {
+    const {token} = this.props.navigation.state.params;
+    const {LecturerOpenClass} = this.props
+    const payload = {
+      section_id,
+      beacon_id,
+    }
+
+    LecturerOpenClass({
+      token,
+      payload,
+    })
   };
 
   handleLogout = () => {
@@ -54,15 +76,63 @@ class OpenClass extends Component {
     Logout({});
   };
 
+  setModalVisible = () => {
+    const {token} = this.props.navigation.state.params;
+    const {GetAllBeacon} = this.props
+    const {modalVisible} = this.state
+    this.setState({
+      modalVisible: !modalVisible,
+      section_id: '',
+      beacon_id: '',
+      pickerValues: '',
+    })
+    GetAllBeacon({
+      token,
+    })
+  }
+
   render() {
-    const {pickerValues, section, token} = this.state;
+    const {pickerValues, section_id, beacon_id, modalVisible} = this.state;
     const {
       currentYear: {year, semester},
       fetching,
     } = this.props.currentYear;
-    const sem = semester === 'SECOND' ? 2 : semester === 'FIRST' ? 1 : 'SUMMER';
+    const subjects = this.props.subjects.subjectsApprove;
+    const {beacons, status} = this.props.subjects;
+    const subjectsArr = [];
+    const sectionArr = [];
+    const beaconArr = [];
+    // const sem = semester === 'SECOND' ? 2 : semester === 'FIRST' ? 1 : 'SUMMER';
+    if (subjects !== null) {
+      subjects.map((s, i) => {
+        subjectsArr.push({
+          label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
+          value: s.Subject.subject_code,
+        });
+      });
+    }
 
-    if (fetching) {
+    if (subjects !== null && pickerValues !== '') {
+      subjects
+        .filter(s => s.Subject.subject_code === pickerValues)
+        .map((s, i) => {
+          sectionArr.push({
+            label: `${s.sections[i].section_number}`,
+            value: s.sections[i].id,
+          });
+        });
+    }
+    if (beacons) {
+      beacons
+        .filter(beacon => beacon.status === 'DISABLE')
+        .map(b => {
+          beaconArr.push({
+            label: b.name,
+            value: b.id,
+          });
+        });
+    }
+    if (fetching || !subjects ) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -70,9 +140,15 @@ class OpenClass extends Component {
         </View>
       );
     }
-
+  
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
+        <SuccessModal
+          msg={status === 'SUCCESS' ? 'Open Class Success.' : 'Open Class Failed.'}
+          setModalVisible={this.setModalVisible}
+          modalVisible={modalVisible}
+          status={status}
+        />
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight
@@ -87,7 +163,7 @@ class OpenClass extends Component {
             <Text style={styles.styleHeader}>OPEN CLASS</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : {year} / {sem}
+            YEAR / SEMESTER : {year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -103,10 +179,10 @@ class OpenClass extends Component {
                   }>
                   <Picker.Item label="Select Subject" value="" />
 
-                  {/* {subjectsArr.length > 0 &&
+                  {subjectsArr.length > 0 &&
                     subjectsArr.map(s => (
                       <Picker.Item label={s.label} value={s.value} />
-                    ))} */}
+                    ))}
                 </Picker>
               </View>
             </View>
@@ -117,18 +193,18 @@ class OpenClass extends Component {
               <View style={styles.stylePicker}>
                 <Picker
                   style={{height: 45}}
-                  selectedValue={section}
+                  selectedValue={section_id}
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({
-                      section: itemValue,
+                      section_id: itemValue,
                     });
                   }}>
                   <Picker.Item label="Select Section" value="" />
 
-                  {/* {sectionArr.length > 0 &&
+                  {sectionArr.length > 0 &&
                     sectionArr.map(sec => (
                       <Picker.Item label={sec.label} value={sec.value} />
-                    ))} */}
+                    ))}
                 </Picker>
               </View>
             </View>
@@ -139,18 +215,18 @@ class OpenClass extends Component {
               <View style={styles.stylePicker}>
                 <Picker
                   style={{height: 45}}
-                  selectedValue={section}
+                  selectedValue={beacon_id}
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({
-                      section: itemValue,
+                      beacon_id: itemValue,
                     });
                   }}>
                   <Picker.Item label="Select Beacon" value="" />
 
-                  {/* {sectionArr.length > 0 &&
-                    sectionArr.map(sec => (
+                  {beaconArr.length > 0 &&
+                    beaconArr.map(sec => (
                       <Picker.Item label={sec.label} value={sec.value} />
-                    ))} */}
+                    ))}
                 </Picker>
               </View>
             </View>
@@ -165,9 +241,10 @@ class OpenClass extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
+              disabled={beacon_id === '' || section_id === '' || pickerValues === ''}
               onPress={() => {
-                //    this.handleSubmit(token,section_id)
-                //    this.setModalVisible(statusReq)
+                   this.handleSubmit(section_id, beacon_id)
+                   this.setModalVisible()
               }}>
               <Text style={{color: 'white'}}>OPEN</Text>
             </TouchableHighlight>
@@ -182,13 +259,16 @@ class OpenClass extends Component {
 const mapStateToProps = state => {
   return {
     currentYear: state.yearReducer,
-    // subjects: state.subjectReducer,
+    subjects: state.subjectReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  GetSubjectsApprove,
   GetCurrentYear,
+  GetAllBeacon,
+  LecturerOpenClass,
   Logout,
 };
 

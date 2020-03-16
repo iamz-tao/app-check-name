@@ -31,6 +31,9 @@ import {
   SET_ALL_BEACON,
   GET_SUBJECT_REGISTRATION,
   SET_SUBJECT_REGISTRATION,
+  OPEN_CLASS,
+  OPEN_CLASS_FAILED,
+  OPEN_CLASS_SUCCESS,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -192,6 +195,21 @@ export const getSubjectRegistration = payload => ({
 export const setSubjectRegistration = payload => ({
   payload,
   type: SET_SUBJECT_REGISTRATION,
+})
+
+export const openClass = payload => ({
+  payload,
+  type: OPEN_CLASS,
+})
+
+export const openClassSuccess = payload => ({
+  payload,
+  type: OPEN_CLASS_SUCCESS,
+})
+
+export const openClassFailed = payload => ({
+  payload,
+  type: OPEN_SECTION_FAILED,
 })
 
 // Auth
@@ -376,6 +394,19 @@ export const GetAllBeacon = params => {
       })
       .catch(err => {
         dispatch(requestError(err));
+      });
+  };
+};
+
+export const OpenClass = params => {
+  return dispatch => {
+    dispatch(openClass());
+    Api.OpenClass(params)
+      .then(result => {
+        dispatch(openClassSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(openClassFailed(err));
       });
   };
 };
