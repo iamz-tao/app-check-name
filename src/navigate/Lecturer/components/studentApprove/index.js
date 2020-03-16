@@ -75,7 +75,7 @@ class StudentApprove extends Component {
         });
     }
 
-    if (fetching) {
+    if (fetching || !subjects) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
