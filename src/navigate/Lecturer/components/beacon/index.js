@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -8,30 +7,10 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
-  Picker,
-  Modal,
-  Image,
 } from 'react-native';
-import {
-  Table,
-  TableWrapper,
-  Row,
-  Cell,
-  TouchableOpacity,
-} from 'react-native-table-component';
-// import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout} from '../../../../actions';
 
-const element = (data, index) => (
-  <TouchableOpacity onPress={() => this._alertIndex(index)}>
-    <View style={styles.btn}>
-      <Text style={styles.btnText}>button</Text>
-    </View>
-  </TouchableOpacity>
-);
+import {Logout, GetAllBeacon} from '../../../../actions';
 
 class Beacon extends Component {
   constructor(props) {
@@ -46,21 +25,14 @@ class Beacon extends Component {
   }
 
   componentDidMount() {
-    // const {token} = this.props.navigation.state.params;
-    // const {GetCurrentYear, GetStudentApprove} = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
-    // GetCurrentYear({
-    //   token,
-    // });
-    // GetStudentApprove({
-    //   token,
-    // });
-  }
-
-  _alertIndex(index) {
-    Alert.alert(`This is row ${index + 1}`);
+    const {token} = this.props.navigation.state.params;
+    const {GetAllBeacon} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
+    GetAllBeacon({
+      token,
+    });
   }
 
   handleLogout = () => {
@@ -69,20 +41,15 @@ class Beacon extends Component {
   };
 
   render() {
-    const {pickerValues, section, token} = this.state;
-    // const {
-    //   currentYear: {year, semester},
-    // } = this.props.currentYear;
-    // const {fetching} =  this.props.subjects;
-
-    // if (fetching) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
+    const {fetching, beacons} = this.props.beacons;
+    if (fetching) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
 
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
@@ -99,27 +66,32 @@ class Beacon extends Component {
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>BEACON</Text>
           </View>
-          {/* <View style={styles.containerTest}> */}
-          <View style={styles.ViewWrapper}>
-            <View style={styles.ViewHeader}>
-              <Text style={{flex: 1}}>NAME</Text>
-              <Text style={{flex: 1}}>STATUS</Text>
-            </View>
-            <View
-              style={{
-                width: 286,
-                height: 20,
-                padding: 2,
-                flexDirection: 'row',
-              }}>
-              <Text style={{flex: 1}}>xxxxxxxx</Text>
-              <Text style={{flex: 1}}>ACTIVE</Text>
-            </View>
-            <View style={{width: 286, height: 20, padding: 2}}>
-              <Text>xxxxxxxx</Text>
+          <View style={{height: 16}} />
+          <View style={styles.StyleWrapper}>
+            <View style={styles.ViewWrapper}>
+              <View style={styles.ViewHeader}>
+                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{flex: 1}}>STATUS</Text>
+              </View>
+              {beacons !== null &&
+                beacons.length > 0 &&
+                beacons.map(b => (
+                  <View style={styles.StyleRow}>
+                    <Text style={{flex: 2, paddingLeft: 8}}>{b.name}</Text>
+                    {b.status === 'ACTIVE' && (
+                      <Text style={{flex: 1, color: '#001AFF'}}>
+                        {b.status}
+                      </Text>
+                    )}
+                    {b.status === 'DISABLE' && (
+                      <Text style={{flex: 1, color: '#FF0000'}}>
+                        {b.status}
+                      </Text>
+                    )}
+                  </View>
+                ))}
             </View>
           </View>
-
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
@@ -147,15 +119,13 @@ class Beacon extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    currentYear: state.yearReducer,
-    subjects: state.subjectReducer,
+    beacons: state.subjectReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  // GetCurrentYear,
-  // GetStudentApprove,
+  GetAllBeacon,
   Logout,
 };
 
@@ -182,6 +152,17 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'center',
     borderColor: '#D0CDCD',
+  },
+  StyleRow: {
+    width: 286,
+    height: 20,
+    padding: 2,
+    flexDirection: 'row',
+  },
+  StyleWrapper: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
   },
   ViewHeader: {
     width: 286,

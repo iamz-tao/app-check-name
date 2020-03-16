@@ -114,7 +114,7 @@ class SettingSection extends Component {
                   <View style={styles.styleTime}>
                     <DatePicker
                       mode="time"
-                      style={{height: 42, width: 146, fontSize: 10}}
+                      style={{height: 42, width: 156, fontSize: 10}}
                       textColor="#006765"
                       onChange={this.handleSelectStartTime()}
                     />

@@ -16,43 +16,60 @@ import {
 } from 'react-native';
 
 const SubjectList = props => {
+  const {subjects} = props;
+  // console.log('subjects', subjects);
   return (
     <ScrollView style={{backgroundColor: '#ffffff'}}>
       <View style={styles.Column}>
         <View style={styles.Wrapper}>
           <View style={styles.Column}>
             <View style={styles.ItemWrapper}>
-              <View style={styles.Row}>
-                <View style={(styles.ListDetail, {minWidth: 130})}>
-                  <Text View style={styles.ItemSpan}>
-                    Digital Labolatory
-                  </Text>
-                </View>
-                <View style={(styles.ListDetail, {width: 36})}>
-                  <Text View style={styles.ItemSpan}>
-                    701
-                  </Text>
-                </View>
-                <View style={(styles.SubjectList, {width: 66})}>
-                  <Text View style={styles.ItemSpan}>
-                    <Text style={{color: '#0038FF'}}> Pending </Text>
-                  </Text>
-                </View>
-                <View
-                  style={
-                    (styles.SubjectList,
-                    {width: 56, alignItems: 'flex-end', paddingRight: 8})
-                  }>
-                  <TouchableHighlight
-                    style={styles.btnDrop}
-                    onPress={() => {
-                      NavigationServices.navigate('StudentSubjectRegister');
-                    }}>
-                    <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
-                  </TouchableHighlight>
-                  {/* <Text>xxxxx</Text> */}
-                </View>
-              </View>
+              {subjects !== null &&
+                subjects.registrations.length > 0 &&
+                subjects.registrations.map(s => (
+                  <View style={styles.Row}>
+                    <View style={(styles.ListDetail, {minWidth: 130})}>
+                      <Text View style={styles.ItemSpan}>
+                        {s.subject_name}
+                      </Text>
+                    </View>
+                    <View style={(styles.ListDetail, {width: 36})}>
+                      <Text View style={styles.ItemSpan}>
+                        {s.section_number}
+                      </Text>
+                    </View>
+                    <View style={(styles.SubjectList, {width: 66})}>
+                      <Text View style={styles.ItemSpan}>
+                        {s.status === 'APPROVE' && (
+                          <Text
+                            style={{
+                              color: '#1AB433',
+                              textDecorationLine: 'underline',
+                            }}>
+                            {' '}
+                            History{' '}
+                          </Text>
+                        )}
+                        {s.status === 'PENDING' && (
+                          <Text style={{color: '#0038FF'}}> Pending </Text>
+                        )}
+                      </Text>
+                    </View>
+                    <View
+                      style={
+                        (styles.SubjectList,
+                        {width: 56, alignItems: 'flex-end', paddingRight: 8})
+                      }>
+                      <TouchableHighlight
+                        style={styles.btnDrop}
+                        onPress={() => {
+                          NavigationServices.navigate('StudentSubjectRegister');
+                        }}>
+                        <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
+                      </TouchableHighlight>
+                    </View>
+                  </View>
+                ))}
             </View>
           </View>
         </View>
@@ -93,12 +110,12 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    minHeight: 50,
+    minHeight: 20,
     width: '100%',
     padding: 4,
   },
   ItemSpan: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: 'kanit',
     fontWeight: '600',
     paddingLeft: 8,

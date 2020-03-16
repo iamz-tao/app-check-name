@@ -1,5 +1,5 @@
 import {
-  SET_SUBJECT_REGIS_STD, 
+  SET_SUBJECT_REGIS_STD,
   GET_SUBJECT_REGIS_STD,
   REGISTER_SUBJECT_REQUEST_SUCCESS,
   REGISTER_SUBJECT_REQUEST_FAILED,
@@ -17,12 +17,18 @@ import {
   REQUEST_ERROR,
   GET_SUBJECT_OPEN_SECTION,
   SET_SUBJECT_OPEN_SECTION,
+  GET_ALL_BEACON,
+  SET_ALL_BEACON,
+  REGISTER_SUBJECT_REQUEST,
+  GET_SUBJECT_REGISTRATION,
+  SET_SUBJECT_REGISTRATION,
 } from '../constant';
 
 const initialState = {
   subjects: null,
   subjectsApprove: null,
   studentsInSection: null,
+  beacons: null,
   err: [],
   isError: false,
   fetching: true,
@@ -32,16 +38,24 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_SUBJECT_REGIS_STD:
-      return {...state, fetching: true, data: null};
+      return {...state, fetching: true, subjects: null};
 
     case SET_SUBJECT_REGIS_STD: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: false, data: data.data};
+      return {
+        ...state,
+        fetching: false,
+        subjects: data.data,
+        status: 'SUCCESS',
+      };
+    }
+    case REGISTER_SUBJECT_REQUEST: {
+      return {...state, fetching: true, status: null};
     }
 
     case REGISTER_SUBJECT_REQUEST_SUCCESS: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: true, status: data.status.dataStatus};
+      return {...state, fetching: false, status: data.status.dataStatus};
     }
 
     case REGISTER_SUBJECT_REQUEST_FAILED: {
@@ -59,7 +73,7 @@ export default (state = initialState, action) => {
     case CREATE_SUBJECT: {
       return {...state, fetching: false, status: null};
     }
-  
+
     case CREATE_SUBJECT_SUCCESS: {
       return {...state, fetching: true, status: 'SUCCESS'};
     }
@@ -83,21 +97,21 @@ export default (state = initialState, action) => {
     case REJECT_STUDENT: {
       return {...state, fetching: true, status: null};
     }
-    
+
     case APPROVE_STUDENT_SUCCESS: {
-      const id = action.payload.id[0]
-      const students = state.studentsInSection.students
-      const index = students.findIndex(s => s.request_id === id)
-      students[index].status = 'APPROVE'
-      return {...state, fetching: false, status: 'SUCCESS'}
+      const id = action.payload.id[0];
+      const students = state.studentsInSection.students;
+      const index = students.findIndex(s => s.request_id === id);
+      students[index].status = 'APPROVE';
+      return {...state, fetching: false, status: 'SUCCESS'};
     }
 
     case REJECT_STUDENT_SUCCESS: {
-      const id = action.payload.id[0]
-      const students = state.studentsInSection.students
-      const index = students.findIndex(s => s.request_id === id)
-      students.splice(index,1)
-      return {...state, fetching: false, status: 'SUCCESS'}
+      const id = action.payload.id[0];
+      const students = state.studentsInSection.students;
+      const index = students.findIndex(s => s.request_id === id);
+      students.splice(index, 1);
+      return {...state, fetching: false, status: 'SUCCESS'};
     }
 
     case GET_SUBJECT_OPEN_SECTION: {
@@ -109,8 +123,25 @@ export default (state = initialState, action) => {
       return {...state, fetching: false, subjects: data.data};
     }
 
+    case GET_ALL_BEACON:
+      return {...state, fetching: true, beacons: null};
+
+    case SET_ALL_BEACON: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, beacons: data.data};
+    }
+
     case REQUEST_ERROR: {
       return {...state, fetching: true, isError: true, status: 'FAILURE'};
+    }
+
+    case GET_SUBJECT_REGISTRATION: {
+      return {...state, fetching: true, subjects: null};
+    }
+
+    case SET_SUBJECT_REGISTRATION: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, subjects: data.data};
     }
 
     default:
