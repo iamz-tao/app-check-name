@@ -31,6 +31,9 @@ import {
   SET_ALL_BEACON,
   GET_SUBJECT_REGISTRATION,
   SET_SUBJECT_REGISTRATION,
+  REGISTER_BEACON,
+  REGISTER_BEACON_SUCCESS,
+  REGISTER_BEACON_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -192,6 +195,21 @@ export const getSubjectRegistration = payload => ({
 export const setSubjectRegistration = payload => ({
   payload,
   type: SET_SUBJECT_REGISTRATION,
+})
+
+export const registerBeacon = payload =>({
+  payload,
+  type: REGISTER_BEACON
+})
+
+export const registerBeaconSuccess = payload => ({
+  payload,
+  type: REGISTER_BEACON_SUCCESS
+})
+
+export const registerBeaconFailure = payload => ({
+  payload,
+  type: REGISTER_BEACON_FAILURE
 })
 
 // Auth
@@ -379,3 +397,17 @@ export const GetAllBeacon = params => {
       });
   };
 };
+
+export const RegisterBeacon = params => {
+  return dispatch => {
+    dispatch(registerBeacon());
+    Api.RegisterBeacon(params)
+    .then(result => {
+      // dispatch(setAllBeacon(JSON.stringify(result)));
+    })
+    .catch(err => {
+      dispatch(registerBeaconFailure(err));
+    });
+    
+  }
+}

@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
-import {connect} from 'react-redux';
-import {DotsLoader, TextLoader} from 'react-native-indicator';
+import React, { Component } from 'react';
+import { Avatar, ButtonGroup } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { DotsLoader, TextLoader } from 'react-native-indicator';
 
 import {
   StyleSheet,
@@ -25,10 +25,10 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout} from '../../../../../actions'
+import { Logout, RegisterBeacon } from '../../../../../actions'
 import Beacons from 'react-native-beacons-manager';
 import BluetoothState from 'react-native-bluetooth-state-manager';
- import {checkLocationStatus} from '../../../../../AuthBeacon/func'
+import { checkLocationStatus } from '../../../../../AuthBeacon/func'
 
 //check Bluetooth
 BluetoothState.requestToEnable();
@@ -76,6 +76,10 @@ class CreateNewBeacon extends Component {
       token: '',
       isScanning: false,
       beacon: [],
+      uuid: '',
+      major: '',
+      minor: '',
+      name: ''
     };
   }
 
@@ -93,7 +97,7 @@ class CreateNewBeacon extends Component {
       Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
         // console.log(data);
       })
-      .catch((reason) => {
+        .catch((reason) => {
           console.log(reason);
         });
 
@@ -118,29 +122,44 @@ class CreateNewBeacon extends Component {
     Alert.alert(`This is row ${index + 1}`);
   }
 
-  renderemptyBeacon = () => {
-    return (
-      <View>
-        <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID : &nbsp; &nbsp;&nbsp; &nbsp;<Text></Text></Text>
-        <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR : &nbsp;<Text></Text></Text>
-        <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR : &nbsp;<Text></Text></Text>
-      </View>
-    );
+  scan = () => {
+    const { beacon, isScanning } = this.state
+    console.log("Scan")
+    this.setState({
+      isScanning: !isScanning
+    })
+
+    beacon.map((b) => {
+      this.setState({
+        uuid: b.uuid,
+        major: b.major,
+        minor: b.minor
+      })
+    })
   }
 
-  
-  renderBeacon = () => {
-    return this.state.beacon.sort((a, b) => a.accuracy - b.accuracy).map((beacon, ind) => (
-      <View key={ind}>
-    <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :<Text>{beacon.uuid}</Text></Text>
-    <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR : &nbsp;<Text>{beacon.major}</Text></Text>
-    <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR : &nbsp;<Text>{beacon.minor}</Text></Text>
-    {/* <Text>Distance: {beacon.distance}</Text>       */}
-      </View>
-    ), this);
+
+  handleNewBeacon = () => {
+    const { uuid, major, minor, name } = this.state;
+    const token = this.props.navigation.state.params;
+    const payload = {
+      uuid,
+      major,
+      minor,
+      name
+    }
+    const { RegisterBeacon } = this.props
+    RegisterBeacon(
+      {
+        token,
+        payload
+      }
+    )
+
+
   }
   render() {
-    const { pickerValues, section, token, beacon, isScanning } = this.state;
+    const { pickerValues, section, token, uuid, major, minor, isScanning } = this.state;
     // const {
     //   currentYear: {year, semester},
     // } = this.props.currentYear;
@@ -154,7 +173,6 @@ class CreateNewBeacon extends Component {
     //     </View>
     //   );
     // }
-
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
@@ -169,8 +187,9 @@ class CreateNewBeacon extends Component {
             </View>
             <TouchableHighlight
               style={styles.btnScan}
-              onPress={() =>
-                this.setState({ isScanning: true })
+              onPress={() => {
+                this.scan();
+              }
               }>
               <Text style={{ color: '#FFFFFF' }}>SCAN</Text>
             </TouchableHighlight>
@@ -182,10 +201,14 @@ class CreateNewBeacon extends Component {
             <TextInput
               style={styles.inputs}
               placeholder="Beacon Name"
-              onChangeText={subject_name => this.setState({ subject_name })}
+              onChangeText={name => this.setState({ name })}
             />
           </View>
-          {isScanning && beacon.length ? this.renderBeacon() : this.renderemptyBeacon()}
+          {/* {isScanning && beacon.length ? this.renderBeacon() : this.renderemptyBeacon()} */}
+          <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :{uuid}<Text></Text></Text>
+          <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
+          <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
+
 
           <View style={styles.btnWrapper}>
             <TouchableHighlight
@@ -197,10 +220,11 @@ class CreateNewBeacon extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
-              onPress={() => {
+              onPress={
+                this.handleNewBeacon
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
-              }}>
+              }>
               <Text style={{ color: 'white' }}>NEW</Text>
             </TouchableHighlight>
           </View>
@@ -223,6 +247,7 @@ const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
   Logout,
+  RegisterBeacon
 };
 
 export default connect(

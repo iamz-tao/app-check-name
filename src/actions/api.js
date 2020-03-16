@@ -365,6 +365,29 @@ async function GetAllBeacon(data) {
   });
 }
 
+async function RegisterBeacon(params) {
+  const token = params.token
+  const payload = params.payload
+  return new Promise(async (resolve,reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/createBeacon',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    console.log(responseJson)
+  })
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -379,4 +402,5 @@ export const Api = {
   OpenSection,
   GetAllBeacon,
   GetSubjectRegistration,
+  RegisterBeacon
 };

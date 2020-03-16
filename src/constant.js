@@ -36,5 +36,10 @@ export const OPEN_SECTION_FAILED = 'lecturer/OPEN_SECTION_FAILED'
 export const GET_ALL_BEACON = 'lecturer/GET_ALL_BEACON'
 export const SET_ALL_BEACON = 'lecturer/SET_ALL_BEACON'
 
+export const REGISTER_BEACON = 'lecturer/REGISTER_BEACON'
+export const REGISTER_BEACON_SUCCESS = 'lecturer/REGISTER_BEACON_SUCCESS'
+export const REGISTER_BEACON_FAILURE = 'lecturer/REGISTER_BEACON_FAILURE'
+
+
 
 
