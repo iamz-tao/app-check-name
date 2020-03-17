@@ -93,7 +93,6 @@ class StudentListSubject extends Component {
         </View>
       );
     }
-    // console.log('this.props',this.props)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -117,11 +116,11 @@ class StudentListSubject extends Component {
           <SubjectList subjects={subjects} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
-              style={styles.btnReq}
+              style={styles.btnCancel}
               onPress={() => {
                 this.props.navigation.navigate('StudentHomePage')
               }}>
-              <Text style={{color: 'white'}}>OK</Text>
+              <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
         </View>

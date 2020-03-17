@@ -1,4 +1,5 @@
 import React from 'react';
+import {DotsLoader, TextLoader} from 'react-native-indicator';
 
 import {
   StyleSheet,
@@ -9,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 
-const SuccessModal = ({ msg, setModalVisible, modalVisible, status}) => {
+const SuccessModal = ({msg, setModalVisible, modalVisible, status}) => {
   return (
     <View>
       <Modal
@@ -20,6 +21,12 @@ const SuccessModal = ({ msg, setModalVisible, modalVisible, status}) => {
         <View style={styles.ModalWrapper}>
           <View style={styles.DetailModalWrapper}>
             <View style={{width: '100%', alignItems: 'center'}}>
+              {status === null && (
+                <View style={styles.loadingWrapper}>
+                  <DotsLoader color="#CA5353" />
+                  <TextLoader text="Loading" />
+                </View>
+              )}
               {status === 'SUCCESS' && (
                 <Image
                   style={styles.CustomImg}
@@ -35,12 +42,10 @@ const SuccessModal = ({ msg, setModalVisible, modalVisible, status}) => {
 
               <View style={{height: 36}} />
               {status === 'SUCCESS' && (
-                              <Text style={styles.styleLabelFail}>SUCCESS
-</Text>
+                <Text style={styles.styleLabelFail}>SUCCESS</Text>
               )}
               {status === 'FAILURE' && (
-                <Text style={styles.styleLabelFail}>FAILURE
-                </Text>
+                <Text style={styles.styleLabelFail}>FAILURE</Text>
               )}
               <Text style={styles.styleLabel}>{msg}</Text>
               <View style={{height: 26}} />
@@ -109,5 +114,12 @@ const styles = StyleSheet.create({
     width: 96,
     height: 46,
     borderRadius: 21,
+  },
+  loadingWrapper: {
+    display: 'flex',
+    position: 'relative',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
   },
 });

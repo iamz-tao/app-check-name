@@ -33,7 +33,10 @@ import {
   SET_SUBJECT_REGISTRATION,
   REGISTER_BEACON,
   REGISTER_BEACON_SUCCESS,
-  REGISTER_BEACON_FAILURE
+  REGISTER_BEACON_FAILURE,
+  OPEN_CLASS,
+  OPEN_CLASS_FAILED,
+  OPEN_CLASS_SUCCESS,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -210,6 +213,21 @@ export const registerBeaconSuccess = payload => ({
 export const registerBeaconFailure = payload => ({
   payload,
   type: REGISTER_BEACON_FAILURE
+})
+
+export const openClass = payload => ({
+  payload,
+  type: OPEN_CLASS,
+})
+
+export const openClassSuccess = payload => ({
+  payload,
+  type: OPEN_CLASS_SUCCESS,
+})
+
+export const openClassFailed = payload => ({
+  payload,
+  type: OPEN_CLASS_FAILED,
 })
 
 // Auth
@@ -403,11 +421,27 @@ export const RegisterBeacon = params => {
     dispatch(registerBeacon());
     Api.RegisterBeacon(params)
     .then(result => {
-      // dispatch(setAllBeacon(JSON.stringify(result)));
+      console.log(result);
+      
+       dispatch(registerBeaconSuccess(JSON.stringify(result)))
     })
     .catch(err => {
+      console.log(err);
+      
       dispatch(registerBeaconFailure(err));
     });
     
   }
 }
+export const OpenClass = params => {
+  return dispatch => {
+    dispatch(openClass());
+    Api.OpenClass(params)
+      .then(result => {
+        dispatch(openClassSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(openClassFailed(err));
+      });
+  };
+};

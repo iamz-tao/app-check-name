@@ -41,5 +41,8 @@ export const REGISTER_BEACON_SUCCESS = 'lecturer/REGISTER_BEACON_SUCCESS'
 export const REGISTER_BEACON_FAILURE = 'lecturer/REGISTER_BEACON_FAILURE'
 
 
+export const OPEN_CLASS = 'lecturer/OPEN_CLASS'
+export const OPEN_CLASS_SUCCESS = 'lecturer/OPEN_CLASS_SUCCESS'
+export const OPEN_CLASS_FAILED = 'lecturer/OPEN_CLASS_FAILED'
 
 
