@@ -31,6 +31,9 @@ import {
   SET_ALL_BEACON,
   GET_SUBJECT_REGISTRATION,
   SET_SUBJECT_REGISTRATION,
+  REGISTER_BEACON,
+  REGISTER_BEACON_SUCCESS,
+  REGISTER_BEACON_FAILURE,
   OPEN_CLASS,
   OPEN_CLASS_FAILED,
   OPEN_CLASS_SUCCESS,
@@ -197,6 +200,21 @@ export const setSubjectRegistration = payload => ({
   type: SET_SUBJECT_REGISTRATION,
 })
 
+export const registerBeacon = payload =>({
+  payload,
+  type: REGISTER_BEACON
+})
+
+export const registerBeaconSuccess = payload => ({
+  payload,
+  type: REGISTER_BEACON_SUCCESS
+})
+
+export const registerBeaconFailure = payload => ({
+  payload,
+  type: REGISTER_BEACON_FAILURE
+})
+
 export const openClass = payload => ({
   payload,
   type: OPEN_CLASS,
@@ -209,7 +227,7 @@ export const openClassSuccess = payload => ({
 
 export const openClassFailed = payload => ({
   payload,
-  type: OPEN_SECTION_FAILED,
+  type: OPEN_CLASS_FAILED,
 })
 
 // Auth
@@ -398,6 +416,23 @@ export const GetAllBeacon = params => {
   };
 };
 
+export const RegisterBeacon = params => {
+  return dispatch => {
+    dispatch(registerBeacon());
+    Api.RegisterBeacon(params)
+    .then(result => {
+      console.log(result);
+      
+       dispatch(registerBeaconSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      console.log(err);
+      
+      dispatch(registerBeaconFailure(err));
+    });
+    
+  }
+}
 export const OpenClass = params => {
   return dispatch => {
     dispatch(openClass());

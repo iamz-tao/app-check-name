@@ -1,7 +1,7 @@
-import {StackActions} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import NavigationServices from '../navigate/NavigationServices';
 
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 
 // Auth
 async function Login(data) {
@@ -37,9 +37,9 @@ async function Login(data) {
               text: 'Cancel',
               style: 'cancel',
             },
-            {text: 'OK'},
+            { text: 'OK' },
           ],
-          {cancelable: false},
+          { cancelable: false },
         );
       }
     } else {
@@ -51,9 +51,9 @@ async function Login(data) {
             text: 'Cancel',
             style: 'cancel',
           },
-          {text: 'OK'},
+          { text: 'OK' },
         ],
-        {cancelable: false},
+        { cancelable: false },
       );
       reject(responseJson);
     }
@@ -365,6 +365,34 @@ async function GetAllBeacon(data) {
   });
 }
 
+async function RegisterBeacon(params) {
+  const token = params.token.token
+  const payload = params.payload
+  return new Promise(async (resolve,reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/createBeacon',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+        body: JSON.stringify({
+          ...payload,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if(responseJson.status.dataStatus === 'SUCCESS'){
+      resolve(responseJson)
+    }
+    else{
+      reject(responseJson)
+    }
+  })
+}
+
 async function OpenClass(data) {
   const token = data.token;
   const payload = data.payload;
@@ -406,5 +434,6 @@ export const Api = {
   OpenSection,
   GetAllBeacon,
   GetSubjectRegistration,
-  OpenClass,
+  RegisterBeacon,
+  OpenClass
 };

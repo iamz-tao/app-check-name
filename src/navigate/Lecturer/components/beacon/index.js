@@ -42,6 +42,9 @@ class Beacon extends Component {
 
   render() {
     const {fetching, beacons} = this.props.beacons;
+    const {token} = this.props.navigation.state.params;
+    // console.log('token',token)
+
     if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
@@ -103,7 +106,9 @@ class Beacon extends Component {
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                this.props.navigation.navigate('CreateNewBeacon');
+                this.props.navigation.navigate('CreateNewBeacon',{
+                  token,
+                });
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }}>
