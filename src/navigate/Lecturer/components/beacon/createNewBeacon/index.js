@@ -25,7 +25,7 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout} from '../../../../../actions'
+import {Logout,GetAllBeacon} from '../../../../../actions'
 import Beacons from 'react-native-beacons-manager';
 import BluetoothState from 'react-native-bluetooth-state-manager';
  import {checkLocationStatus} from '../../../../../AuthBeacon/func'
@@ -82,7 +82,6 @@ class CreateNewBeacon extends Component {
   async componentDidMount() {
 
     this.beaconsDidRange = null;
-
     const request_permission = await requestLocationPermission();
     checkLocationStatus();
 
@@ -101,11 +100,16 @@ class CreateNewBeacon extends Component {
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
+          // const beaconfilter = data.beacons.filter((bf) => {
+          //   return bf.uuid !== 'b9407f30-f5f8-466e-aff9-25556b57feed'
+          // })
+      
+          // console.log(beaconfilter)
+          // this.setState({beacon:beaconfilter})
           this.setState({
-            beacon: data.beacons
+            beacon:data.beacons
           })
-        }
-      );
+        })
     }
   }
 
@@ -135,12 +139,22 @@ class CreateNewBeacon extends Component {
     <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :<Text>{beacon.uuid}</Text></Text>
     <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR : &nbsp;<Text>{beacon.major}</Text></Text>
     <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR : &nbsp;<Text>{beacon.minor}</Text></Text>
-    {/* <Text>Distance: {beacon.distance}</Text>       */}
       </View>
     ), this);
   }
   render() {
     const { pickerValues, section, token, beacon, isScanning } = this.state;
+
+   
+    
+    // const {GetAllBeacon} = this.props
+    // const token = this.props.navigation.state.params;
+
+    // GetAllBeacon({token})
+
+    // const {beacons} = this.props.beacons
+
+    
     // const {
     //   currentYear: {year, semester},
     // } = this.props.currentYear;
@@ -213,8 +227,7 @@ class CreateNewBeacon extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    currentYear: state.yearReducer,
-    subjects: state.subjectReducer,
+    beacons: state.subjectReducer,
   };
 };
 
@@ -222,6 +235,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
+  GetAllBeacon,
   Logout,
 };
 
