@@ -43,7 +43,6 @@ class Beacon extends Component {
   render() {
     const {fetching, beacons} = this.props.beacons;
     const {token} = this.props.navigation.state.params;
-    // console.log('token',token)
 
     if (fetching) {
       return (

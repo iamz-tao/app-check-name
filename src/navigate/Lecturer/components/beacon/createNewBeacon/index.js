@@ -25,7 +25,7 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import { Logout, RegisterBeacon } from '../../../../../actions'
+import { Logout, RegisterBeacon,GetAllBeacon } from '../../../../../actions'
 import Beacons from 'react-native-beacons-manager';
 import BluetoothState from 'react-native-bluetooth-state-manager';
 import { checkLocationStatus } from '../../../../../AuthBeacon/func'
@@ -87,6 +87,19 @@ class CreateNewBeacon extends Component {
 
     this.beaconsDidRange = null;
 
+    const {token} = this.props.navigation.state.params;
+    const {GetAllBeacon} = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
+    GetAllBeacon({
+      token,
+    });
+
+    const {beacons} = this.props.subjects;
+
+    let beconFilter = beacons.map(beacon => { return beacon.uuid });
+
     const request_permission = await requestLocationPermission();
     checkLocationStatus();
 
@@ -105,9 +118,10 @@ class CreateNewBeacon extends Component {
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
-          this.setState({
-            beacon: data.beacons
-          })
+            let filterBeacon = data.beacons.filter(f => {
+              return !beconFilter.includes(f.uuid)
+            })
+            this.setState({beacon : filterBeacon})
         }
       );
     }
@@ -160,19 +174,8 @@ class CreateNewBeacon extends Component {
   }
   render() {
     const { pickerValues, section, token, uuid, major, minor, isScanning } = this.state;
-    // const {
-    //   currentYear: {year, semester},
-    // } = this.props.currentYear;
-    // const {fetching} =  this.props.subjects;
 
-    // if (fetching) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
+   
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
@@ -247,7 +250,8 @@ const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
   Logout,
-  RegisterBeacon
+  RegisterBeacon,
+  GetAllBeacon
 };
 
 export default connect(
