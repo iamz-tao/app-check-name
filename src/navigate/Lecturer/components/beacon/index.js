@@ -33,12 +33,24 @@ class Beacon extends Component {
     GetAllBeacon({
       token,
     });
+
+    //this line below when back button from next page then reload page
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        GetAllBeacon({token})
+      }
+    );
   }
 
   handleLogout = () => {
     const {Logout} = this.props;
     Logout({});
   };
+  
+  componentWillUnmount() {
+    this.willFocusSubscription.remove();
+  }
 
   render() {
     const {fetching, beacons} = this.props.beacons;

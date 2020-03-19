@@ -169,13 +169,10 @@ class CreateNewBeacon extends Component {
         payload
       }
     )
-
-
   }
   render() {
     const { pickerValues, section, token, uuid, major, minor, isScanning } = this.state;
 
-   
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
@@ -207,11 +204,10 @@ class CreateNewBeacon extends Component {
               onChangeText={name => this.setState({ name })}
             />
           </View>
-          {/* {isScanning && beacon.length ? this.renderBeacon() : this.renderemptyBeacon()} */}
+          
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :{uuid}<Text></Text></Text>
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
-
 
           <View style={styles.btnWrapper}>
             <TouchableHighlight
@@ -228,7 +224,7 @@ class CreateNewBeacon extends Component {
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }>
-              <Text style={{ color: 'white' }}>NEW</Text>
+              <Text style={{ color: 'white' }}>ADD</Text>
             </TouchableHighlight>
           </View>
         </View>

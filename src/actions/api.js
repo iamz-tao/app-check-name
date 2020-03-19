@@ -385,10 +385,12 @@ async function RegisterBeacon(params) {
     );
     const responseJson = await response.json();
     if(responseJson.status.dataStatus === 'SUCCESS'){
-      resolve(responseJson)
+        resolve(responseJson)
+        Alert.alert('Add Beacon Success')
     }
     else{
       reject(responseJson)
+      Alert.alert(responseJson.message)
     }
   })
 }
