@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
+import {Avatar, ButtonGroup, CheckBox} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -14,6 +14,9 @@ import {
   Picker,
   Modal,
   Image,
+  SafeAreaView,
+  TouchableOpacity as TouchableOpacityNative,
+  FlatList,
 } from 'react-native';
 import {
   Table,
@@ -22,6 +25,7 @@ import {
   Cell,
   TouchableOpacity,
 } from 'react-native-table-component';
+
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
 import {
   Logout,
@@ -29,6 +33,171 @@ import {
   ApproveStudent,
   RejectStudent,
 } from '../../../../../../actions';
+
+const Header = props => {
+  const {handleApprove, handleReject} = props;
+
+  return (
+    <View style={{display: 'flex'}}>
+      <View style={{display: 'flex', flexDirection: 'row'}}>
+        <View
+          style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
+          <CheckBox />
+          <Text>Select 1 item(s)</Text>
+        </View>
+        <View
+          style={
+            (styles.customStatus,
+            {
+              alignItems: 'center',
+              flexDirection: 'row',
+              justifyContent: 'flex-end',
+              marginBottom: 8,
+              flex: 1,
+            })
+          }>
+          <TouchableHighlight
+            style={styles.btnApprove}
+            onPress={() => {
+              handleApprove(s.request_id);
+            }}>
+            <Text style={{color: 'white', fontSize: 10}}>APPROVE</Text>
+          </TouchableHighlight>
+          <Text>&nbsp;</Text>
+          <TouchableHighlight
+            style={styles.btnDrop}
+            onPress={() => {
+              handleReject(s.request_id);
+            }}>
+            <Text style={{color: 'white', fontSize: 10}}>REJECT</Text>
+          </TouchableHighlight>
+        </View>
+      </View>
+      <>
+        <View style={styles.Header}>
+          <View style={styles.HeaderWrapper}>
+            <Text>NAME</Text>
+          </View>
+          <View style={styles.HeaderWrapper}>
+            <Text>STATUS</Text>
+          </View>
+          <View style={{width: '4%'}} />
+        </View>
+      </>
+    </View>
+  );
+};
+
+const StudentList = props => {
+  const {
+    students,
+    handleReject,
+    handleApprove,
+    handleChecked,
+    checkedArr,
+  } = props;
+  // console.log('students', students);
+  return (
+    // <ScrollView style={{backgroundColor: '#ffffff'}}>
+    <View style={styles.Column}>
+      <View style={styles.Wrapper}>
+        <View style={styles.Column}>
+          <View style={styles.ItemWrapper}>
+            {checkedArr !== null &&
+              checkedArr.length > 0 &&
+              checkedArr.map((s, i) => (
+                <View style={styles.Row}>
+                  <View style={styles.ListDetail}>
+                    <CheckBox
+                      checked={s.checked}
+                      onPress={() => {
+                        handleChecked(i, s.id);
+                      }}
+                      size={16}
+                      textStyle={{fontWeight: '100'}}
+                      checkedIcon="check"
+                      checkedColor="blue"
+                      containerStyle={{
+                        backgroundColor: '#FFFFFF',
+                        borderColor: '#FFFFFF',
+                        width: '56%',
+                      }}
+                      // uncheckedColor="blue"
+                      title={`${s.firstname} ${s.lastname}`}
+                    />
+                    {s.status === 'APPROVE' && (
+                      <View style={styles.customStatus}>
+                        <Text style={{color: '#1AB433'}}>APPROVE</Text>
+                      </View>
+                    )}
+                    {s.status === 'PENDING' && (
+                      <View style={styles.customStatus}>
+                        <TouchableHighlight
+                          style={styles.btnApprove}
+                          onPress={() => {
+                            handleApprove(s.request_id);
+                          }}>
+                          <Text style={{color: 'white', fontSize: 10}}>
+                            APPROVE
+                          </Text>
+                        </TouchableHighlight>
+                        <Text>&nbsp;</Text>
+                        <TouchableHighlight
+                          style={styles.btnDrop}
+                          onPress={() => {
+                            handleReject(s.request_id);
+                          }}>
+                          <Text style={{color: 'white', fontSize: 10}}>
+                            REJECT
+                          </Text>
+                        </TouchableHighlight>
+                      </View>
+                    )}
+                  </View>
+                </View>
+              ))}
+            <View style={styles.Row}>
+              <View style={styles.ListDetail}>
+                <CheckBox
+                  checked={false}
+                  size={16}
+                  textStyle={{fontWeight: '100'}}
+                  checkedIcon="check"
+                  containerStyle={{
+                    backgroundColor: '#FFFFFF',
+                    borderColor: '#FFFFFF',
+                    width: '56%',
+                  }}
+                  uncheckedColor="blue"
+                  checkedColor="red"
+                  title={'Phiyada Srikhenkan'}
+                />
+                <View style={styles.customStatus}>
+                  <TouchableHighlight
+                    style={styles.btnApprove}
+                    onPress={() => {
+                      handleApprove(s.request_id);
+                    }}>
+                    <Text style={{color: 'white', fontSize: 10}}>APPROVE</Text>
+                  </TouchableHighlight>
+                  <Text>&nbsp;</Text>
+                  <TouchableHighlight
+                    style={styles.btnDrop}
+                    onPress={() => {
+                      handleReject(s.request_id);
+                    }}>
+                    <Text style={{color: 'white', fontSize: 10}}>REJECT</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+      </View>
+    </View>
+    // </ScrollView>
+  );
+};
 
 class ListStudentApprove extends Component {
   constructor(props) {
@@ -39,7 +208,10 @@ class ListStudentApprove extends Component {
       subject_code: '',
       subject_name: '',
       token: '',
-      tableHead: ['NAME', 'STATUS'],
+      tableHead: ['', 'NAME', '', 'STATUS'],
+      checked: [],
+      checkedArr: [],
+      check: [],
     };
   }
 
@@ -94,8 +266,21 @@ class ListStudentApprove extends Component {
     });
   };
 
+  handleChecked = (index, id) => {
+    console.log('handleChecked', index, id);
+    const {checkedArr} = this.state;
+    const newStatus = {checked: !checkedArr[index].checked}
+   const test = Object.assign(checkedArr[index],newStatus)
+    console.log('test>>',test);
+    // this.setState({
+    //   checkedArr: [test],
+    // });
+  };
+
+
   render() {
     const students = this.props.subjects.studentsInSection;
+    const {checked, checkedArr, check} = this.state;
     if (!students) {
       return (
         <View style={styles.loadingWrapper}>
@@ -107,12 +292,23 @@ class ListStudentApprove extends Component {
 
     const subject = students === null ? '-' : students.subject_name;
     const section = students === null ? '-' : students.section_number;
-    const studentArr = [];
-    // students.students.map(s => {
-    //   studentArr.push
-    // })
-    const state = this.state;
+    // let ss = []
+    students.students.map((s, i) => {
+      checkedArr[i] = {
+        id: s.request_id,
+        status: s.status,
+        checked: false,
+        firstname: s.firstname,
+        lastname: s.lastname,
+      };
+    });
+    //  students.students.map((s,i) => {
+    //    this.setState({
+    //    checkedArr = checkedArr[index] === false
+    //  })
 
+    // console.log('check',check)
+    console.log('checkedArr', checkedArr);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -146,83 +342,31 @@ class ListStudentApprove extends Component {
             </View>
           ) : (
             <View style={styles.containerTest}>
-              <Table>
-                <Row
-                  data={state.tableHead}
-                  style={styles.head}
-                  textStyle={styles.textHeader}
+              <View style={styles.btnWrapper}>
+                <Header
+                  handleReject={this.handleReject}
+                  handleApprove={this.handleApprove}
+                  handleChecked={this.handleChecked}
+                  check={check}
+                  checkedArr={checkedArr}
                 />
-                {students.students.map((s, index) => (
-                  <TableWrapper style={styles.row}>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        margin: 6,
-                        width: '100%',
-                      }}>
-                      <View style={{width: 156}}>
-                        <Text>
-                          {s.firstname} {s.lastname}
-                        </Text>
-                      </View>
-                      <View style={{flex: 1}}>
-                        {s.status === 'APPROVE' ? (
-                          <View
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              flex: 1,
-                              width: '100%',
-                              alignItems: 'center',
-                            }}>
-                            <Text style={{color: '#1AB433'}}>{s.status}</Text>
-                          </View>
-                        ) : (
-                          <View style={styles.customStatus}>
-                            <TouchableHighlight
-                              style={styles.btnApprove}
-                              onPress={() => {
-                                this.handleApprove(s.request_id);
-                              }}>
-                              <Text style={{color: 'white', fontSize: 10}}>
-                                APPROVE
-                              </Text>
-                            </TouchableHighlight>
-                            <Text>&nbsp;</Text>
-                            <TouchableHighlight
-                              style={styles.btnDrop}
-                              onPress={() => {
-                                this.handleReject(s.request_id);
-                              }}>
-                              <Text style={{color: 'white', fontSize: 10}}>
-                                REJECT
-                              </Text>
-                            </TouchableHighlight>
-                          </View>
-                        )}
-                      </View>
-                    </View>
-                  </TableWrapper>
-                ))}
-              </Table>
+              </View>
+              <View style={{height: 8}} />
+              <StudentList
+                students={students.students}
+                handleReject={this.handleReject}
+                handleApprove={this.handleApprove}
+                handleChecked={this.handleChecked}
+                check={check}
+                checkedArr={checkedArr}
+              />
             </View>
           )}
-
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => this.props.navigation.navigate('StudentApprove')}>
               <Text style={{color: '#949494'}}>BACK</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.btnReq}
-              onPress={() => {
-                this.props.navigation.navigate('ListStudentApprove');
-                //    this.handleSubmit(token,section_id)
-                //    this.setModalVisible(statusReq)
-              }}>
-              <Text style={{color: 'white'}}>OK</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -254,6 +398,23 @@ export default connect(
 )(ListStudentApprove);
 
 const styles = StyleSheet.create({
+  Wrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100%',
+  },
+  ItemWrapper: {
+    width: '100%',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#D0CDCD',
+    shadowColor: 'rgba(0, 0, 0, 0.25)',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    alignSelf: 'center',
+  },
   container: {
     position: 'relative',
     display: 'flex',
@@ -269,11 +430,38 @@ const styles = StyleSheet.create({
     width: '100%',
     alignItems: 'center',
   },
+  ListDetail: {
+    display: 'flex',
+    width: '100%',
+    flexDirection: 'row',
+  },
+  Row: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    // minHeight: 16,
+    width: '100%',
+    padding: 4,
+  },
+  SubjectList: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   containerTest: {
     flex: 1,
-    padding: 16,
-    paddingTop: 30,
+    padding: 8,
+    paddingTop: 20,
     backgroundColor: '#FFFFFF',
+  },
+  Column: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    // marginBottom: 6,
+    width: '100%',
   },
   head: {
     height: 40,
@@ -289,6 +477,17 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderTopWidth: 0,
     borderColor: '#D0CDCD',
+  },
+  HeaderWrapper: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  Header: {
+    width: 300,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
   btnText: {textAlign: 'center', color: 'black'},
