@@ -47,5 +47,11 @@ export const REGISTER_BEACON_FAILURE = 'lecturer/REGISTER_BEACON_FAILURE'
 export const OPEN_CLASS = 'lecturer/OPEN_CLASS'
 export const OPEN_CLASS_SUCCESS = 'lecturer/OPEN_CLASS_SUCCESS'
 export const OPEN_CLASS_FAILED = 'lecturer/OPEN_CLASS_FAILED'
+export const GET_CLASS = 'lecturer/GET_CLASS'
+export const GET_CLASS_SUCCESS = 'lecturer/GET_CLASS_SUCCESS'
+export const GET_CLASS_FAILED = 'lecturer/GET_CLASS_FAILED'
+export const CLOSE_CLASS = 'lecturer/CLOSE_CLASS'
+export const CLOSE_CLASS_SUCCESS = 'lecturer/CLOSE_CLASS_SUCCESS'
+
 
 
