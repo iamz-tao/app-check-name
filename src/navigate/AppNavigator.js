@@ -14,6 +14,7 @@ import CreateSubject from './Lecturer/components/createSubject';
 import Beacon from './Lecturer/components/beacon';
 import CreateNewBeacon from './Lecturer/components/beacon/createNewBeacon';
 import ListMySubject from './Lecturer/components/mySubject';
+import StudentCheckName from './Student/components/checkName';
 
 const optsNavigation = {
   initialRouteName: 'Login',
@@ -35,6 +36,7 @@ const AppNavigator = createStackNavigator(
     Beacon: {screen: Beacon},
     CreateNewBeacon: {screen: CreateNewBeacon},
     MySubject: {screen: ListMySubject},
+    StudentCheckName: {screen: StudentCheckName},
   },
   optsNavigation,
 );
