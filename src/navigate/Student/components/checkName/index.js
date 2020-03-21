@@ -51,13 +51,12 @@ class StudentCheckName extends Component {
       });
       GetSubjectRegistration({
         token,
-      })
-     
+      });
     }
   }
 
   setModalVisible() {
-      this.setState({modalVisible: true});
+    this.setState({modalVisible: true});
   }
 
   handleSelect = () => {
@@ -68,9 +67,7 @@ class StudentCheckName extends Component {
     alert(select);
   };
 
-  handleSubmit = () => {
-    
-  };
+  handleSubmit = () => {};
 
   handleLogout = () => {
     const {Logout} = this.props;
@@ -82,14 +79,13 @@ class StudentCheckName extends Component {
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
-    const {subjects} = this.props.Subjects;
+    const {subjectsRegistration} = this.props.Subjects;
     const statusReq = this.props.Subjects.status;
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
     let subject_name = '';
-   
-    if (subjects === null || statusReq === null) {
+    if (subjectsRegistration === null) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -98,7 +94,9 @@ class StudentCheckName extends Component {
       );
     }
 
-    const subjectApprove = subjects.registrations.filter(s => s.status === 'APPROVE')
+    const subjectApprove = subjectsRegistration.registrations.filter(
+      s => s.status === 'APPROVE',
+    );
     subjectApprove.map((s, i) => {
       subjectsArr.push({
         label: `${s.subject_code} ${s.subject_name}`,
@@ -165,9 +163,9 @@ class StudentCheckName extends Component {
                     onPress={() => {
                       this.setState({modalVisible: !this.state.modalVisible});
                       if (statusReq === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentListSubject',{
+                        this.props.navigation.navigate('StudentListSubject', {
                           token,
-                        })
+                        });
                       }
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
@@ -260,7 +258,7 @@ class StudentCheckName extends Component {
               </Text>
             </View>
           </View>  */}
-          <View style={{height: 8}}/>
+          <View style={{height: 8}} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}

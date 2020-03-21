@@ -34,6 +34,7 @@ const initialState = {
   subjects: null,
   subjectsApprove: null,
   studentsInSection: null,
+  subjectsRegistration: null,
   beacons: null,
   err: [],
   isError: false,
@@ -157,12 +158,12 @@ export default (state = initialState, action) => {
     }
 
     case GET_SUBJECT_REGISTRATION: {
-      return {...state, fetching: true, subjects: null};
+      return {...state, fetching: true, subjectsRegistration: null};
     }
 
     case SET_SUBJECT_REGISTRATION: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: false, subjects: data.data};
+      return {...state, fetching: false, subjectsRegistration: data.data};
     }
 
     case OPEN_CLASS: {

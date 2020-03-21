@@ -41,6 +41,11 @@ import {
   OPEN_CLASS,
   OPEN_CLASS_FAILED,
   OPEN_CLASS_SUCCESS,
+  GET_CLASS,
+  GET_CLASS_SUCCESS,
+  GET_CLASS_FAILED,
+  CLOSE_CLASS,
+  CLOSE_CLASS_SUCCESS,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -254,6 +259,32 @@ export const openClassFailed = payload => ({
   payload,
   type: OPEN_CLASS_FAILED,
 });
+
+export const closeClass = payload => ({
+  payload,
+  type: CLOSE_CLASS,
+});
+
+export const closeClassSuccess = payload => ({
+  payload,
+  type: CLOSE_CLASS_SUCCESS,
+});
+
+export const getClass = payload => ({
+  payload,
+  type: GET_CLASS,
+})
+
+export const getClassSuccess = payload => ({
+  payload,
+  type: GET_CLASS_SUCCESS,
+})
+
+export const getClassFailed = payload => ({
+  payload,
+  type: GET_CLASS_FAILED,
+})
+
 
 // Auth
 export const Login = params => {
@@ -486,6 +517,32 @@ export const OpenClass = params => {
       })
       .catch(err => {
         dispatch(openClassFailed(err));
+      });
+  };
+};
+
+export const GetClass = params => {
+  return dispatch => {
+    dispatch(getClass());
+    Api.GetClass(params)
+      .then(result => {
+        dispatch(getClassSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(getClassFailed(err));
+      });
+  };
+};
+
+export const CloseClass = params => {
+  return dispatch => {
+    dispatch(closeClass());
+    Api.CloseClass(params)
+      .then(result => {
+        dispatch(closeClassSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
       });
   };
 };
