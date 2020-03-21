@@ -18,8 +18,12 @@ import {
   GET_SUBJECT_TEACH,
   SET_SUBJECT_TEACH,
   APPROVE_STUDENT,
+  APPROVE_STUDENTS,
   APPROVE_STUDENT_SUCCESS,
+  APPROVE_STUDENTS_SUCCESS,
+  REJECT_STUDENTS_SUCCESS,
   REJECT_STUDENT,
+  REJECT_STUDENTS,
   REJECT_STUDENT_SUCCESS,
   REQUEST_ERROR,
   GET_SUBJECT_OPEN_SECTION,
@@ -140,9 +144,19 @@ export const approveStudent = payload => ({
   type: APPROVE_STUDENT,
 });
 
+export const approveStudents = payload => ({
+  payload,
+  type: APPROVE_STUDENTS,
+});
+
 export const approveStudentSuccess = payload => ({
   payload,
   type: APPROVE_STUDENT_SUCCESS,
+});
+
+export const approveStudentsSuccess = payload => ({
+  payload,
+  type: APPROVE_STUDENTS_SUCCESS,
 });
 
 export const rejectStudent = payload => ({
@@ -150,9 +164,20 @@ export const rejectStudent = payload => ({
   type: REJECT_STUDENT,
 });
 
+export const rejectStudents = payload => ({
+  payload,
+  type: REJECT_STUDENTS,
+});
+
+
 export const rejectStudentSuccess = payload => ({
   payload,
   type: REJECT_STUDENT_SUCCESS,
+});
+
+export const rejectStudentsSuccess = payload => ({
+  payload,
+  type: REJECT_STUDENTS_SUCCESS,
 });
 
 export const getSubjectOpenSection = payload => ({
@@ -168,67 +193,67 @@ export const setSubjectOpenSection = payload => ({
 export const openSection = payload => ({
   payload,
   type: OPEN_SECTION,
-})
+});
 
 export const openSectionSuccess = payload => ({
   payload,
   type: OPEN_SECTION_SUCCESS,
-})
+});
 
 export const openSectionFailed = payload => ({
   payload,
   type: OPEN_SECTION_FAILED,
-})
+});
 
 export const getAllBeacon = payload => ({
   payload,
   type: GET_ALL_BEACON,
-})
+});
 
 export const setAllBeacon = payload => ({
   payload,
   type: SET_ALL_BEACON,
-})
+});
 
 export const getSubjectRegistration = payload => ({
   payload,
   type: GET_SUBJECT_REGISTRATION,
-})
+});
 
 export const setSubjectRegistration = payload => ({
   payload,
   type: SET_SUBJECT_REGISTRATION,
-})
+});
 
-export const registerBeacon = payload =>({
+export const registerBeacon = payload => ({
   payload,
-  type: REGISTER_BEACON
-})
+  type: REGISTER_BEACON,
+});
 
 export const registerBeaconSuccess = payload => ({
   payload,
-  type: REGISTER_BEACON_SUCCESS
-})
+  type: REGISTER_BEACON_SUCCESS,
+});
 
 export const registerBeaconFailure = payload => ({
   payload,
-  type: REGISTER_BEACON_FAILURE
-})
+  type: REGISTER_BEACON_FAILURE,
+});
 
 export const openClass = payload => ({
   payload,
   type: OPEN_CLASS,
-})
+});
 
 export const openClassSuccess = payload => ({
   payload,
   type: OPEN_CLASS_SUCCESS,
-})
+});
 
 export const openClassFailed = payload => ({
   payload,
   type: OPEN_CLASS_FAILED,
-})
+});
 
 // Auth
 export const Login = params => {
@@ -330,7 +355,6 @@ export const GetStudentsApprove = params => {
         dispatch(setStudentsApprove(JSON.stringify(result)));
       })
       .catch(err => {
-        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };
@@ -357,11 +381,24 @@ export const ApproveStudent = params => {
         dispatch(approveStudentSuccess(params));
       })
       .catch(err => {
-        // console.log('err>>',err)
         dispatch(requestError(err));
       });
   };
 };
+
+export const ApproveStudents = params => {
+  return dispatch => {
+    dispatch(approveStudents());
+    Api.ApproveStudents(params)
+      .then(result => {
+        dispatch(approveStudentsSuccess(params));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
 
 export const RejectStudent = params => {
   return dispatch => {
@@ -371,7 +408,19 @@ export const RejectStudent = params => {
         dispatch(rejectStudentSuccess(params));
       })
       .catch(err => {
-        // console.log('err>>',err)
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const RejectStudents = params => {
+  return dispatch => {
+    dispatch(rejectStudents());
+    Api.RejectStudents(params)
+      .then(result => {
+        dispatch(rejectStudentsSuccess(params));
+      })
+      .catch(err => {
         dispatch(requestError(err));
       });
   };
@@ -420,19 +469,14 @@ export const RegisterBeacon = params => {
   return dispatch => {
     dispatch(registerBeacon());
     Api.RegisterBeacon(params)
-    .then(result => {
-      console.log(result);
-      
-       dispatch(registerBeaconSuccess(JSON.stringify(result)))
-    })
-    .catch(err => {
-      console.log(err);
-      
-      dispatch(registerBeaconFailure(err));
-    });
-    
-  }
-}
+      .then(result => {
+        dispatch(registerBeaconSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(registerBeaconFailure(err));
+      });
+  };
+};
 export const OpenClass = params => {
   return dispatch => {
     dispatch(openClass());
