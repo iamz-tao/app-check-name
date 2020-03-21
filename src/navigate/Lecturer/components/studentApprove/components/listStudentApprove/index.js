@@ -32,6 +32,7 @@ import {
   GetStudentsApprove,
   ApproveStudent,
   RejectStudent,
+  ApproveStudents,
 } from '../../../../../../actions';
 
 const Header = props => {
@@ -126,7 +127,7 @@ const StudentList = props => {
                 <View style={styles.Row}>
                   <View style={styles.ListDetail}>
                     <CheckBox
-                      // disabled={s.status === 'APPROVE'}
+                      disabled={s.status === 'APPROVE'}
                       checked={s.checked}
                       onPress={() => {
                         handleChecked(i, s.id);
@@ -280,16 +281,30 @@ class ListStudentApprove extends Component {
 
   handleMultiApprove = () => {
     const {token} = this.props.navigation.state.params;
-    const {ApproveStudent} = this.props;
+    const {ApproveStudents} = this.props;
     const {checkedArr} = this.state;
+    let newArr = []
     const id = checkedArr
       .filter(c => c.checked === true)
       .map(idCheck => idCheck.id);
-    // console.log('approve>>', id);
-    ApproveStudent({
+    ApproveStudents({
       id,
       token,
     });
+   
+    // students.students.map((s, i) => {
+    //   newArr[i] = {
+    //     id: s.request_id,
+    //     status: s.status,
+    //     checked: false,
+    //     firstname: s.firstname,
+    //     lastname: s.lastname,
+    //   };
+    // });
+    // this.setState({
+    //   checkedArr: newArr,
+    // })
+    // console.log('qqqqqqqqqqqqqqqqq')
   };
 
   handleMultiReject = () => {
@@ -338,6 +353,8 @@ class ListStudentApprove extends Component {
         </View>
       );
     }
+
+    // console.log('students',checkedArr)
 
     const subject = students === null ? '-' : students.subject_name;
     const section = students === null ? '-' : students.section_number;
@@ -419,13 +436,17 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   // GetCurrentYear,
+  ApproveStudents,
   ApproveStudent,
   RejectStudent,
   GetStudentsApprove,
   Logout,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListStudentApprove);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(ListStudentApprove);
 
 const styles = StyleSheet.create({
   Wrapper: {

@@ -26,6 +26,8 @@ import {
   OPEN_CLASS_SUCCESS,
   OPEN_SECTION_FAILED,
   OPEN_CLASS_FAILED,
+  APPROVE_STUDENTS_SUCCESS,
+  REJECT_STUDENTS_SUCCESS,
 } from '../constant';
 
 const initialState = {
@@ -115,6 +117,21 @@ export default (state = initialState, action) => {
       const students = state.studentsInSection.students;
       const index = students.findIndex(s => s.request_id === id);
       students.splice(index, 1);
+      return {...state, fetching: false, status: 'SUCCESS' };
+    }
+
+    case APPROVE_STUDENTS_SUCCESS: {
+      const id = action.payload.id;
+      const students = state.studentsInSection.students;
+      const index = id.map(i => students.findIndex(s => s.request_id === i));
+      index.map(i => (students[i].status = 'APPROVE'));
+      return {...state, fetching: false, status: 'SUCCESS'};
+    }
+    
+    case REJECT_STUDENTS_SUCCESS: {
+      const id = action.payload.id;
+      const students = state.studentsInSection.students;
+      students.filter(rec => !id.includes(rec.request_id))
       return {...state, fetching: false, status: 'SUCCESS'};
     }
 
@@ -153,13 +170,10 @@ export default (state = initialState, action) => {
     }
 
     case OPEN_CLASS_SUCCESS: {
-      console.log('xxxx')
       return {...state, fetching: true, status: 'SUCCESS'};
     }
 
     case OPEN_SECTION_FAILED: {
-      console.log('vvvv')
-
       return {...state, fetching: true, status: 'FAILURE'};
     }
 
