@@ -35,14 +35,30 @@ import {
 } from '../../../../../../actions';
 
 const Header = props => {
-  const {handleApprove, handleReject, count} = props;
+  const {handleMultiApprove, handleMultiReject, count} = props;
 
   return (
     <View style={{display: 'flex'}}>
       <View style={{display: 'flex', flexDirection: 'row'}}>
         <View
           style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          <CheckBox size={12} containerStyle={{borderColor:'#D0CDCD', borderWidth: 1, borderRadius: 10}}/>
+          {/* <CheckBox
+            size={6}
+            containerStyle={styles.containerCheckbox}
+            uncheckedIcon={
+              <Image
+                source={require('../../../../../../../android/statics/images/unchecked.jpg')}
+                style={{width: 20, height: 20}}
+              />
+            }
+            checkedIcon={
+              <Image
+                source={require('../../../../../../../android/statics/images/check-icon.jpg')}
+                style={{width: 20, height: 20}}
+              />
+            }
+          /> */}
+          {/* <Image source={require('../../../../../../../android/statics/images/unchecked.jpg')} style={{width: 12, height: 12}} /> */}
           <Text>Select {count} item(s)</Text>
         </View>
         <View
@@ -60,7 +76,7 @@ const Header = props => {
             style={styles.btnApprove}
             disabled={count === 0}
             onPress={() => {
-              handleApprove(s.request_id);
+              handleMultiApprove();
             }}>
             <Text style={{color: 'white', fontSize: 10}}>APPROVE</Text>
           </TouchableHighlight>
@@ -69,7 +85,7 @@ const Header = props => {
             style={styles.btnDrop}
             disabled={count === 0}
             onPress={() => {
-              handleReject(s.request_id);
+              handleMultiReject();
             }}>
             <Text style={{color: 'white', fontSize: 10}}>REJECT</Text>
           </TouchableHighlight>
@@ -83,7 +99,7 @@ const Header = props => {
           <View style={styles.HeaderWrapper}>
             <Text>STATUS</Text>
           </View>
-          <View style={{width: '8%'}} />
+          <View style={{width: '4%'}} />
         </View>
       </>
     </View>
@@ -118,18 +134,33 @@ const StudentList = props => {
                       }}
                       size={10}
                       textStyle={{fontWeight: '100'}}
-                      checkedIcon="check"
-                      checkedColor="red"
-                      containerStyle={{
-                        backgroundColor: '#FFFFFF',
-                        borderColor:'#D0CDCD', borderWidth: 1, borderRadius: 10
-                      }}
-                      
+                      // checkedIcon="check"
+                      // checkedColor="red"
+                      containerStyle={styles.containerCheckbox}
                       uncheckedColor="black"
+                      uncheckedIcon={
+                        <Image
+                          source={require('../../../../../../../android/statics/images/unchecked.jpg')}
+                          style={{width: 20, height: 20}}
+                        />
+                      }
+                      checkedIcon={
+                        <Image
+                          source={require('../../../../../../../android/statics/images/check.png')}
+                          style={{width: 20, height: 20}}
+                        />
+                      }
                     />
-                      <View style={styles.customStatus}>
-                    <Text>{s.firstname} {s.lastname}</Text>
-                       </View>
+                    <View
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        width: 142,
+                      }}>
+                      <Text>
+                        {s.firstname} {s.lastname}
+                      </Text>
+                    </View>
                     {s.status === 'APPROVE' && (
                       <View style={styles.customStatus}>
                         <Text style={{color: '#1AB433'}}>APPROVE</Text>
@@ -247,6 +278,34 @@ class ListStudentApprove extends Component {
     });
   };
 
+  handleMultiApprove = () => {
+    const {token} = this.props.navigation.state.params;
+    const {ApproveStudent} = this.props;
+    const {checkedArr} = this.state;
+    const id = checkedArr
+      .filter(c => c.checked === true)
+      .map(idCheck => idCheck.id);
+    // console.log('approve>>', id);
+    ApproveStudent({
+      id,
+      token,
+    });
+  };
+
+  handleMultiReject = () => {
+    const {token} = this.props.navigation.state.params;
+    const {RejectStudent} = this.props;
+    const {checkedArr} = this.state;
+    const id = checkedArr
+      .filter(c => c.checked === true)
+      .map(idCheck => idCheck.id);
+    // console.log('reject>>', id);
+    RejectStudent({
+      id,
+      token,
+    });
+  };
+
   handleChecked = (index, id) => {
     // console.log('handleChecked', index, id);
     const {checkedArr} = this.state;
@@ -261,8 +320,8 @@ class ListStudentApprove extends Component {
 
   handleCount = () => {
     const {checkedArr} = this.state;
-    let newCount = 0
-    checkedArr.map(c => c.checked === true && newCount++)
+    let newCount = 0;
+    checkedArr.map(c => c.checked === true && newCount++);
     this.setState({
       count: newCount,
     });
@@ -318,8 +377,8 @@ class ListStudentApprove extends Component {
             <View style={styles.containerTest}>
               <View style={styles.btnWrapper}>
                 <Header
-                  handleReject={this.handleReject}
-                  handleApprove={this.handleApprove}
+                  handleMultiApprove={this.handleMultiApprove}
+                  handleMultiReject={this.handleMultiReject}
                   handleChecked={this.handleChecked}
                   checkedArr={checkedArr}
                   count={count}
@@ -366,10 +425,7 @@ const mapDispatchToProps = {
   Logout,
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(ListStudentApprove);
+export default connect(mapStateToProps, mapDispatchToProps)(ListStudentApprove);
 
 const styles = StyleSheet.create({
   Wrapper: {
@@ -388,6 +444,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     alignSelf: 'center',
+  },
+  containerCheckbox: {
+    backgroundColor: '#FFFFFF',
+    // borderColor: '#D0CDCD',
+    // borderWidth: 1,
+    // borderRadius: 10,
   },
   container: {
     position: 'relative',
@@ -426,7 +488,7 @@ const styles = StyleSheet.create({
   containerTest: {
     flex: 1,
     padding: 8,
-    paddingTop: 20,
+    paddingTop: 14,
     backgroundColor: '#FFFFFF',
   },
   Column: {
@@ -537,7 +599,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 20,
+    // marginTop: 12,
   },
   btnReq: {
     alignItems: 'center',
