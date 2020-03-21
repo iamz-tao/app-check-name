@@ -90,10 +90,12 @@ class StudentHomePage extends Component {
               <View style={{width: 20}} />
               <TouchableHighlight
                 style={styles.buttonCheckIn}
-                onPress={
-                  () => {}
-                  //   this.onClickListener('Student_subject_register')
-                }>
+                onPress={() => {
+                  this.props.navigation.navigate('StudentCheckName', {
+                    token,
+                    LoginReducer,
+                  });
+                }}>
                 <Text style={styles.LabelText}>ATTEND CLASS</Text>
               </TouchableHighlight>
             </View>
@@ -101,7 +103,7 @@ class StudentHomePage extends Component {
             <TouchableHighlight
               style={styles.buttonMySubject}
               onPress={() => {
-                this.props.navigation.navigate('StudentListSubject',{token});
+                this.props.navigation.navigate('StudentListSubject', {token});
               }}>
               <Text style={styles.LabelText}>MY SUBJECT</Text>
             </TouchableHighlight>
