@@ -1,5 +1,6 @@
 import React from 'react';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
+import NavigationServices from '../../navigate/NavigationServices';
 
 import {
   StyleSheet,
@@ -10,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 
-const SuccessModal = ({msg, setModalVisible, modalVisible, status}) => {
+const SuccessModal = ({msg, setModalVisible, modalVisible, status, path}) => {
   return (
     <View>
       <Modal
@@ -53,6 +54,9 @@ const SuccessModal = ({msg, setModalVisible, modalVisible, status}) => {
                 style={styles.btnReq}
                 onPress={() => {
                   setModalVisible();
+                  if(path){
+                    NavigationServices.navigate(path);
+                  }
                 }}>
                 <Text style={{color: 'white'}}>OK</Text>
               </TouchableHighlight>

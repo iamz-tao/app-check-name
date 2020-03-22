@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout} from '../../actions'
+import {Logout, GetClass, CloseClass} from '../../actions'
 class LecturerHomePage extends Component {
   constructor(props) {
     super(props);
@@ -22,11 +22,13 @@ class LecturerHomePage extends Component {
 
   componentDidMount() {
     const {
-      LoginReducer: {token},
+      LoginReducer: {data: {token}},
+      GetClass,
     } = this.props;
     // if (!token) {
     //   this.props.navigation.navigate('Login');
     // }
+    GetClass({token})
   }
 
   handleLogout = () => {
@@ -40,10 +42,12 @@ class LecturerHomePage extends Component {
       LoginReducer: {
         data: {token},
       },
+      class: {openClass}
     } = this.props;
     const {
       LoginReducer: {fetching},
     } = this.props;
+
 
     if (fetching) {
       return (
@@ -53,6 +57,8 @@ class LecturerHomePage extends Component {
         </View>
       );
     }
+
+    // console.log('class>>>',this.props.class)
 
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
@@ -104,8 +110,11 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonCloseClass}
                 onPress={
-                  () => {}
-                  //   this.onClickListener('Student_subject_register')
+                  () => {
+                    this.props.navigation.navigate('LecturerCloseClass', {
+                      token,
+                    });
+                  }
                 }>
                 <Text style={styles.LabelText}>CLOSE CLASS</Text>
               </TouchableHighlight>
@@ -152,10 +161,12 @@ class LecturerHomePage extends Component {
 const mapStateToProps = state => {
   return {
     LoginReducer: state.loginReducer,
+    class: state.subjectReducer
   };
 };
 
 const mapDispatchToProps = {
+  GetClass,
     Logout,
 };
 

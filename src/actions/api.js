@@ -476,28 +476,26 @@ async function OpenClass(data) {
 
 async function CloseClass(data) {
   const token = data.token;
-  // return new Promise(async (resolve, reject) => {
-  //   const response = await fetch(
-  //     'https://us-central1-kpscheckin.cloudfunctions.net/api/closeClass',
-  //     {
-  //       method: 'POST',
-  //       headers: {
-  //         Accept: 'application/json',
-  //         'Content-Type': 'application/json',
-  //         token,
-  //       },
-  //       body: JSON.stringify({
-  //         ...payload,
-  //       }),
-  //     },
-  //   );
-  //   const responseJson = await response.json();
-  //   if (responseJson.status.dataStatus === 'SUCCESS') {
-  //     resolve(responseJson);
-  //   } else {
-  //     reject(responseJson);
-  //   }
-  // });
+  const id = data.id
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/closeClass/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
 }
 
 async function GetClass(data) {
