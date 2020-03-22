@@ -8,13 +8,11 @@ import {
   View,
   Text,
   TouchableHighlight,
-  Image,
 } from 'react-native';
-import {Table, TableWrapper, Row} from 'react-native-table-component';
-// import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import {Logout, GetCurrentYear, GetSubjectsApprove} from '../../../../actions';
 
-class ListMySubject extends Component {
+import {Logout, ListStudentInSection} from '../../../../actions';
+
+class StudentInSection extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -22,21 +20,32 @@ class ListMySubject extends Component {
       section: [],
       subject_code: '',
       subject_name: '',
-      tableHead: ['SUBJECT', '', 'SECTION'],
+      token: '',
     };
   }
 
   componentDidMount() {
-    const {token} = this.props.navigation.state.params;
+    const {
+      token,
+      subject_name,
+      section_number,
+      year,
+      semester,
+    } = this.props.navigation.state.params;
+    const {ListStudentInSection} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
-    const {GetCurrentYear, GetSubjectsApprove} = this.props;
-    GetCurrentYear({
+    const payload = {
+      subject_name,
+      section_number,
+      year,
+      semester,
+    };
+
+    ListStudentInSection({
       token,
-    });
-    GetSubjectsApprove({
-      token,
+      payload,
     });
   }
 
@@ -46,15 +55,9 @@ class ListMySubject extends Component {
   };
 
   render() {
-    const state = this.state;
-    const {
-      data: {
-        user: {displayName},
-      },
-    } = this.props.user;
-    const subjects = this.props.subjects.subjectsApprove;
-    const {token} = this.props.navigation.state.params;
-    if (this.props.currentYear === [] || !subjects) {
+    const {fetching, studentsInSection} = this.props.students;
+    const {token, subject_name, section_number} = this.props.navigation.state.params;
+    if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -62,11 +65,7 @@ class ListMySubject extends Component {
         </View>
       );
     }
-
-    const {
-      currentYear: {year, semester},
-    } = this.props.currentYear;
-    // console.log('subjects',subjects)
+    // console.log('studentsInSection',studentsInSection)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -80,84 +79,54 @@ class ListMySubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>MY SUBJECT</Text>
+            <Text style={styles.styleHeader}>STUDENTS IN SECTION</Text>
           </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR : &nbsp; &nbsp; {year} / {semester}
-          </Text>
+          <View style={{marginLeft: 16}}>
+            <Text>SUBJECT NAME : {subject_name}</Text>
+            <Text>SECTION : {section_number}</Text>
+          </View>
+          <View style={{height: 16}} />
+          <View style={styles.StyleWrapper}>
+            <View style={styles.ViewWrapper}>
+              <View style={styles.ViewHeader}>
+                <Text style={{flex: 1, paddingLeft: 8}}>ID</Text>
+                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{flex: 1}}>STATUS</Text>
+              </View>
+              {studentsInSection !== null &&
+                studentsInSection.length > 0 &&
+                studentsInSection.map(s => (
+                  <View style={styles.StyleRow}>
+                    <Text style={{flex: 1, paddingLeft: 8}}>{s.std_id}</Text>
+                    <Text style={{flex: 2, paddingLeft: 8}}>
+                      {s.firstname} {s.lastname}
+                    </Text>
 
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            LECTURER NAME : &nbsp; &nbsp; {displayName}
-          </Text>
-
-          {subjects !== null && subjects.lenght === 0 ? (
-            <View style={styles.NotFound}>
-              <Image
-                style={styles.CustomImg}
-                source={require('../../../../../android/statics/images/nodata.png')}
-              />
-              <Text>There are no students in this class.</Text>
-            </View>
-          ) : (
-            <View style={styles.containerTest}>
-              <Table>
-                <Row
-                  data={state.tableHead}
-                  style={styles.head}
-                  textStyle={styles.textHeader}
-                />
-                {subjects.map((s, index) => (
-                  <TableWrapper style={styles.row}>
-                    <View
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        margin: 6,
-                        width: '100%',
-                      }}>
+                    {s.status === 'APPROVE' && (
+                      <Text style={{flex: 1, color: '#001AFF'}}>ACTIVE</Text>
+                    )}
+                    {s.status === 'DROP' && (
                       <View style={{flex: 1}}>
-                        <Text>
-                          {s.Subject.subject_code} {s.Subject.subject_name}
+                      <TouchableHighlight
+                        style={styles.btnDrop}
+                        onPress={() => {
+                          // this.props.navigate('StudentSubjectRegister');
+                        }}>
+                        <Text style={{color: 'white', fontSize: 10}}>
+                          DELETE
                         </Text>
+                      </TouchableHighlight>
                       </View>
-                      <View style={{width: 76}}>
-                        {s.sections.map(sec => (
-                          <TouchableHighlight
-                            style={{textDecorationLine: 'underline'}}
-                            onPress={() => {
-                              this.props.navigation.navigate(
-                                'StudentInSection',
-                                {
-                                  token,
-                                  subject_name: s.Subject.subject_name,
-                                  section_number: sec.section_number,
-                                  year,
-                                  semester,
-                                },
-                              );
-                            }}>
-                            <Text
-                              style={{
-                                color: '#949494',
-                                textDecorationLine: 'underline',
-                              }}>
-                              {sec.section_number}
-                            </Text>
-                          </TouchableHighlight>
-                        ))}
-                      </View>
-                    </View>
-                  </TableWrapper>
+                    )}
+                  </View>
                 ))}
-              </Table>
             </View>
-          )}
-
+          </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('MySubject', {token})
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
@@ -171,23 +140,21 @@ class ListMySubject extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    user: state.loginReducer,
-    subjects: state.subjectReducer,
+    students: state.subjectReducer,
     currentYear: state.yearReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  GetCurrentYear,
+  ListStudentInSection,
   Logout,
-  GetSubjectsApprove,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ListMySubject);
+)(StudentInSection);
 
 const styles = StyleSheet.create({
   container: {
@@ -198,12 +165,50 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
-  customStatus: {
+  btnDrop: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    backgroundColor: '#CA5353',
+    borderColor: '#CA5353',
+    color: '#ffffff',
+    width: 46,
+    height: 22,
+    borderRadius: 21,
+  },
+  ViewWrapper: {
+    width: 300,
+    height: 300,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 18,
     display: 'flex',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  StyleRow: {
+    width: 286,
+    height: 20,
+    padding: 2,
     flexDirection: 'row',
-    flex: 1,
+    marginBottom: 4,
+  },
+  StyleWrapper: {
+    display: 'flex',
     width: '100%',
     alignItems: 'center',
+  },
+  ViewHeader: {
+    width: 286,
+    height: 32,
+    padding: 4,
+    borderBottomWidth: 1,
+    marginBottom: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
   },
   containerTest: {
     flex: 1,
@@ -216,7 +221,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 0.3,
     borderColor: '#D0CDCD',
-  },
+  }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
   text: {margin: 6, color: '#525252'},
   textHeader: {margin: 6, color: '#000000'},
   row: {
@@ -226,12 +231,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderColor: '#D0CDCD',
   },
-  btn: {
-    width: 58,
-    height: 18,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 18,
-  },
+  btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
   btnText: {textAlign: 'center', color: 'black'},
   btnLogout: {
     alignItems: 'center',
@@ -250,42 +250,15 @@ const styles = StyleSheet.create({
   CustomImg: {
     width: 116,
     height: 116,
-  },
-  NotFound: {
-    display: 'flex',
-    width: '100%',
-    alignItems: 'center',
-    marginTop: 26,
-    marginBottom: 26,
+    top: 20,
   },
   ModalWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    alignItems: 'center',
-  },
-  btnApprove: {
-    alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2C9644',
-    borderColor: '#2C9644',
-    borderWidth: 1,
-    color: '#ffffff',
-    width: 54,
-    height: 24,
-    borderRadius: 21,
-  },
-  btnDrop: {
     alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#AA3D3D',
-    borderColor: '#AA3D3D',
-    borderWidth: 1,
-    color: '#ffffff',
-    width: 52,
-    height: 24,
-    borderRadius: 21,
   },
   DetailModalWrapper: {
     width: 300,
@@ -314,8 +287,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginRight: 8,
     borderWidth: 1,
-    backgroundColor: '#CA5353',
-    borderColor: '#CA5353',
+    backgroundColor: '#006765',
+    borderColor: '#006765',
     color: '#ffffff',
     width: 96,
     height: 46,

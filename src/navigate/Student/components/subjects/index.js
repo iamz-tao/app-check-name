@@ -84,8 +84,9 @@ class StudentListSubject extends Component {
   };
 
   render() {
-    const {subjects} = this.props.subjects
-    if (!subjects) {
+    const {subjectsRegistration,fetching} = this.props.subjects
+    // console.log(this.props.subjects)
+    if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -113,7 +114,7 @@ class StudentListSubject extends Component {
           <Header />
           </View>
           <View style={{height: 8}} />
-          <SubjectList subjects={subjects} />
+          <SubjectList subjects={subjectsRegistration} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
