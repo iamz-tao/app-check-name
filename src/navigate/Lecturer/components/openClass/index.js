@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -8,14 +7,12 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
   Picker,
-  Modal,
   Image,
 } from 'react-native';
 
+import {Table, TableWrapper} from 'react-native-table-component';
 import SuccessModal from '../../../../components/successModal';
 
 import {
@@ -24,7 +21,29 @@ import {
   GetSubjectsApprove,
   GetAllBeacon,
   OpenClass as LecturerOpenClass,
+  GetClass,
 } from '../../../../actions';
+
+const Header = props => {
+  return (
+    <View style={{display: 'flex'}}>
+      <View style={{display: 'flex', flexDirection: 'row'}}>
+        <View style={styles.Header}>
+          <View style={(styles.HeaderWrapper, {width: 96})}>
+            <Text style={{paddingLeft: 8}}>ID</Text>
+          </View>
+          <View style={styles.HeaderWrapper}>
+            <Text>NAME</Text>
+          </View>
+          <View style={(styles.HeaderWrapper, {width: 56})}>
+            <Text>STATUS</Text>
+          </View>
+          {/* <View style={{width: '4%'}} /> */}
+        </View>
+      </View>
+    </View>
+  );
+};
 
 class OpenClass extends Component {
   constructor(props) {
@@ -37,12 +56,18 @@ class OpenClass extends Component {
       token: '',
       beacon_id: '',
       modalVisible: false,
+      tableHead: ['ID', '', 'NAME', 'STATUS'],
     };
   }
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
-    const {GetCurrentYear, GetSubjectsApprove,GetAllBeacon} = this.props;
+    const {
+      GetCurrentYear,
+      GetSubjectsApprove,
+      GetAllBeacon,
+      GetClass,
+    } = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
@@ -55,20 +80,22 @@ class OpenClass extends Component {
     GetAllBeacon({
       token,
     });
+    GetClass({token});
   }
 
   handleSubmit = (section_id, beacon_id) => {
     const {token} = this.props.navigation.state.params;
-    const {LecturerOpenClass} = this.props
+    const {LecturerOpenClass, GetClass} = this.props;
     const payload = {
       section_id,
       beacon_id,
-    }
+    };
 
     LecturerOpenClass({
       token,
       payload,
-    })
+    });
+    GetClass({token});
   };
 
   handleLogout = () => {
@@ -78,18 +105,18 @@ class OpenClass extends Component {
 
   setModalVisible = () => {
     const {token} = this.props.navigation.state.params;
-    const {GetAllBeacon} = this.props
-    const {modalVisible} = this.state
+    const {GetAllBeacon} = this.props;
+    const {modalVisible} = this.state;
     this.setState({
       modalVisible: !modalVisible,
       section_id: '',
       beacon_id: '',
       pickerValues: '',
-    })
+    });
     GetAllBeacon({
       token,
-    })
-  }
+    });
+  };
 
   render() {
     const {pickerValues, section_id, beacon_id, modalVisible} = this.state;
@@ -98,7 +125,7 @@ class OpenClass extends Component {
       fetching,
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjectsApprove;
-    const {beacons, status} = this.props.subjects;
+    const {beacons, status, openClass} = this.props.subjects;
     const subjectsArr = [];
     const sectionArr = [];
     const beaconArr = [];
@@ -132,7 +159,7 @@ class OpenClass extends Component {
           });
         });
     }
-    if (fetching || !subjects ) {
+    if (fetching || !subjects || !openClass) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -140,118 +167,202 @@ class OpenClass extends Component {
         </View>
       );
     }
-  
-    return (
-      <ScrollView style={{backgroundColor: '#ffffff'}}>
-        <SuccessModal
-          msg={status === 'SUCCESS' ? 'Open Class Success.' : 'Open Class Failed.'}
-          setModalVisible={this.setModalVisible}
-          modalVisible={modalVisible}
-          status={status}
-        />
-        <View style={styles.container}>
-          <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight
-              style={styles.btnLogout}
-              onPress={() => {
-                this.handleLogout();
-              }}>
-              <Text style={{color: 'white'}}>Logout</Text>
-            </TouchableHighlight>
-          </View>
-          <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>OPEN CLASS</Text>
-          </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : {year} / {semester}
-          </Text>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={pickerValues}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({
-                      pickerValues: itemValue,
-                    })
-                  }>
-                  <Picker.Item label="Select Subject" value="" />
+    // console.log(openClass.length)
 
-                  {subjectsArr.length > 0 &&
-                    subjectsArr.map(s => (
-                      <Picker.Item label={s.label} value={s.value} />
-                    ))}
-                </Picker>
-              </View>
+    if (openClass.length > 0) {
+      return (
+        <ScrollView style={{backgroundColor: '#ffffff'}}>
+          <View style={styles.container}>
+            <View style={{display: 'flex', alignItems: 'flex-end'}}>
+              <TouchableHighlight
+                style={styles.btnLogout}
+                onPress={() => {
+                  this.handleLogout();
+                }}>
+                <Text style={{color: 'white'}}>Logout</Text>
+              </TouchableHighlight>
+            </View>
+            <View style={styles.containerWrapper}>
+              <Text style={styles.styleHeader}>STUDENTS IN CLASS</Text>
+            </View>
+            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+              YEAR : 23562 / f4wfw
+            </Text>
+            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+              LECTURER NAME : shfvhv hw
+            </Text>
+            {/* {subjects !== null && subjects.lenght === 0 ? ( */}
+            {/* <View style={styles.NotFound}>
+            <Image
+              style={styles.CustomImg}
+              source={require('../../../../../android/statics/images/nodata.png')}
+            />
+            <View style={{height: 4}} />
+            <Text>There are no students in this class.</Text>
+          </View> */}
+            {/* ) : ( */}
+            <View style={styles.containerTest}>
+              <Table>
+                <Header />
+                {/* {subjects.map((s, index) => ( */}
+                <TableWrapper style={styles.row}>
+                  <View
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'row',
+                      margin: 6,
+                      width: '100%',
+                    }}>
+                    <View style={{width: 86}}>
+                      <Text>5920542159</Text>
+                    </View>
+                    <View style={{flex: 1}}>
+                      <Text>pfpdfmefef pfnkwnfekgneldjgrgoj</Text>
+                    </View>
+                    <View style={{width: 76}}>
+                      {/* 1AB433 green */}
+                      {/* FF0000 red */}
+                      {/* 0029FF blue */}
+                      <Text>On time</Text>
+                    </View>
+                  </View>
+                </TableWrapper>
+                {/* ))} */}
+              </Table>
+            </View>
+            {/* )} */}
+            <View style={styles.btnWrapper}>
+              <TouchableHighlight
+                style={styles.btnCancel}
+                onPress={() =>
+                  this.props.navigation.navigate('LecturerHomePage')
+                }>
+                <Text style={{color: '#949494'}}>BACK</Text>
+              </TouchableHighlight>
             </View>
           </View>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SECTION :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={section_id}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                      section_id: itemValue,
-                    });
-                  }}>
-                  <Picker.Item label="Select Section" value="" />
+        </ScrollView>
+      );
+    } else {
+      return (
+        <ScrollView style={{backgroundColor: '#ffffff'}}>
+          <SuccessModal
+            msg={
+              status === 'SUCCESS'
+                ? 'Open Class Success.'
+                : 'Open Class Failed.'
+            }
+            setModalVisible={this.setModalVisible}
+            modalVisible={modalVisible}
+            status={status}
+            path={'LecturerHomePage'}
+          />
+          <View style={styles.container}>
+            <View style={{display: 'flex', alignItems: 'flex-end'}}>
+              <TouchableHighlight
+                style={styles.btnLogout}
+                onPress={() => {
+                  this.handleLogout();
+                }}>
+                <Text style={{color: 'white'}}>Logout</Text>
+              </TouchableHighlight>
+            </View>
+            <View style={styles.containerWrapper}>
+              <Text style={styles.styleHeader}>OPEN CLASS</Text>
+            </View>
+            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+              YEAR / SEMESTER : {year} / {semester}
+            </Text>
+            <View style={styles.styleInputWrapper}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
+                <View style={styles.stylePicker}>
+                  <Picker
+                    style={{height: 45}}
+                    selectedValue={pickerValues}
+                    onValueChange={(itemValue, itemIndex) =>
+                      this.setState({
+                        pickerValues: itemValue,
+                      })
+                    }>
+                    <Picker.Item label="Select Subject" value="" />
 
-                  {sectionArr.length > 0 &&
-                    sectionArr.map(sec => (
-                      <Picker.Item label={sec.label} value={sec.value} />
-                    ))}
-                </Picker>
+                    {subjectsArr.length > 0 &&
+                      subjectsArr.map(s => (
+                        <Picker.Item label={s.label} value={s.value} />
+                      ))}
+                  </Picker>
+                </View>
               </View>
             </View>
-          </View>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT BEACON :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{height: 45}}
-                  selectedValue={beacon_id}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                      beacon_id: itemValue,
-                    });
-                  }}>
-                  <Picker.Item label="Select Beacon" value="" />
+            <View style={styles.styleInputWrapper}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.styleLabel}>SELECT SECTION :</Text>
+                <View style={styles.stylePicker}>
+                  <Picker
+                    style={{height: 45}}
+                    selectedValue={section_id}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.setState({
+                        section_id: itemValue,
+                      });
+                    }}>
+                    <Picker.Item label="Select Section" value="" />
 
-                  {beaconArr.length > 0 &&
-                    beaconArr.map(sec => (
-                      <Picker.Item label={sec.label} value={sec.value} />
-                    ))}
-                </Picker>
+                    {sectionArr.length > 0 &&
+                      sectionArr.map(sec => (
+                        <Picker.Item label={sec.label} value={sec.value} />
+                      ))}
+                  </Picker>
+                </View>
               </View>
             </View>
+            <View style={styles.styleInputWrapper}>
+              <View style={styles.inputContainer}>
+                <Text style={styles.styleLabel}>SELECT BEACON :</Text>
+                <View style={styles.stylePicker}>
+                  <Picker
+                    style={{height: 45}}
+                    selectedValue={beacon_id}
+                    onValueChange={(itemValue, itemIndex) => {
+                      this.setState({
+                        beacon_id: itemValue,
+                      });
+                    }}>
+                    <Picker.Item label="Select Beacon" value="" />
+
+                    {beaconArr.length > 0 &&
+                      beaconArr.map(sec => (
+                        <Picker.Item label={sec.label} value={sec.value} />
+                      ))}
+                  </Picker>
+                </View>
+              </View>
+            </View>
+            <View style={styles.btnWrapper}>
+              <TouchableHighlight
+                style={styles.btnCancel}
+                onPress={() =>
+                  this.props.navigation.navigate('LecturerHomePage')
+                }>
+                <Text style={{color: '#949494'}}>CANCEL</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.btnReq}
+                disabled={
+                  beacon_id === '' || section_id === '' || pickerValues === ''
+                }
+                onPress={() => {
+                  this.handleSubmit(section_id, beacon_id);
+                  this.setModalVisible();
+                }}>
+                <Text style={{color: 'white'}}>OPEN</Text>
+              </TouchableHighlight>
+            </View>
           </View>
-          <View style={styles.btnWrapper}>
-            <TouchableHighlight
-              style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
-              }>
-              <Text style={{color: '#949494'}}>CANCEL</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.btnReq}
-              disabled={beacon_id === '' || section_id === '' || pickerValues === ''}
-              onPress={() => {
-                   this.handleSubmit(section_id, beacon_id)
-                   this.setModalVisible()
-              }}>
-              <Text style={{color: 'white'}}>OPEN</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-      </ScrollView>
-    );
+        </ScrollView>
+      );
+    }
   }
 }
 
@@ -269,6 +380,7 @@ const mapDispatchToProps = {
   GetCurrentYear,
   GetAllBeacon,
   LecturerOpenClass,
+  GetClass,
   Logout,
 };
 
@@ -285,6 +397,12 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#ffffff',
     height: '100%',
+  },
+  containerTest: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: '#FFFFFF',
   },
   btnLogout: {
     alignItems: 'center',
@@ -305,12 +423,38 @@ const styles = StyleSheet.create({
     height: 116,
     top: 20,
   },
+  text: {margin: 6, color: '#525252'},
+  textHeader: {margin: 6, color: '#000000'},
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderTopWidth: 0,
+    borderColor: '#D0CDCD',
+  },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
+  },
+  HeaderWrapper: {
+    flex: 1,
+    alignItems: 'flex-start',
+  },
+  Header: {
+    width: 300,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   ModalWrapper: {
     display: 'flex',
     justifyContent: 'center',
     alignSelf: 'center',
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   DetailModalWrapper: {
