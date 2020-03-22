@@ -25,10 +25,11 @@ import {
   TouchableOpacity,
 } from 'react-native-table-component';
 // import {GetCurrentYear, GetStudentApprove} from '../../../../../../actions';
-import { Logout, RegisterBeacon } from '../../../../../actions'
+import { Logout, RegisterBeacon, GetAllBeacon } from '../../../../../actions'
 import Beacons from 'react-native-beacons-manager';
 import BluetoothState from 'react-native-bluetooth-state-manager';
 import { checkLocationStatus } from '../../../../../AuthBeacon/func'
+import beacon from '..';
 
 //check Bluetooth
 BluetoothState.requestToEnable();
@@ -87,6 +88,19 @@ class CreateNewBeacon extends Component {
 
     this.beaconsDidRange = null;
 
+    const { token } = this.props.navigation.state.params;
+    const { GetAllBeacon } = this.props;
+    if (!token) {
+      this.props.navigation.navigate('Login');
+    }
+    GetAllBeacon({
+      token,
+    });
+
+    const { beacons } = this.props.subjects;
+
+    let beconFilter = beacons.map(beacon => { return beacon.uuid });
+
     const request_permission = await requestLocationPermission();
     checkLocationStatus();
 
@@ -94,20 +108,14 @@ class CreateNewBeacon extends Component {
 
       Beacons.detectIBeacons();
 
-      Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
-        // console.log(data);
-      })
-        .catch((reason) => {
-          console.log(reason);
-        });
-
       // Print a log of the detected iBeacons (1 per second)
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
-          this.setState({
-            beacon: data.beacons
+          let filterBeacon = data.beacons.filter(f => {
+            return !beconFilter.includes(f.uuid)
           })
+          this.setState({ beacon: filterBeacon })
         }
       );
     }
@@ -125,17 +133,26 @@ class CreateNewBeacon extends Component {
   scan = () => {
     const { beacon, isScanning } = this.state
     console.log("Scan")
-    this.setState({
-      isScanning: !isScanning
+    Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
+      // console.log(data);
     })
-
-    beacon.map((b) => {
+      .catch((reason) => {
+        console.log(reason);
+      });
+      
+    setTimeout(() => {
       this.setState({
-        uuid: b.uuid,
-        major: b.major,
-        minor: b.minor
+        isScanning: !isScanning
       })
-    })
+      beacon.map((b) => {
+        this.setState({
+          uuid: b.uuid,
+          major: b.major,
+          minor: b.minor
+        })
+      })
+    }, 2000);
+
   }
 
 
@@ -155,24 +172,11 @@ class CreateNewBeacon extends Component {
         payload
       }
     )
-
-
   }
-  render() {
-    const { pickerValues, section, token, uuid, major, minor, isScanning } = this.state;
-    // const {
-    //   currentYear: {year, semester},
-    // } = this.props.currentYear;
-    // const {fetching} =  this.props.subjects;
 
-    // if (fetching) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
+  render() {
+    const { pickerValues, section, token, uuid, major, minor, isScanning, beacon } = this.state;
+
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
@@ -204,12 +208,15 @@ class CreateNewBeacon extends Component {
               onChangeText={name => this.setState({ name })}
             />
           </View>
-          {/* {isScanning && beacon.length ? this.renderBeacon() : this.renderemptyBeacon()} */}
+
+          {isScanning && beacon.length > 0 ? <View>
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :{uuid}<Text></Text></Text>
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
           <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
-
-
+          </View> : 
+          <View>
+            <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon</Text>
+          </View>}
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
@@ -225,7 +232,7 @@ class CreateNewBeacon extends Component {
                 //    this.handleSubmit(token,section_id)
                 //    this.setModalVisible(statusReq)
               }>
-              <Text style={{ color: 'white' }}>NEW</Text>
+              <Text style={{ color: 'white' }}>ADD</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -247,7 +254,8 @@ const mapDispatchToProps = {
   // GetCurrentYear,
   // GetStudentApprove,
   Logout,
-  RegisterBeacon
+  RegisterBeacon,
+  GetAllBeacon
 };
 
 export default connect(
