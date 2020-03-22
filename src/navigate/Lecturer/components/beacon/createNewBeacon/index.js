@@ -108,13 +108,6 @@ class CreateNewBeacon extends Component {
 
       Beacons.detectIBeacons();
 
-      Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
-        // console.log(data);
-      })
-        .catch((reason) => {
-          console.log(reason);
-        });
-
       // Print a log of the detected iBeacons (1 per second)
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
@@ -140,6 +133,13 @@ class CreateNewBeacon extends Component {
   scan = () => {
     const { beacon, isScanning } = this.state
     console.log("Scan")
+    Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
+      // console.log(data);
+    })
+      .catch((reason) => {
+        console.log(reason);
+      });
+      
     setTimeout(() => {
       this.setState({
         isScanning: !isScanning
