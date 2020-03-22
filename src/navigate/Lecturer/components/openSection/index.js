@@ -10,6 +10,8 @@ import {
   TextInput,
   TouchableHighlight,
   Picker,
+  Modal,
+  Image,
 } from 'react-native';
 import SettingSection from './components/settingSection';
 
@@ -26,6 +28,7 @@ class OpenSection extends Component {
     this.state = {
       pickerValues: '',
       modalVisible: false,
+      modalVisibleSubmit: false,
       late_time: '',
       absent_time: '',
       total_mark: '',
@@ -51,6 +54,14 @@ class OpenSection extends Component {
     GetSubjectOpenSection({
       token,
     });
+  }
+
+  setModalSubmit() {
+    this.setState({modalVisibleSubmit: true});
+  }
+
+  setModalVisible() {
+    this.setState({modalVisible: true});
   }
 
   handleLogout = () => {
@@ -151,13 +162,24 @@ class OpenSection extends Component {
     LecturerOpenSection({
       token,
       payload,
-    })
+    });
   };
 
   render() {
-    const {pickerValues, modalVisible} = this.state;
+    const {
+      pickerValues,
+      modalVisible,
+      modalVisibleSubmit,
+      fday,
+      sday,
+      s_time,
+      e_time,
+      s_time2,
+      e_time2,
+    } = this.state;
     const {token} = this.props.navigation.state.params;
     const subjects = this.props.subjects.subjects;
+    const statusReq = this.props.subjects.status;
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
@@ -169,9 +191,65 @@ class OpenSection extends Component {
         </View>
       );
     }
-
+    console.log(e_time);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
+        <View>
+          <Modal
+            animationType="slide"
+            // transparent={false}
+            visible={this.state.modalVisibleSubmit}
+            presentationStyle="pageSheet">
+            <View style={styles.ModalWrapper}>
+              <View style={styles.DetailModalSuccessWrapper}>
+                <View style={{width: '100%', alignItems: 'center'}}>
+                  {statusReq !== null && statusReq === 'SUCCESS' && (
+                    <View style={{alignItems: 'center'}}>
+                      <Image
+                        style={styles.CustomImg}
+                        source={require('../../../../../android/statics/images/success.png')}
+                      />
+                      <View style={{height: 36}} />
+                      <Text style={styles.styleLabelFail}>
+                        OPEN SECTION SUCCESS
+                      </Text>
+                      <Text style={styles.styleLabel}>
+                        You can check list subjects your teach in MY SUBJECT
+                        page.
+                      </Text>
+                    </View>
+                  )}
+                  {statusReq !== null && statusReq === 'FAILURE' && (
+                    <View style={{alignItems: 'center'}}>
+                      <Image
+                        style={styles.CustomImg}
+                        source={require('../../../../../android/statics/images/icon-failure.png')}
+                      />
+                      <View style={{height: 36}} />
+                      <Text style={styles.styleLabelFail}>
+                        OPEN SECTION FAILED
+                      </Text>
+                      <Text style={styles.styleLabel}>
+                        ERROR! Could not handle the request.
+                      </Text>
+                    </View>
+                  )}
+                  <View style={{height: 16}} />
+                  <TouchableHighlight
+                    style={styles.btnReq}
+                    onPress={() => {
+                      this.setState({modalVisibleSubmit: !modalVisibleSubmit});
+                      this.props.navigation.navigate('MySubject', {
+                        token,
+                      });
+                    }}>
+                    <Text style={{color: 'white'}}>OK</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </View>
+          </Modal>
+        </View>
         <SettingSection
           setModalVisible={this.setModalVisible}
           modalVisible={modalVisible}
@@ -203,6 +281,8 @@ class OpenSection extends Component {
                       pickerValues: itemValue,
                     })
                   }>
+                  <Picker.Item label={'Select Subject'} />
+
                   {subjects !== null &&
                     subjects.map(s => (
                       <Picker.Item
@@ -266,13 +346,25 @@ class OpenSection extends Component {
               <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}>
                 DETAIL :{' '}
               </Text>
-              <Text style={{flex: 2}}>Th 09.00 AM - 10.30 AM</Text>
+              {fday !== null &&
+                e_time !== 'null:undefined null' &&
+                s_time !== 'null:undefined null' && (
+                  <Text style={{flex: 3}}>
+                    {fday} {s_time} - {e_time}
+                  </Text>
+                )}
             </View>
             <View style={{flexDirection: 'row'}}>
               <Text
                 style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}
               />
-              <Text style={{flex: 2}}>Tue 10.30 AM - 12.00 PM</Text>
+              {sday !== null &&
+                e_time2 !== 'null:undefined null' &&
+                s_time2 !== 'null:undefined null' && (
+                  <Text style={{flex: 3}}>
+                    {sday} {s_time2} - {e_time2}
+                  </Text>
+                )}
             </View>
           </View>
           <View style={styles.btnWrapper}>
@@ -285,7 +377,10 @@ class OpenSection extends Component {
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
-              onPress={() => this.handleSubmit()}>
+              onPress={() => {
+                this.handleSubmit();
+                this.setModalSubmit();
+              }}>
               <Text style={{color: 'white'}}>OPEN</Text>
             </TouchableHighlight>
           </View>
@@ -362,6 +457,39 @@ const styles = StyleSheet.create({
     width: 68,
     height: 36,
     borderRadius: 21,
+  },
+  ModalWrapper: {
+    display: 'flex',
+    justifyContent: 'center',
+    alignSelf: 'center',
+    flex: 1,
+    alignItems: 'center',
+  },
+  DetailModalWrapper: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#EBEAEA',
+    borderRadius: 19,
+  },
+  DetailModalSuccessWrapper: {
+    width: 300,
+    height: 300,
+    backgroundColor: '#F7F7F7',
+    borderColor: '#EBEAEA',
+    borderRadius: 19,
+  },
+  CustomImg: {
+    width: 116,
+    height: 116,
+    top: 20,
+  },
+  styleLabelFail: {
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 21,
+    display: 'flex',
+    paddingLeft: 12,
+    color: '#CA5353',
   },
   btnWrapper: {
     display: 'flex',
