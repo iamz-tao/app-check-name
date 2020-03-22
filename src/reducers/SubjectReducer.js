@@ -24,6 +24,7 @@ import {
   SET_SUBJECT_REGISTRATION,
   OPEN_CLASS,
   OPEN_CLASS_SUCCESS,
+  OPEN_SECTION_SUCCESS,
   OPEN_SECTION_FAILED,
   OPEN_CLASS_FAILED,
   APPROVE_STUDENTS_SUCCESS,
@@ -178,6 +179,14 @@ export default (state = initialState, action) => {
     }
 
     case OPEN_CLASS_SUCCESS: {
+      return {...state, fetching: true, status: 'SUCCESS'};
+    }
+
+    case OPEN_SECTION_FAILED: {
+      return {...state, fetching: true, status: null};
+    }
+
+    case OPEN_SECTION_SUCCESS: {
       return {...state, fetching: true, status: 'SUCCESS'};
     }
 
