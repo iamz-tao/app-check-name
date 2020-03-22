@@ -46,6 +46,9 @@ import {
   GET_CLASS_FAILED,
   CLOSE_CLASS,
   CLOSE_CLASS_SUCCESS,
+  CHECKNAME,
+  CHECKNAME_SUCCESS,
+  CHECKNAME_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -284,6 +287,22 @@ export const getClassFailed = payload => ({
   payload,
   type: GET_CLASS_FAILED,
 })
+
+export const checkname = payload => ({
+  payload,
+  type:CHECKNAME
+})
+
+export const checkname_success = payload => ({
+  payload,
+  type:CHECKNAME_SUCCESS
+})
+
+export const checkname_failure = payload => ({
+  payload,
+  type:CHECKNAME_FAILURE
+})
+
 
 
 // Auth
