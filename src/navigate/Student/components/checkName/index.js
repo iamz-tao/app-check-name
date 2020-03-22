@@ -14,6 +14,8 @@ import {
   Picker,
   Modal,
   Image,
+  DeviceEventEmitter,
+  PermissionsAndroid
 } from 'react-native';
 
 import {
@@ -22,6 +24,7 @@ import {
   GetSubjectRegistration,
 } from '../../../../actions';
 
+import Beacons from 'react-native-beacons-manager';
 class StudentCheckName extends Component {
   constructor(props) {
     super(props);
@@ -33,7 +36,25 @@ class StudentCheckName extends Component {
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+
+    const request_permission = await this.requestLocationPermission();
+
+    if (request_permission) {
+
+      Beacons.detectIBeacons();
+
+      // Print a log of the detected iBeacons (1 per second)
+      this.beaconsDidRange = DeviceEventEmitter.addListener(
+        'beaconsDidRange',
+        (data) => {
+          // console.log(data.beacons)
+          this.setState({
+            beacon: data.beacons
+          })
+        }
+      );
+    }
     const {
       LoginReducer: {
         data: {token},
@@ -55,6 +76,31 @@ class StudentCheckName extends Component {
     }
   }
 
+  requestLocationPermission = async () => {
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+        {
+          title: 'Location Permission',
+          message:
+            'This example app needs to access your location in order to use bluetooth beacons.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      );
+      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+        return true;
+      } else {
+        // permission denied
+        return false;
+      }
+    } catch (err) {
+      console.warn(err);
+      return false;
+    }
+  }
+
   setModalVisible() {
     this.setState({modalVisible: true});
   }
@@ -67,12 +113,24 @@ class StudentCheckName extends Component {
     alert(select);
   };
 
-  handleSubmit = () => {};
+  handleSubmit = () => {
+    Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
+      // console.log(data);
+    })
+      .catch((reason) => {
+        console.log(reason);
+      });
+  };
 
   handleLogout = () => {
     const {Logout} = this.props;
     Logout({});
   };
+
+  componentWillUnmount(){
+    this.beaconsDidRange = null;
+    Beacons.stopRangingBeaconsInRegion('REGION1');
+  }
 
   render() {
     const {pickerValues, section, token} = this.state;
@@ -269,7 +327,8 @@ class StudentCheckName extends Component {
               style={styles.btnReq}
               onPress={() => {
                 // this.handleSubmit(token, section_id);
-                this.setModalVisible();
+                this.handleSubmit();
+                // this.setModalVisible();
               }}>
               <Text style={{color: 'white'}}>CHECK</Text>
             </TouchableHighlight>

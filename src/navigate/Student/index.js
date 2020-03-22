@@ -10,6 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
+import { checkLocationStatus } from '../../AuthBeacon/func';
 import {StudentGetSubjectRegis, Logout} from '../../actions';
 
 class StudentHomePage extends Component {
@@ -21,7 +22,9 @@ class StudentHomePage extends Component {
     };
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    checkLocationStatus();
+  }
 
   handleLogout = () => {
     const {Logout} = this.props;
