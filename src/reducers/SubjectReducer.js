@@ -28,13 +28,21 @@ import {
   OPEN_CLASS_FAILED,
   APPROVE_STUDENTS_SUCCESS,
   REJECT_STUDENTS_SUCCESS,
+  GET_CLASS,
+  GET_CLASS_SUCCESS,
+  GET_CLASS_FAILED,
+  CLOSE_CLASS,
+  CLOSE_CLASS_SUCCESS,
 } from '../constant';
+import {GetClass} from '../actions';
 
 const initialState = {
   subjects: null,
   subjectsApprove: null,
   studentsInSection: null,
+  subjectsRegistration: null,
   beacons: null,
+  openClass: null,
   err: [],
   isError: false,
   fetching: true,
@@ -117,7 +125,7 @@ export default (state = initialState, action) => {
       const students = state.studentsInSection.students;
       const index = students.findIndex(s => s.request_id === id);
       students.splice(index, 1);
-      return {...state, fetching: false, status: 'SUCCESS' };
+      return {...state, fetching: false, status: 'SUCCESS'};
     }
 
     case APPROVE_STUDENTS_SUCCESS: {
@@ -127,11 +135,11 @@ export default (state = initialState, action) => {
       index.map(i => (students[i].status = 'APPROVE'));
       return {...state, fetching: false, status: 'SUCCESS'};
     }
-    
+
     case REJECT_STUDENTS_SUCCESS: {
       const id = action.payload.id;
       const students = state.studentsInSection.students;
-      students.filter(rec => !id.includes(rec.request_id))
+      students.filter(rec => !id.includes(rec.request_id));
       return {...state, fetching: false, status: 'SUCCESS'};
     }
 
@@ -157,12 +165,12 @@ export default (state = initialState, action) => {
     }
 
     case GET_SUBJECT_REGISTRATION: {
-      return {...state, fetching: true, subjects: null};
+      return {...state, fetching: true, subjectsRegistration: null};
     }
 
     case SET_SUBJECT_REGISTRATION: {
       const data = JSON.parse(action.payload);
-      return {...state, fetching: false, subjects: data.data};
+      return {...state, fetching: false, subjectsRegistration: data.data};
     }
 
     case OPEN_CLASS: {
@@ -175,6 +183,32 @@ export default (state = initialState, action) => {
 
     case OPEN_SECTION_FAILED: {
       return {...state, fetching: true, status: 'FAILURE'};
+    }
+
+    case GET_CLASS: {
+      return {...state, fetching: true, openClass: null};
+    }
+
+    case GET_CLASS_SUCCESS: {
+      const data = JSON.parse(action.payload);
+      return {
+        ...state,
+        fetching: false,
+        openClass: data.data,
+        status: 'SUCCESS',
+      };
+    }
+
+    case GET_CLASS_FAILED: {
+      return {...state, fetching: true, status: 'FAILURE'};
+    }
+
+    case CLOSE_CLASS: {
+      return {...state, fetching: true};
+    }
+
+    case CLOSE_CLASS_SUCCESS: {
+      return {...state, fetching: false, status: 'SUCCESS'};
     }
 
     default:
