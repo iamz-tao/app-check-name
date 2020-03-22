@@ -46,6 +46,8 @@ import {
   GET_CLASS_FAILED,
   CLOSE_CLASS,
   CLOSE_CLASS_SUCCESS,
+  GET_STUDENT_IN_SECTION,
+  SET_STUDENT_IN_SECTION,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -285,6 +287,15 @@ export const getClassFailed = payload => ({
   type: GET_CLASS_FAILED,
 })
 
+export const getStudentInSection = payload => ({
+  payload,
+  type: GET_STUDENT_IN_SECTION,
+})
+
+export const setStudentInSection = payload => ({
+  payload,
+  type: SET_STUDENT_IN_SECTION,
+})
 
 // Auth
 export const Login = params => {
@@ -540,6 +551,19 @@ export const CloseClass = params => {
     Api.CloseClass(params)
       .then(result => {
         dispatch(closeClassSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const ListStudentInSection = params => {
+  return dispatch => {
+    dispatch(getStudentInSection());
+    Api.GetStudentInSection(params)
+      .then(result => {
+        dispatch(setStudentInSection(JSON.stringify(result)));
       })
       .catch(err => {
         dispatch(requestError(err));

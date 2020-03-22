@@ -34,6 +34,8 @@ import {
   GET_CLASS_FAILED,
   CLOSE_CLASS,
   CLOSE_CLASS_SUCCESS,
+  GET_STUDENT_IN_SECTION,
+  SET_STUDENT_IN_SECTION,
 } from '../constant';
 import {GetClass} from '../actions';
 
@@ -42,6 +44,7 @@ const initialState = {
   subjectsApprove: null,
   studentsInSection: null,
   subjectsRegistration: null,
+  studentsInSection: null,
   beacons: null,
   openClass: null,
   err: [],
@@ -218,6 +221,15 @@ export default (state = initialState, action) => {
 
     case CLOSE_CLASS_SUCCESS: {
       return {...state, fetching: false, status: 'SUCCESS'};
+    }
+
+    case GET_STUDENT_IN_SECTION: {
+      return {...state, fetching: true, studentsInSection: null};
+    }
+
+    case SET_STUDENT_IN_SECTION: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, studentsInSection: data.data};
     }
 
     default:

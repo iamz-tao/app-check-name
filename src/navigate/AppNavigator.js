@@ -16,6 +16,7 @@ import CreateNewBeacon from './Lecturer/components/beacon/createNewBeacon';
 import ListMySubject from './Lecturer/components/mySubject';
 import StudentCheckName from './Student/components/checkName';
 import LecturerCloseClass from './Lecturer/components/closeClass';
+import StudentInSection from './Lecturer/components/listStudents';
 
 const optsNavigation = {
   initialRouteName: 'Login',
@@ -39,6 +40,7 @@ const AppNavigator = createStackNavigator(
     MySubject: {screen: ListMySubject},
     StudentCheckName: {screen: StudentCheckName},
     LecturerCloseClass: {screen: LecturerCloseClass},
+    StudentInSection: {screen: StudentInSection},
   },
   optsNavigation,
 );
