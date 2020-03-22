@@ -52,6 +52,9 @@ export const GET_CLASS_SUCCESS = 'lecturer/GET_CLASS_SUCCESS'
 export const GET_CLASS_FAILED = 'lecturer/GET_CLASS_FAILED'
 export const CLOSE_CLASS = 'lecturer/CLOSE_CLASS'
 export const CLOSE_CLASS_SUCCESS = 'lecturer/CLOSE_CLASS_SUCCESS'
+export const GET_STUDENT_IN_SECTION = 'lecturer/GET_STUDENT_IN_SECTION'
+export const SET_STUDENT_IN_SECTION = 'lecturer/SET_STUDENT_IN_SECTION'
+
 
 export const CHECKNAME = 'student/checkname'
 export const CHECKNAME_SUCCESS = 'student/checkname_success'
