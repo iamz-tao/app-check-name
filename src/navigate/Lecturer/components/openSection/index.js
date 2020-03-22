@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -9,7 +8,6 @@ import {
   View,
   Text,
   TextInput,
-  Alert,
   TouchableHighlight,
   Picker,
 } from 'react-native';
@@ -43,7 +41,7 @@ class OpenSection extends Component {
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
-    const {GetSubjectOpenSection} = this.props;
+    const {GetSubjectOpenSection, GetCurrentYear} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
@@ -65,7 +63,7 @@ class OpenSection extends Component {
     this.setState({modalVisible: !modalVisible});
   };
 
-  handleSetting = (data) => {
+  handleSetting = data => {
     const {modalVisible} = this.state;
     const {fday, sday, s_time, e_time, s_time2, e_time2} = data;
     this.setState({
@@ -93,21 +91,35 @@ class OpenSection extends Component {
       s_time2,
       e_time2,
     } = this.state;
+    const {
+      currentYear: {year, semester},
+    } = this.props.currentYear;
     const students = this.props.subjects.subjects;
     const {token} = this.props.navigation.state.params;
-    const {LecturerOpenSection} = this.props
-    const Subject = students.filter(s => s.id === pickerValues);
-    const Time = [];
-    if (s_time2 !== null && e_time2 !== null) {
-      Time.push([
+    const {LecturerOpenSection} = this.props;
+    const Subject = students.filter(s => s.id === pickerValues)[0];
+    let Time = [];
+    if (
+      s_time !== null &&
+      e_time !== null &&
+      s_time2 === null &&
+      e_time2 === null
+    ) {
+      Time = [
         {
           day: fday,
           start_time: s_time,
           end_time: e_time,
         },
-      ]);
-    } else {
-      Time.push([
+      ];
+    }
+    if (
+      s_time !== null &&
+      e_time !== null &&
+      s_time2 !== null &&
+      e_time2 !== null
+    ) {
+      Time = [
         {
           day: fday,
           start_time: s_time,
@@ -118,22 +130,29 @@ class OpenSection extends Component {
           start_time: s_time2,
           end_time: e_time2,
         },
-      ]);
+      ];
     }
 
     const payload = {
-      Subject,
+      year,
+      semester,
+      Subject: {
+        approved_status: Subject.approved_status,
+        subject_code: Subject.subject_code,
+        subject_name: Subject.subject_name,
+      },
       section_number,
       Time,
       time_late: late_time,
       time_absent: absent_time,
       total_mark,
     };
-    // LecturerOpenSection({
-    //   token,
-    //   payload,
-    // })
-  }
+    // console.log(payload)
+    LecturerOpenSection({
+      token,
+      payload,
+    })
+  };
 
   render() {
     const {pickerValues, modalVisible} = this.state;
@@ -200,7 +219,7 @@ class OpenSection extends Component {
                 <TextInput
                   style={styles.inputs}
                   placeholder="Late Time"
-                  onChangeText={firstname => this.setState({firstname})}
+                  onChangeText={late_time => this.setState({late_time})}
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
@@ -208,7 +227,7 @@ class OpenSection extends Component {
                 <TextInput
                   style={styles.inputs}
                   placeholder="Absent Time"
-                  onChangeText={firstname => this.setState({firstname})}
+                  onChangeText={absent_time => this.setState({absent_time})}
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
@@ -216,7 +235,7 @@ class OpenSection extends Component {
                 <TextInput
                   style={styles.inputs}
                   placeholder="Total Mark"
-                  onChangeText={firstname => this.setState({firstname})}
+                  onChangeText={total_mark => this.setState({total_mark})}
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
@@ -225,7 +244,9 @@ class OpenSection extends Component {
                   <TextInput
                     style={styles.inputs}
                     placeholder="Section Number"
-                    onChangeText={firstname => this.setState({firstname})}
+                    onChangeText={section_number =>
+                      this.setState({section_number})
+                    }
                   />
                   <Text>&nbsp;</Text>
                   <TouchableHighlight
@@ -262,7 +283,9 @@ class OpenSection extends Component {
               }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
-            <TouchableHighlight style={styles.btnReq}>
+            <TouchableHighlight
+              style={styles.btnReq}
+              onPress={() => this.handleSubmit()}>
               <Text style={{color: 'white'}}>OPEN</Text>
             </TouchableHighlight>
           </View>
