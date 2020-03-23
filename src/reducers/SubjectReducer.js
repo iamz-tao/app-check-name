@@ -36,6 +36,10 @@ import {
   CLOSE_CLASS_SUCCESS,
   GET_STUDENT_IN_SECTION,
   SET_STUDENT_IN_SECTION,
+  STUDENT_DROP,
+  STUDENT_DROP_SUCCESS,
+  DELETE_STD_FROM_SECTION,
+  DELETE_STD_FROM_SECTION_SUCCESS,
 } from '../constant';
 import {GetClass} from '../actions';
 
@@ -230,6 +234,34 @@ export default (state = initialState, action) => {
     case SET_STUDENT_IN_SECTION: {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, studentsInSection: data.data};
+    }
+
+    case STUDENT_DROP: {
+      const id = action.payload.id;
+      const students = state.subjectsRegistration;
+      const index = students.registrations.findIndex(s => s.request_id === id);
+      students.registrations[index].status = 'DROP';
+      return {...state, fetching: false, status: 'SUCCESS'};
+      // return {...state, fetching: true, status: null};
+    }
+
+    case STUDENT_DROP_SUCCESS: {
+      const id = action.payload.id;
+      const students = state.subjectsRegistration;
+      const index = students.registrations.findIndex(s => s.request_id === id);
+      students.registrations[index].status = 'DROP';
+      return {...state, fetching: false, status: 'SUCCESS'};
+    }
+
+    case DELETE_STD_FROM_SECTION: {
+      return {...state, fetching: true, status: null};
+    }
+
+    case DELETE_STD_FROM_SECTION_SUCCESS: {
+      const id = action.payload.id;
+      const students = state.studentsInSection.students;
+      students.filter(rec => !id.includes(rec.request_id));
+      return {...state, fetching: false, status: 'SUCCESS'};
     }
 
     default:
