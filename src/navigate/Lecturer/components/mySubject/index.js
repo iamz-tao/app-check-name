@@ -47,11 +47,7 @@ class ListMySubject extends Component {
 
   render() {
     const state = this.state;
-    const {
-      data: {
-        user: {displayName},
-      },
-    } = this.props.user;
+    const name = this.props.user.data.user.displayName  === undefined ? '-' : this.props.user.data.user.displayName
     const subjects = this.props.subjects.subjectsApprove;
     const {token} = this.props.navigation.state.params;
     if (this.props.currentYear === [] || !subjects) {
@@ -87,7 +83,7 @@ class ListMySubject extends Component {
           </Text>
 
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            LECTURER NAME : &nbsp; &nbsp; {displayName}
+            LECTURER NAME : &nbsp; &nbsp; {name}
           </Text>
 
           {subjects !== null && subjects.lenght === 0 ? (

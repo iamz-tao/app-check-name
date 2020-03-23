@@ -550,6 +550,54 @@ async function GetStudentInSection(data) {
   });
 }
 
+async function StudentDrop(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/dropSubject/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function DeleteStudentFromSec(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/dropStudent/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -571,4 +619,6 @@ export const Api = {
   GetClass,
   CloseClass,
   GetStudentInSection,
+  DeleteStudentFromSec,
+  StudentDrop,
 };

@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout, ListStudentInSection} from '../../../../actions';
+import {Logout, ListStudentInSection, DeleteStudentFromSec} from '../../../../actions';
 
 class StudentInSection extends Component {
   constructor(props) {
@@ -54,10 +54,23 @@ class StudentInSection extends Component {
     Logout({});
   };
 
+  handelDelete = id => {
+    const {DeleteStudentFromSec} = this.props
+    const {token} = this.props.navigation.state.params;
+    // console.log(id)
+    DeleteStudentFromSec({token,id})
+  };
+
   render() {
     const {fetching, studentsInSection} = this.props.students;
-    const {token, subject_name, section_number} = this.props.navigation.state.params;
-    if (fetching) {
+    const {
+      year,
+      semester,
+      token,
+      subject_name,
+      section_number,
+    } = this.props.navigation.state.params;
+    if (!studentsInSection) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -65,7 +78,7 @@ class StudentInSection extends Component {
         </View>
       );
     }
-    // console.log('studentsInSection',studentsInSection)
+    // console.log('studentsInSection', studentsInSection);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -93,6 +106,11 @@ class StudentInSection extends Component {
                 <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
                 <Text style={{flex: 1}}>STATUS</Text>
               </View>
+              {studentsInSection !== null && studentsInSection.length === 0 && (
+                  <View style={styles.StyleRow, {alignItems: 'center'}}>
+                    <Text>There are no student in section.</Text>
+</View>
+              )}
               {studentsInSection !== null &&
                 studentsInSection.length > 0 &&
                 studentsInSection.map(s => (
@@ -107,15 +125,25 @@ class StudentInSection extends Component {
                     )}
                     {s.status === 'DROP' && (
                       <View style={{flex: 1}}>
-                      <TouchableHighlight
-                        style={styles.btnDrop}
-                        onPress={() => {
-                          // this.props.navigate('StudentSubjectRegister');
-                        }}>
-                        <Text style={{color: 'white', fontSize: 10}}>
-                          DELETE
-                        </Text>
-                      </TouchableHighlight>
+                        <TouchableHighlight
+                          style={styles.btnDrop}
+                          onPress={() => {
+                            this.handelDelete(s.regis_id);
+                            this.props.navigation.navigate(
+                              'StudentInSection',
+                              {
+                                token,
+                                subject_name,
+                                section_number,
+                                year,
+                                semester,
+                              },
+                            );
+                          }}>
+                          <Text style={{color: 'white', fontSize: 10}}>
+                            DELETE
+                          </Text>
+                        </TouchableHighlight>
                       </View>
                     )}
                   </View>
@@ -147,6 +175,7 @@ const mapStateToProps = state => {
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  DeleteStudentFromSec,
   ListStudentInSection,
   Logout,
 };

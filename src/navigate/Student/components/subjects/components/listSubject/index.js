@@ -16,7 +16,7 @@ import {
 } from 'react-native';
 
 const SubjectList = props => {
-  const {subjects} = props;
+  const {subjects, handleDrop} = props;
   // console.log('subjects', subjects);
   return (
     <ScrollView style={{backgroundColor: '#ffffff'}}>
@@ -53,6 +53,9 @@ const SubjectList = props => {
                         {s.status === 'PENDING' && (
                           <Text style={{color: '#0038FF'}}> Pending </Text>
                         )}
+                         {s.status === 'DROP' && (
+                          <Text style={{color: '#FF0000'}}> Drop </Text>
+                        )}
                       </Text>
                     </View>
                     <View
@@ -60,13 +63,16 @@ const SubjectList = props => {
                         (styles.SubjectList,
                         {width: 56, alignItems: 'flex-end', paddingRight: 8})
                       }>
-                      <TouchableHighlight
-                        style={styles.btnDrop}
-                        onPress={() => {
-                          NavigationServices.navigate('StudentSubjectRegister');
-                        }}>
-                        <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
-                      </TouchableHighlight>
+                        {s.status !== 'DROP' && (
+                          <TouchableHighlight
+                          style={styles.btnDrop}
+                          onPress={() => {
+                            handleDrop(s.request_id)
+                          }}>
+                          <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
+                        </TouchableHighlight>
+                        )}
+                      
                     </View>
                   </View>
                 ))}
