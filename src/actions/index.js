@@ -612,7 +612,7 @@ export const ListStudentInSection = params => {
 
 export const DeleteStudentFromSec = params => {
   return dispatch => {
-    dispatch(deleteStudentFromSec());
+    dispatch(deleteStudentFromSec(params));
     Api.DeleteStudentFromSec(params)
       .then(result => {
         dispatch(deleteStudentFromSecSuccess(JSON.stringify(result)));

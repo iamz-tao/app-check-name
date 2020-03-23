@@ -254,14 +254,17 @@ export default (state = initialState, action) => {
     }
 
     case DELETE_STD_FROM_SECTION: {
-      return {...state, fetching: true, status: null};
+      const id = action.payload.id;
+      const students = state.studentsInSection;
+      students.filter(rec => !id.includes(rec.regis_id));
+      return {...state, fetching: false, status: 'SUCCESS', studentsInSection: students.filter(rec => !id.includes(rec.regis_id))};
     }
 
     case DELETE_STD_FROM_SECTION_SUCCESS: {
       const id = action.payload.id;
-      const students = state.studentsInSection.students;
-      students.filter(rec => !id.includes(rec.request_id));
-      return {...state, fetching: false, status: 'SUCCESS'};
+      const students = state.studentsInSection;
+      students.filter(rec => !id.includes(rec.regis_id));
+      return {...state, fetching: false, status: 'SUCCESS', studentsInSection: students.filter(rec => !id.includes(rec.regis_id))};
     }
 
     default:
