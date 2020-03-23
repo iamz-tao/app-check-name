@@ -140,7 +140,6 @@ class CreateNewBeacon extends Component {
         console.log(reason);
       });
       
-    setTimeout(() => {
       this.setState({
         isScanning: !isScanning
       })
@@ -151,10 +150,7 @@ class CreateNewBeacon extends Component {
           minor: b.minor
         })
       })
-    }, 2000);
-
   }
-
 
   handleNewBeacon = () => {
     const { uuid, major, minor, name } = this.state;

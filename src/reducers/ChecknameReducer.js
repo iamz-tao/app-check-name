@@ -1,7 +1,8 @@
 import { CHECKNAME, CHECKNAME_SUCCESS, CHECKNAME_FAILURE } from '../constant';
 
-const inialstate = {
-
+const  initialState = {
+    error:'',
+    data:''
 }
 
 export default (state = initialState, action) => {

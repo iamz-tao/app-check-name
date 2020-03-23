@@ -25,6 +25,8 @@ import {
 } from '../../../../actions';
 
 import Beacons from 'react-native-beacons-manager';
+import {CheckName} from '../../../../actions'
+
 class StudentCheckName extends Component {
   constructor(props) {
     super(props);
@@ -33,6 +35,12 @@ class StudentCheckName extends Component {
       section: '',
       token: '',
       modalVisible: false,
+      uuid:'',
+      major:'',
+      minor:'',
+      ischeck:false,
+      beacon:[],
+      distance:''
     };
   }
 
@@ -49,9 +57,11 @@ class StudentCheckName extends Component {
         'beaconsDidRange',
         (data) => {
           // console.log(data.beacons)
+          if(data.beacons.length > 0){
           this.setState({
             beacon: data.beacons
           })
+        }
         }
       );
     }
@@ -113,13 +123,35 @@ class StudentCheckName extends Component {
     alert(select);
   };
 
-  handleSubmit = () => {
+  startScan = () => {
+    const {beacon,ischeck} = this.state
     Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
-      // console.log(data);
+       console.log("Start Scan");
     })
-      .catch((reason) => {
+    .catch((reason) => {
         console.log(reason);
-      });
+    });
+    if(beacon.length < 1){
+      console.log("Empty");
+    }
+    this.setState({ischeck : !ischeck})
+    console.log(beacon.length)
+    beacon.map(b => {
+      this.setState({
+        uuid: b.uuid,
+        major: b.major,
+        minor: b.minor,
+        distance: b.distance
+      })
+    })
+
+  }
+  handleSubmit = async () => {
+    const {beacon,distance,pickerValues,section} = this.state
+    const {CheckName} = this.props;
+    const { token } = this.props.navigation.state.params;
+    this.startScan();
+    CheckName({token,beacon,pickerValues,section});
   };
 
   handleLogout = () => {
@@ -133,7 +165,7 @@ class StudentCheckName extends Component {
   }
 
   render() {
-    const {pickerValues, section, token} = this.state;
+    const {pickerValues, section, token,beacon} = this.state;
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
@@ -143,6 +175,9 @@ class StudentCheckName extends Component {
     const sectionArr = [];
     let teacher_name = '';
     let subject_name = '';
+    // const {CheckName} = this.props;
+    // CheckName({token,beacon});
+
     if (subjectsRegistration === null) {
       return (
         <View style={styles.loadingWrapper}>
@@ -352,6 +387,7 @@ const mapDispatchToProps = {
   GetCurrentYear,
   GetSubjectRegistration,
   Logout,
+  CheckName
 };
 
 export default connect(

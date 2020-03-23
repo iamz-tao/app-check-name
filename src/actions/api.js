@@ -422,7 +422,7 @@ async function GetAllBeacon(data) {
 async function RegisterBeacon(params) {
   const token = params.token.token
   const payload = params.payload
-  return new Promise(async (resolve,reject) => {
+  return new Promise(async (resolve, reject) => {
     const response = await fetch(
       'https://us-central1-kpscheckin.cloudfunctions.net/api/createBeacon',
       {
@@ -438,11 +438,11 @@ async function RegisterBeacon(params) {
       },
     );
     const responseJson = await response.json();
-    if(responseJson.status.dataStatus === 'SUCCESS'){
-        resolve(responseJson)
-        Alert.alert('Add Beacon Success')
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson)
+      Alert.alert('Add Beacon Success')
     }
-    else{
+    else {
       reject(responseJson)
       Alert.alert(responseJson.message)
     }
@@ -550,6 +550,38 @@ async function GetStudentInSection(data) {
   });
 }
 
+async function checkName(params) {
+  console.log("LLLLLLL")
+  const token = params.token;
+  const beacon = params.beacon;
+  const section_id = params.section_id;
+  if (beacon.length < 1) {
+    console.log("PPPPP")
+  }
+  else {
+    return Promise(async (resolve, reject) => {
+      const response = await fetch(
+        'https://us-central1-kpscheckin.cloudfunctions.net/api/checkname',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            token,
+          },
+          body: JSON.stringify({
+            beacon,
+            section_id
+          }),
+        },
+      );
+      // const responseJson = await response.json();
+      console.log(JSON.stringify(beacon))
+      console.log(responseJson)
+    })
+  }
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -571,4 +603,5 @@ export const Api = {
   GetClass,
   CloseClass,
   GetStudentInSection,
+  checkName
 };

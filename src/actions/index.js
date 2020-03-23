@@ -589,3 +589,16 @@ export const ListStudentInSection = params => {
       });
   };
 };
+
+export const CheckName = params => {
+  return dispatch => {
+    dispatch(checkname());
+    Api.checkName(params)
+    .then(result => {
+      dispatch(checkname_success(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(checkname_failure(err))
+    })
+  }
+}
