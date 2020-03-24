@@ -15,6 +15,8 @@ export const REGISTER_SUBJECT_REQUEST_SUCCESS = 'student/REGISTER_SUBJECT_REQUES
 export const REGISTER_SUBJECT_REQUEST_FAILED = 'student/REGISTER_SUBJECT_REQUEST_FAILED'
 export const GET_SUBJECT_REGISTRATION = 'student/GET_SUBJECT_REGISTRATION'
 export const SET_SUBJECT_REGISTRATION = 'student/SET_SUBJECT_REGISTRATION'
+export const STUDENT_DROP = 'student/STUDENT_DROP'
+export const STUDENT_DROP_SUCCESS = 'student/STUDENT_DROP_SUCCESS'
 
 
 export const GET_STUDENT_APPROVE = 'lecturer/GET_STUDENT_APPROVE'
@@ -59,5 +61,8 @@ export const SET_STUDENT_IN_SECTION = 'lecturer/SET_STUDENT_IN_SECTION'
 export const CHECKNAME = 'student/checkname'
 export const CHECKNAME_SUCCESS = 'student/checkname_success'
 export const CHECKNAME_FAILURE = 'student/checkname_failure'
+
+export const DELETE_STD_FROM_SECTION = 'lecturer/DELETE_STD_FROM_SECTION'
+export const DELETE_STD_FROM_SECTION_SUCCESS = 'lecturer/DELETE_STD_FROM_SECTION_SUCCESS'
 
 

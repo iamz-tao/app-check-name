@@ -51,6 +51,10 @@ import {
   CHECKNAME_FAILURE,
   GET_STUDENT_IN_SECTION,
   SET_STUDENT_IN_SECTION,
+  DELETE_STD_FROM_SECTION,
+  DELETE_STD_FROM_SECTION_SUCCESS,
+  STUDENT_DROP,
+  STUDENT_DROP_SUCCESS,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -316,6 +320,26 @@ export const setStudentInSection = payload => ({
   type: SET_STUDENT_IN_SECTION,
 })
 
+export const studentDrop = payload => ({
+  payload,
+  type: STUDENT_DROP,
+})
+
+export const studentDropSuccess = payload => ({
+  payload,
+  type: STUDENT_DROP_SUCCESS,
+})
+
+export const deleteStudentFromSec = payload => ({
+  payload,
+  type: DELETE_STD_FROM_SECTION,
+})
+
+export const deleteStudentFromSecSuccess = payload => ({
+  payload,
+  type: DELETE_STD_FROM_SECTION_SUCCESS,
+})
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -392,6 +416,21 @@ export const GetSubjectRegistration = params => {
       });
   };
 };
+
+export const StudentDrop = params => {
+  return dispatch => {
+    dispatch(studentDrop(params));
+    Api.StudentDrop(params)
+      .then(result => {
+        dispatch(studentDropSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+
 
 // Lecturer
 export const GetSubjectsApprove = params => {
@@ -602,3 +641,15 @@ export const CheckName = params => {
     })
   }
 }
+export const DeleteStudentFromSec = params => {
+  return dispatch => {
+    dispatch(deleteStudentFromSec(params));
+    Api.DeleteStudentFromSec(params)
+      .then(result => {
+        dispatch(deleteStudentFromSecSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};

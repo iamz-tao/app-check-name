@@ -17,7 +17,7 @@ import {
 } from 'react-native';
 
 import SubjectList from './components/listSubject';
-import {Logout, GetSubjectRegistration} from '../../../../actions';
+import {Logout, GetSubjectRegistration, StudentDrop} from '../../../../actions';
 
 const Header = () => (
   <View style={styles.Header}>
@@ -83,10 +83,20 @@ class StudentListSubject extends Component {
     Logout({});
   };
 
+  handleDrop = (id) => {
+    const {StudentDrop} = this.props
+    // console.log(id)
+    const {token} = this.props.navigation.state.params;
+    StudentDrop({
+      token,
+      id,
+    })
+  }
+
   render() {
     const {subjectsRegistration,fetching} = this.props.subjects
-    // console.log(this.props.subjects)
-    if (fetching) {
+    // console.log(this.props.subjects.subjectsRegistration)
+    if (!subjectsRegistration) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -114,7 +124,7 @@ class StudentListSubject extends Component {
           <Header />
           </View>
           <View style={{height: 8}} />
-          <SubjectList subjects={subjectsRegistration} />
+          <SubjectList subjects={subjectsRegistration} handleDrop={this.handleDrop} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
@@ -140,6 +150,7 @@ const mapStateToProps = state => {
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   GetSubjectRegistration,
+  StudentDrop,
   Logout,
 };
 

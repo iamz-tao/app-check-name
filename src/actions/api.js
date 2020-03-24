@@ -550,36 +550,52 @@ async function GetStudentInSection(data) {
   });
 }
 
-async function checkName(params) {
-  console.log("LLLLLLL")
-  const token = params.token;
-  const beacon = params.beacon;
-  const section_id = params.section_id;
-  if (beacon.length < 1) {
-    console.log("PPPPP")
-  }
-  else {
-    return Promise(async (resolve, reject) => {
-      const response = await fetch(
-        'https://us-central1-kpscheckin.cloudfunctions.net/api/checkname',
-        {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-            token,
-          },
-          body: JSON.stringify({
-            beacon,
-            section_id
-          }),
+async function StudentDrop(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/dropSubject/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
         },
-      );
-      // const responseJson = await response.json();
-      console.log(JSON.stringify(beacon))
-      console.log(responseJson)
-    })
-  }
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function DeleteStudentFromSec(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/dropStudent/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
 }
 
 export const Api = {
@@ -603,5 +619,6 @@ export const Api = {
   GetClass,
   CloseClass,
   GetStudentInSection,
-  checkName
+  DeleteStudentFromSec,
+  StudentDrop,
 };
