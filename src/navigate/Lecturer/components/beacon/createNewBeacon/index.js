@@ -29,7 +29,7 @@ import { Logout, RegisterBeacon, GetAllBeacon } from '../../../../../actions'
 import Beacons from 'react-native-beacons-manager';
 import BluetoothState from 'react-native-bluetooth-state-manager';
 import { checkLocationStatus } from '../../../../../AuthBeacon/func'
-import beacon from '..';
+
 
 //check Bluetooth
 BluetoothState.requestToEnable();
@@ -80,7 +80,8 @@ class CreateNewBeacon extends Component {
       uuid: '',
       major: '',
       minor: '',
-      name: ''
+      name: '',
+      hasbeacon: true
     };
   }
 
@@ -112,10 +113,12 @@ class CreateNewBeacon extends Component {
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
-          let filterBeacon = data.beacons.filter(f => {
-            return !beconFilter.includes(f.uuid)
-          })
-          this.setState({ beacon: filterBeacon })
+          if (data.beacons.length > 0) {
+            let filterBeacon = data.beacons.filter(f => {
+              return !beconFilter.includes(f.uuid)
+            })
+            this.setState({ beacon: filterBeacon })
+          }
         }
       );
     }
@@ -130,31 +133,85 @@ class CreateNewBeacon extends Component {
     Alert.alert(`This is row ${index + 1}`);
   }
 
-  scan = () => {
-    const { beacon, isScanning } = this.state
-    console.log("Scan")
-    Beacons.startRangingBeaconsInRegion('REGION1').then((data) => {
-      // console.log(data);
-    })
+  scanBeacon = () => {
+    const { beacon } = this.state;
+    Beacons.setForegroundScanPeriod(1000);
+    Beacons.startRangingBeaconsInRegion('REGION1')
+      .then((data) => {
+        // console.log(data);
+      })
       .catch((reason) => {
         console.log(reason);
       });
-      
-    setTimeout(() => {
-      this.setState({
-        isScanning: !isScanning
-      })
-      beacon.map((b) => {
-        this.setState({
-          uuid: b.uuid,
-          major: b.major,
-          minor: b.minor
+
+    return new Promise((resolve, reject) => {
+      if (beacon.length > 0) {
+        beacon.map(b => {
+          this.setState({
+            uuid: b.uuid,
+            major: b.major,
+            minor: b.minor,
+          })
+          resolve(this.state.uuid)
+
         })
-      })
-    }, 2000);
+      }
+      else {
+        // this.scanBeacon();
+        reject("Not Found")
+      }
+    })
 
   }
+  scan = async () => {
+    console.log("Scan")
 
+    this.setState({ isScanning: true })
+
+    setTimeout(async () => {
+      await this.scanBeacon()
+        .then((resp) => {
+          if (resp === '') {
+            this.setState({ isScanning: false, hasbeacon: false })
+            Alert.alert("Not Found Beacon")
+          }
+          else {
+            this.setState(
+              {
+                isScanning: false,
+                hasbeacon: true
+              })
+          }
+        })
+        .catch(err => {
+          console.log(err)
+          Alert.alert("Not Found Beacon");
+          this.setState({ isScanning: false, hasbeacon: false })
+        })
+    }, 3000)
+    //   await this.scanBeacon().then((resp) => {
+    //     setTimeout(() => {
+    //       if (resp === '') {
+    //         this.setState({ isScanning: false, hasbeacon : false})
+    //         Alert.alert("Not Found Beacon")
+    //       }
+    //       else {
+    //         this.setState(
+    //           {
+    //             isScanning: false,
+    //             hasbeacon: true
+    //           })
+    //       }
+    //     }, 3000);
+    //   })
+    //     .catch(err => {
+    //       console.log(err)
+    //       Alert.alert("Not Found Beacon");
+    //       this.setState({ isScanning: false,hasbeacon: false})
+    //     })
+
+    // }
+  }
 
   handleNewBeacon = () => {
     const { uuid, major, minor, name } = this.state;
@@ -174,9 +231,17 @@ class CreateNewBeacon extends Component {
     )
   }
 
-  render() {
-    const { pickerValues, section, token, uuid, major, minor, isScanning, beacon } = this.state;
 
+  render() {
+    const { pickerValues, section, token, uuid, major, minor, isScanning, beacon, hasbeacon } = this.state;
+    if (isScanning) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View style={styles.container}>
@@ -208,15 +273,14 @@ class CreateNewBeacon extends Component {
               onChangeText={name => this.setState({ name })}
             />
           </View>
-
-          {isScanning && beacon.length > 0 ? <View>
-          <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :{uuid}<Text></Text></Text>
-          <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
-          <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
-          </View> : 
-          <View>
-            <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon</Text>
-          </View>}
+          {hasbeacon && beacon.length > 0 ? <View>
+            <Text style={styles.styleLabel, { paddingLeft: 34 }}>UUID :{uuid}<Text></Text></Text>
+            <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
+            <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
+          </View> :
+            <View>
+              <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon</Text>
+            </View>}
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
