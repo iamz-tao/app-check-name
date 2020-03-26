@@ -157,7 +157,6 @@ class CreateNewBeacon extends Component {
         })
       }
       else {
-        // this.scanBeacon();
         reject("Not Found")
       }
     })
@@ -189,28 +188,6 @@ class CreateNewBeacon extends Component {
           this.setState({ isScanning: false, hasbeacon: false })
         })
     }, 3000)
-    //   await this.scanBeacon().then((resp) => {
-    //     setTimeout(() => {
-    //       if (resp === '') {
-    //         this.setState({ isScanning: false, hasbeacon : false})
-    //         Alert.alert("Not Found Beacon")
-    //       }
-    //       else {
-    //         this.setState(
-    //           {
-    //             isScanning: false,
-    //             hasbeacon: true
-    //           })
-    //       }
-    //     }, 3000);
-    //   })
-    //     .catch(err => {
-    //       console.log(err)
-    //       Alert.alert("Not Found Beacon");
-    //       this.setState({ isScanning: false,hasbeacon: false})
-    //     })
-
-    // }
   }
 
   handleNewBeacon = () => {
