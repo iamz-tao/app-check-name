@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
+import Device from 'react-native-device-info';
 
 import {
   StyleSheet,
@@ -30,6 +31,7 @@ class StudentCheckName extends Component {
       section: '',
       token: '',
       modalVisible: false,
+      macAddress: ''
     };
   }
 
@@ -52,6 +54,8 @@ class StudentCheckName extends Component {
       GetSubjectRegistration({
         token,
       });
+
+      this.getMacAddress();
     }
   }
 
@@ -67,7 +71,22 @@ class StudentCheckName extends Component {
     alert(select);
   };
 
-  handleSubmit = () => {};
+  getMacAddress = () => {
+   Device.getMacAddress()
+    .then(address => {
+       this.setState({macAddress : address})
+    })
+    .catch(err => {
+      console.warn(err)
+    })
+  }
+
+  checkname = async () => {
+    const {macAddress} = this.state;
+    
+    console.log(macAddress)
+    // console.log(mac)
+  };
 
   handleLogout = () => {
     const {Logout} = this.props;
@@ -269,7 +288,8 @@ class StudentCheckName extends Component {
               style={styles.btnReq}
               onPress={() => {
                 // this.handleSubmit(token, section_id);
-                this.setModalVisible();
+                this.checkname();
+                // this.setModalVisible();
               }}>
               <Text style={{color: 'white'}}>CHECK</Text>
             </TouchableHighlight>
