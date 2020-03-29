@@ -26,6 +26,7 @@ import {
 
 import Beacons from 'react-native-beacons-manager';
 import { CheckName } from '../../../../actions'
+import Device from 'react-native-device-info';
 
 class StudentCheckName extends Component {
   constructor(props) {
@@ -40,7 +41,8 @@ class StudentCheckName extends Component {
       minor: '',
       beacon: [],
       distance: '',
-      ischecking: false
+      ischecking: false,
+      macAddress:''
     };
   }
 
@@ -84,6 +86,13 @@ class StudentCheckName extends Component {
         token,
       });
     }
+  }
+
+  getMacAddress = () => {
+    Device.getMacAddress()
+    .then(address => {
+      this.setState({macAddress: address})
+    })
   }
 
   requestLocationPermission = async () => {
@@ -154,21 +163,24 @@ class StudentCheckName extends Component {
     })
   }
   handleSubmit = async () => {
+
+    const {macAddress} = this.state;
+    console.log(macAddress)
     // const {beacon,distance,pickerValues,section} = this.state
     // const {CheckName} = this.props;
-     const { token } = this.props.navigation.state.params;
-    this.setState({ ischecking: true })
-    await this.startScan()
-      .then((beacon) => {
-        console.log(beacon);
-        this.setBeacon(beacon);
-        this.setState({ ischecking: false });
-      })
-      .catch(err => {
-        console.log(err);
-      })
+    //  const { token } = this.props.navigation.state.params;
+    // this.setState({ ischecking: true })
+    // await this.startScan()
+    //   .then((beacon) => {
+    //     console.log(beacon);
+    //     this.setBeacon(beacon);
+    //     this.setState({ ischecking: false });
+    //   })
+    //   .catch(err => {
+    //     console.log(err);
+    //   })
 
-    CheckName({ token, beacon, pickerValues, section });
+    // CheckName({ token, beacon, pickerValues, section });
   };
 
   handleLogout = () => {
