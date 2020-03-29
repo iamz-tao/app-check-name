@@ -97,8 +97,8 @@ class StudentSubjectRegister extends Component {
     let time = '';
     let day = '';
     let secondTime = '';
-    let day2: '';
-    let section_id: '';
+    let day2 =  '';
+    let section_id =  '';
     if (subjects !== null) {
       subjects.map((s, i) => {
         subjectsArr.push({

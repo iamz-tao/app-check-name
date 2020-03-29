@@ -52,6 +52,9 @@ import {
   DELETE_STD_FROM_SECTION_SUCCESS,
   STUDENT_DROP,
   STUDENT_DROP_SUCCESS,
+  CHECKNAME,
+  CHECKNAME_SUCCESS,
+  CHECKNAME_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -319,6 +322,21 @@ export const deleteStudentFromSec = payload => ({
 export const deleteStudentFromSecSuccess = payload => ({
   payload,
   type: DELETE_STD_FROM_SECTION_SUCCESS,
+})
+
+export const checkname = payload => ({
+  payload,
+  type: CHECKNAME
+})
+
+export const checknameSuccess = payload => ({
+  payload,
+  type: CHECKNAME_SUCCESS
+})
+
+export const checknameFailure = payload => ({
+  payload,
+  type: CHECKNAME_FAILURE
 })
 
 // Auth
@@ -622,3 +640,17 @@ export const DeleteStudentFromSec = params => {
       });
   };
 };
+
+//CheckName
+export const Checkname = params => {
+  return dispatch => {
+    dispatch(checkname(params));
+    Api.checkname(params)
+    .then((result) => {
+      dispatch(checknameSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(checknameFailure(err));
+    })
+  }
+}

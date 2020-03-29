@@ -1,8 +1,10 @@
-import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
-import {connect} from 'react-redux';
-import {DotsLoader, TextLoader} from 'react-native-indicator';
+import React, { Component } from 'react';
+import { Avatar, ButtonGroup } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { DotsLoader, TextLoader } from 'react-native-indicator';
 import Device from 'react-native-device-info';
+import Beacons from 'react-native-beacons-manager';
+import { checkLocationStatus } from '../../../../AuthBeacon/func'
 
 import {
   StyleSheet,
@@ -15,13 +17,43 @@ import {
   Picker,
   Modal,
   Image,
+  DeviceEventEmitter,
+  PermissionsAndroid
 } from 'react-native';
 
 import {
   Logout,
   GetCurrentYear,
   GetSubjectRegistration,
+  Checkname
 } from '../../../../actions';
+
+
+
+const requestLocationPermission = async () => {
+  try {
+    const granted = await PermissionsAndroid.request(
+      PermissionsAndroid.PERMISSIONS.ACCESS_COARSE_LOCATION,
+      {
+        title: 'Location Permission',
+        message:
+          'This example app needs to access your location in order to use bluetooth beacons.',
+        buttonNeutral: 'Ask Me Later',
+        buttonNegative: 'Cancel',
+        buttonPositive: 'OK',
+      },
+    );
+    if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+      return true;
+    } else {
+      // permission denied
+      return false;
+    }
+  } catch (err) {
+    console.warn(err);
+    return false;
+  }
+}
 
 class StudentCheckName extends Component {
   constructor(props) {
@@ -31,36 +63,67 @@ class StudentCheckName extends Component {
       section: '',
       token: '',
       modalVisible: false,
-      macAddress: ''
+      macAddress: '',
+      ischecking: false,
+      beacon: [],
+      uuid: '',
+      major: '',
+      minor: '',
+      distance: 0
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+
     const {
       LoginReducer: {
-        data: {token},
+        data: { token },
       },
     } = this.props.navigation.state.params;
-    const {GetSubjectRegistration, GetCurrentYear} = this.props;
+    const { GetSubjectRegistration, GetCurrentYear } = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     } else {
-      this.setState({
-        token,
-      });
-      GetCurrentYear({
-        token,
-      });
-      GetSubjectRegistration({
-        token,
-      });
 
-      this.getMacAddress();
+      Beacons.detectIBeacons();
+      Beacons.setForegroundScanPeriod(1000);
+
+      const request_permission = await requestLocationPermission();
+      checkLocationStatus();
+
+      if (request_permission) {
+        this.scan();
+        Beacons.setRssiFilter(0, 4000);
+        this.setState({
+          token,
+        });
+        GetCurrentYear({
+          token,
+        });
+        GetSubjectRegistration({
+          token,
+        });
+
+        this.getMacAddress();
+      }
+
+      this.beacondidRange = DeviceEventEmitter.addListener(
+        'beaconsDidRange',
+        (data) => {
+          if (data.beacons.length > 0) {
+            this.setState({
+              beacon: data.beacons
+            })
+            // console.log(data.beacons)
+
+          }
+        }
+      )
     }
   }
 
   setModalVisible() {
-    this.setState({modalVisible: true});
+    this.setState({ modalVisible: true });
   }
 
   handleSelect = () => {
@@ -72,38 +135,90 @@ class StudentCheckName extends Component {
   };
 
   getMacAddress = () => {
-   Device.getMacAddress()
-    .then(address => {
-       this.setState({macAddress : address})
-    })
-    .catch(err => {
-      console.warn(err)
-    })
+    Device.getMacAddress()
+      .then(address => {
+        this.setState({ macAddress: address })
+      })
+      .catch(err => {
+        console.warn(err)
+      })
   }
 
+  scan = async () => {
+
+    Beacons.startRangingBeaconsInRegion('REGION')
+      .then(() => {
+        console.log('------scanning----------')
+      })
+  }
+
+  setBeacon = () => {
+    const { beacon } = this.state;
+        beacon.map(b => {
+          this.setState({
+            uuid: b.uuid,
+            major: b.major,
+            minor: b.minor,
+            distance: b.distance
+          })
+        })
+      }
+
   checkname = async () => {
-    const {macAddress} = this.state;
-    
-    console.log(macAddress)
-    // console.log(mac)
+   
+    this.setState({ ischecking: true });
+
+    setTimeout(async () => {
+      this.setBeacon();
+      await this.handleCheck();
+      this.setState({ischecking : false,modalVisible : true})
+    },5000)
   };
 
+    handleCheck = async () => {
+      const {Checkname} = this.props;
+      const { macAddress,token,uuid,major,minor,distance} = this.state;
+
+      Checkname({
+        token,
+        macAddress,
+        uuid,
+        major,
+        minor,
+        distance
+      })
+    }
+
   handleLogout = () => {
-    const {Logout} = this.props;
+    const { Logout } = this.props;
     Logout({});
   };
 
   render() {
-    const {pickerValues, section, token} = this.state;
+    const { pickerValues, section, token, ischecking, uuid, distance } = this.state;
     const {
-      currentYear: {year, semester},
+      currentYear: { year, semester },
     } = this.props.currentYear;
-    const {subjectsRegistration} = this.props.Subjects;
-    const statusReq = this.props.Subjects.status;
+    const { subjectsRegistration } = this.props.Subjects;
+     const statusReq = this.props.Subjects.status;
+
+    const statusCheckname = this.props.checkname.status;
+    // console.log(statusCheckname)
+    //  console.log(statusCheckname)
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
     let subject_name = '';
+
+    if (ischecking) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+
     if (subjectsRegistration === null) {
       return (
         <View style={styles.loadingWrapper}>
@@ -136,7 +251,7 @@ class StudentCheckName extends Component {
     }
     // console.log('subjects>>',subjects)
     return (
-      <ScrollView style={{backgroundColor: '#ffffff'}}>
+      <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View>
           <Modal
             animationType="slide"
@@ -145,14 +260,14 @@ class StudentCheckName extends Component {
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
-                <View style={{width: '100%', alignItems: 'center'}}>
-                  {statusReq === 'SUCCESS' && (
-                    <View style={{alignItems: 'center'}}>
+                <View style={{ width: '100%', alignItems: 'center' }}>
+                  {statusCheckname === 'SUCCESS' && (
+                    <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/success.png')}
                       />
-                      <View style={{height: 36}} />
+                      <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
                         CHECK NAME SUCCESS
                       </Text>
@@ -162,12 +277,12 @@ class StudentCheckName extends Component {
                     </View>
                   )}
                   {statusReq === 'FAILURE' && (
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/icon-failure.png')}
                       />
-                      <View style={{height: 36}} />
+                      <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
                         CHECK NAME FAILED
                       </Text>
@@ -176,18 +291,18 @@ class StudentCheckName extends Component {
                       </Text>
                     </View>
                   )}
-                  <View style={{height: 16}} />
+                  <View style={{ height: 16 }} />
                   <TouchableHighlight
                     style={styles.btnReq}
                     onPress={() => {
-                      this.setState({modalVisible: !this.state.modalVisible});
+                      this.setState({ modalVisible: !this.state.modalVisible });
                       if (statusReq === 'SUCCESS') {
                         this.props.navigation.navigate('StudentListSubject', {
                           token,
                         });
                       }
                     }}>
-                    <Text style={{color: 'white'}}>OK</Text>
+                    <Text style={{ color: 'white' }}>OK</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -195,19 +310,19 @@ class StudentCheckName extends Component {
           </Modal>
         </View>
         <View style={styles.container}>
-          <View style={{display: 'flex', alignItems: 'flex-end'}}>
+          <View style={{ display: 'flex', alignItems: 'flex-end' }}>
             <TouchableHighlight
               style={styles.btnLogout}
               onPress={() => {
                 this.handleLogout();
               }}>
-              <Text style={{color: 'white'}}>Logout</Text>
+              <Text style={{ color: 'white' }}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>CHECK NAME</Text>
           </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+          <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
             YEAR / SEMESTER : {year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
@@ -215,7 +330,7 @@ class StudentCheckName extends Component {
               <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
               <View style={styles.stylePicker}>
                 <Picker
-                  style={{height: 45}}
+                  style={{ height: 45 }}
                   selectedValue={pickerValues}
                   onValueChange={(itemValue, itemIndex) =>
                     this.setState({
@@ -237,7 +352,7 @@ class StudentCheckName extends Component {
               <Text style={styles.styleLabel}>SELECT SECTION :</Text>
               <View style={styles.stylePicker}>
                 <Picker
-                  style={{height: 45}}
+                  style={{ height: 45 }}
                   selectedValue={section}
                   onValueChange={(itemValue, itemIndex) => {
                     this.setState({
@@ -277,12 +392,12 @@ class StudentCheckName extends Component {
               </Text>
             </View>
           </View>  */}
-          <View style={{height: 8}} />
+          <View style={{ height: 8 }} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => this.props.navigation.navigate('StudentHomePage')}>
-              <Text style={{color: '#949494'}}>CANCEL</Text>
+              <Text style={{ color: '#949494' }}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
@@ -291,7 +406,7 @@ class StudentCheckName extends Component {
                 this.checkname();
                 // this.setModalVisible();
               }}>
-              <Text style={{color: 'white'}}>CHECK</Text>
+              <Text style={{ color: 'white' }}>CHECK</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -305,6 +420,7 @@ const mapStateToProps = state => {
   return {
     currentYear: state.yearReducer,
     Subjects: state.subjectReducer,
+    checkname: state.checknameReducer
   };
 };
 
@@ -313,6 +429,7 @@ const mapDispatchToProps = {
   GetCurrentYear,
   GetSubjectRegistration,
   Logout,
+  Checkname
 };
 
 export default connect(

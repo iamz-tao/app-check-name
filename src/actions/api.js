@@ -598,6 +598,33 @@ async function DeleteStudentFromSec(data) {
   });
 }
 
+async function checkname(params){
+  console.log("Function Checkname")
+  console.log(params)
+  const token = params.token
+  return new Promise(async (resolve,reject) => {
+    const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
+    {
+      method: 'POST',
+      headers:{
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        token,
+      },
+      body: JSON.stringify({
+        uuid: params.uuid,
+        major: params.major,
+        minor: params.minor,
+        distance: params.distance,
+        macAddress: params.macAddress
+      })
+    })
+    const responseJson = await response.json();
+    resolve(responseJson)
+    // console.log(responseJson)
+  })
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -621,4 +648,5 @@ export const Api = {
   GetStudentInSection,
   DeleteStudentFromSec,
   StudentDrop,
+  checkname
 };
