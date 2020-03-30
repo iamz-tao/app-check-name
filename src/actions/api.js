@@ -620,8 +620,11 @@ async function checkname(params){
       })
     })
     const responseJson = await response.json();
-    resolve(responseJson)
-    // console.log(responseJson)
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
   })
 }
 

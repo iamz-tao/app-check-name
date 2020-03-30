@@ -650,7 +650,7 @@ export const Checkname = params => {
       dispatch(checknameSuccess(JSON.stringify(result)))
     })
     .catch(err => {
-      dispatch(checknameFailure(err));
+      dispatch(checknameFailure(JSON.stringify(err)));
     })
   }
 }

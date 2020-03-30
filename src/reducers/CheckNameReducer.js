@@ -2,16 +2,17 @@ import {CHECKNAME,CHECKNAME_SUCCESS,CHECKNAME_FAILURE} from '../constant'
 
 const initialState = {
     data: [],
-    err: '',
+    err_message: '',
     ischecking: false,
     isError: false,
-    status:false
+    status:false,
+    timecheck : ''
   };
 
   export default (state = initialState, action) => {
     switch (action.type) {
       case CHECKNAME:
-        return {...state, ischecking: true, data: []};
+        return {...state, ischecking: true, data: [],timecheck:''};
   
       case CHECKNAME_SUCCESS: {
          const data = JSON.parse(action.payload);
@@ -21,13 +22,16 @@ const initialState = {
           isLogin: false,
           fetching: false,
           status:'SUCCESS',
+          timecheck:data.dateTime
         //   data: data.data,
         //   status: 'SUCCESS',
         };
       }
   
       case CHECKNAME_FAILURE:
-        return {...state, isError: true, err: action.payload, status: 'FAILURE'};
+        // const data = JSON.parse(action.payload)
+        // console.log(action.payload)
+        return {...state, isError: true, err_message: data.message, status: 'FAILURE'};
   
       default:
         return state;

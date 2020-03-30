@@ -69,7 +69,8 @@ class StudentCheckName extends Component {
       uuid: '',
       major: '',
       minor: '',
-      distance: 0
+      distance: 0,
+      hasbeacon:false
     };
   }
 
@@ -86,14 +87,14 @@ class StudentCheckName extends Component {
     } else {
 
       Beacons.detectIBeacons();
-      Beacons.setForegroundScanPeriod(1000);
+      Beacons.setForegroundScanPeriod(2000);
 
       const request_permission = await requestLocationPermission();
       checkLocationStatus();
 
       if (request_permission) {
         this.scan();
-        Beacons.setRssiFilter(0, 4000);
+        Beacons.setRssiFilter(0, 1000);
         this.setState({
           token,
         });
@@ -178,7 +179,7 @@ class StudentCheckName extends Component {
     handleCheck = async () => {
       const {Checkname} = this.props;
       const { macAddress,token,uuid,major,minor,distance} = this.state;
-
+      this.checkBeacon();
       Checkname({
         token,
         macAddress,
@@ -189,13 +190,23 @@ class StudentCheckName extends Component {
       })
     }
 
+    checkBeacon = () => {
+      const {beacon} = this.state;
+      if(beacon.length < 1){
+        this.setState({hasbeacon: false})
+      }
+      else{
+        this.setState({hasbeacon: true})
+      }
+    }
+
   handleLogout = () => {
     const { Logout } = this.props;
     Logout({});
   };
 
   render() {
-    const { pickerValues, section, token, ischecking, uuid, distance } = this.state;
+    const { pickerValues, section, token, ischecking, uuid, distance ,hasbeacon} = this.state;
     const {
       currentYear: { year, semester },
     } = this.props.currentYear;
@@ -204,7 +215,10 @@ class StudentCheckName extends Component {
 
     const statusCheckname = this.props.checkname.status;
     // console.log(statusCheckname)
-    //  console.log(statusCheckname)
+    const timecheck = this.props.checkname.timecheck
+    const error = this.props.err_message
+    // console.log(error)
+
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
@@ -273,10 +287,11 @@ class StudentCheckName extends Component {
                       </Text>
                       <Text style={styles.styleLabel}>
                         You can check history in MY SUBJECT page.
+                        Time_Check : {timecheck} 
                       </Text>
                     </View>
                   )}
-                  {statusReq === 'FAILURE' && (
+                  {statusCheckname === 'FAILURE' && (
                     <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
@@ -287,7 +302,8 @@ class StudentCheckName extends Component {
                         CHECK NAME FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        Check your internet or turn on your bluetooth.
+                        Check your internet or turn on your bluetooth and turn on your location.
+                        {/* {error} */}
                       </Text>
                     </View>
                   )}
@@ -296,10 +312,8 @@ class StudentCheckName extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
-                      if (statusReq === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentListSubject', {
-                          token,
-                        });
+                      if(statusCheckname === 'SUCCESS'){
+                        this.props.navigation.navigate('StudentCheckName');
                       }
                     }}>
                     <Text style={{ color: 'white' }}>OK</Text>
