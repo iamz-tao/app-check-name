@@ -60,17 +60,15 @@ export default class ForgotPassword extends Component {
   render() {
     const {modalVisible} = this.state
     const status = 'SUCCESS'
-    console.log('xxx')
     return (
-    //   <ScrollView>
-          /* <SuccessModal
+        <View style={styles.container}>
+            <SuccessModal
           msg={'Please check your E-mail.'}
           setModalVisible={this.setModalVisible}
           modalVisible={modalVisible}
           status={status}
           path={'Login'}
-        /> */
-        <View style={styles.container}>
+        /> 
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>RETRIEVE PASSWORD</Text>
             <Text style={{fontSize: 12, color: '#525252', padding: 12}}>Enter your email adress and We’ll send you a link to reset your password.</Text>
@@ -86,12 +84,14 @@ export default class ForgotPassword extends Component {
             </View>
             <TouchableHighlight
               style={styles.buttonContainer}
-              onPress={this.Event_Register}>
+              onPress={() => {
+                  this.Event_Register
+                  this.setModalVisible()
+              }}>
               <Text style={{color: '#ffffff'}}>SUBMIT</Text>
             </TouchableHighlight>
           </View>
         </View>
-    //   </ScrollView>
     );
   }
 }
