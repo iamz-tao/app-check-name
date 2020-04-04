@@ -2,6 +2,7 @@ import {createStackNavigator} from 'react-navigation-stack';
 import {createAppContainer} from 'react-navigation';
 import LoginScreen from './LoginScreen';
 import Register from './Register';
+import ForgotPassword from './forgotPassword';
 import StudentHomePage from './Student';
 import StudentSubjectRegister from './Student/components/subjectRegister';
 import LecturerHomePage from './Lecturer';
@@ -27,6 +28,7 @@ const AppNavigator = createStackNavigator(
   {
     Login: {screen: LoginScreen},
     Register: {screen: Register},
+    ForgotPassword: {screen: ForgotPassword},
     StudentHomePage: {screen: StudentHomePage},
     StudentSubjectRegister: {screen: StudentSubjectRegister},
     LecturerHomePage: {screen: LecturerHomePage},
@@ -43,6 +45,7 @@ const AppNavigator = createStackNavigator(
     LecturerCloseClass: {screen: LecturerCloseClass},
     StudentInSection: {screen: StudentInSection},
     TeachingHistory: {screen: TeachingHistory},
+    
   },
   optsNavigation,
 );
