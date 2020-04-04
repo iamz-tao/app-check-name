@@ -116,8 +116,9 @@ class ListMySubject extends Component {
                           {s.Subject.subject_code} {s.Subject.subject_name}
                         </Text>
                       </View>
-                      <View style={{width: 76}}>
+                      <View style={{width: 118}}>
                         {s.sections.map(sec => (
+                          <View style={{display: 'flex', flexDirection: 'row'}}>
                           <TouchableHighlight
                             style={{textDecorationLine: 'underline'}}
                             onPress={() => {
@@ -140,6 +141,30 @@ class ListMySubject extends Component {
                               {sec.section_number}
                             </Text>
                           </TouchableHighlight>
+                          <View style={{width: 12}}/>
+                          <TouchableHighlight
+                            style={{textDecorationLine: 'underline'}}
+                            onPress={() => {
+                              this.props.navigation.navigate(
+                                'TeachingHistory',
+                                {
+                                  token,
+                                  subject_name: s.Subject.subject_name,
+                                  section_number: sec.section_number,
+                                  year,
+                                  semester,
+                                },
+                              );
+                            }}>
+                            <Text
+                              style={{
+                                color: '#1AB433',
+                                textDecorationLine: 'underline',
+                              }}>
+                              history
+                            </Text>
+                          </TouchableHighlight>
+                          </View>
                         ))}
                       </View>
                     </View>
