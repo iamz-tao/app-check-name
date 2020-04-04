@@ -10,7 +10,9 @@ import {
   TouchableHighlight,
   Picker,
   Image,
+  TextInput,
 } from 'react-native';
+import {CheckBox} from 'react-native-elements';
 
 import {Table, TableWrapper} from 'react-native-table-component';
 import SuccessModal from '../../../../components/successModal';
@@ -57,6 +59,8 @@ class OpenClass extends Component {
       beacon_id: '',
       modalVisible: false,
       tableHead: ['ID', '', 'NAME', 'STATUS'],
+      checked: false,
+      distance: 3,
     };
   }
 
@@ -86,6 +90,7 @@ class OpenClass extends Component {
   handleSubmit = (section_id, beacon_id) => {
     const {token} = this.props.navigation.state.params;
     const {LecturerOpenClass, GetClass} = this.props;
+    const {distance} = this.state;
     const payload = {
       section_id,
       beacon_id,
@@ -118,8 +123,26 @@ class OpenClass extends Component {
     });
   };
 
+  handleChecked = () => {
+    const {checked, distance} = this.state;
+    this.setState({
+      checked: !checked,
+    });
+    if (checked) {
+      this.setState({
+        distance: 3,
+      });
+    }
+  };
+
   render() {
-    const {pickerValues, section_id, beacon_id, modalVisible} = this.state;
+    const {
+      pickerValues,
+      section_id,
+      beacon_id,
+      modalVisible,
+      checked,
+    } = this.state;
     const {
       currentYear: {year, semester},
       fetching,
@@ -339,6 +362,54 @@ class OpenClass extends Component {
                 </View>
               </View>
             </View>
+            <View style={{marginTop: 0, marginLeft: 28}}>
+              <View style={(styles.inputContainer, {flexDirection: 'row'})}>
+                <Text style={{display: 'flex', lineHeight: 66}}>
+                  CUSTOM DISTANCE :
+                </Text>
+                <CheckBox
+                  checked={checked}
+                  onPress={() => {
+                    this.handleChecked();
+                  }}
+                  // size={10}
+                  // style={{flex: 1}}
+                  textStyle={{fontWeight: '100'}}
+                  containerStyle={styles.containerCheckbox}
+                  uncheckedColor="black"
+                  uncheckedIcon={
+                    <Image
+                      source={require('../../../../../android/statics/images/unchecked.jpg')}
+                      style={{width: 30, height: 30}}
+                    />
+                  }
+                  checkedIcon={
+                    <Image
+                      source={require('../../../../../android/statics/images/check.png')}
+                      style={{width: 30, height: 30}}
+                    />
+                  }
+                />
+                <Text
+                    style={{
+                      display: 'flex',
+                      color: '#A8A3A3',
+                      fontSize: 10,
+                      lineHeight: 66,
+                    }}>
+                    Default 3 m.
+                  </Text>
+              </View>
+              {checked === true && (
+                <View style={{display: 'flex', flexDirection: 'column'}}>
+                  <TextInput
+                    style={styles.inputs}
+                    placeholder="1-70 m."
+                    onChangeText={distance => this.setState({distance})}
+                  />
+                </View>
+              )}
+            </View>
             <View style={styles.btnWrapper}>
               <TouchableHighlight
                 style={styles.btnCancel}
@@ -397,6 +468,12 @@ const styles = StyleSheet.create({
     padding: 8,
     backgroundColor: '#ffffff',
     height: '100%',
+  },
+  containerCheckbox: {
+    backgroundColor: '#FFFFFF',
+    // borderColor: '#D0CDCD',
+    // borderWidth: 1,
+    // borderRadius: 10,
   },
   containerTest: {
     flex: 1,
@@ -476,6 +553,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flexDirection: 'row',
     marginTop: 20,
+    marginBottom: 12,
   },
   btnReq: {
     alignItems: 'center',
@@ -551,11 +629,11 @@ const styles = StyleSheet.create({
   },
   inputs: {
     height: 45,
-    flex: 1,
+    width: 300,
     borderWidth: 1,
     borderColor: 'rgba(36, 52, 69, 0.5)',
     borderRadius: 21,
-    paddingLeft: 12,
+    paddingLeft: 10,
   },
   inputContainerGroup: {
     position: 'relative',
