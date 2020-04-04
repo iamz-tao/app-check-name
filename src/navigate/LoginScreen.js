@@ -66,7 +66,7 @@ class LoginScreen extends Component {
 
         <TouchableHighlight
           style={styles.buttonForget}
-          onPress={() => this.onClickListener('restore_password')}>
+          onPress={() => this.props.navigation.navigate('ForgotPassword')}>
           <Text style={{textDecorationLine: 'underline' }}>
             Forgot your password?
           </Text>

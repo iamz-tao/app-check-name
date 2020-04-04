@@ -191,7 +191,17 @@ class StudentCheckName extends Component {
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
             YEAR / SEMESTER : {year} / {semester}
           </Text>
-          <View style={styles.styleInputWrapper}>
+          <View style={{height: 21}} />
+          <Text style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+              SUBJECT NAME : DIGITAL LAB
+        </Text>
+        <Text style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+              SECTION : 701
+        </Text>
+        <Text style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+              TIME : Thu 10.30 - 12.00
+        </Text>
+          {/* <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
               <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
               <View style={styles.stylePicker}>
@@ -234,7 +244,7 @@ class StudentCheckName extends Component {
                 </Picker>
               </View>
             </View>
-          </View>
+          </View> */}
           {/* <View style={{display: 'flex', paddingLeft: 16, width: 340}}>
             <View style={{flexDirection: 'row'}}>
               <Text
