@@ -23,7 +23,7 @@ const SubjectList = props => {
                 <View style={styles.ItemWrapper}>
                   <View style={styles.Row}>
                     <View style={(styles.ListDetail, {flex: 2})}>
-                      <Text View style={styles.ItemSpan}>
+                      <Text View style={styles.ItemSpan, {paddingLeft: 8}}>
                         {s.subject_name}
                       </Text>
                     </View>
@@ -35,8 +35,8 @@ const SubjectList = props => {
                       </Text>
                     </View>
                     <View style={styles.ListDetail}>
-                      {/* <Text View style={styles.ItemSpan}> */}
-                      {/* {s.status === 'APPROVE' && ( */}
+                      
+                      {s.status === 'APPROVE' && (
                       <TouchableHighlight
                         style={{textDecorationLine: 'underline'}}
                         onPress={() => {
@@ -54,14 +54,15 @@ const SubjectList = props => {
                           history
                         </Text>
                       </TouchableHighlight>
-                      {/* )}
-                        {s.status === 'PENDING' && (
+                     )}
+                     <Text View style={styles.ItemSpan}>
+                         {s.status === 'PENDING' && (
                           <Text style={{color: '#0038FF'}}> Pending </Text>
                         )}
                         {s.status === 'DROP' && (
                           <Text style={{color: '#FF0000'}}> Drop </Text>
-                        )} */}
-                      {/* </Text> */}
+                        )}
+                      </Text>
                     </View>
                     <View
                       style={
