@@ -27,10 +27,10 @@ class ListTeachingHistory extends Component {
   componentDidMount() {
     const {
       token,
-    //   subject_name,
-    //   section_number,
-    //   year,
-    //   semester,
+      //   subject_name,
+      //   section_number,
+      //   year,
+      //   semester,
     } = this.props.navigation.state.params;
     // const {ListStudentInSection} = this.props;
     if (!token) {
@@ -59,7 +59,7 @@ class ListTeachingHistory extends Component {
     const {
       year,
       semester,
-      // token,
+      token,
       // subject_name,
       // section_number,
     } = this.props.navigation.state.params;
@@ -95,7 +95,7 @@ class ListTeachingHistory extends Component {
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{width: 26, paddingLeft: 8}}></Text>
+                <Text style={{width: 26, paddingLeft: 8}} />
                 <Text style={{flex: 1, paddingLeft: 8}}>DATE</Text>
                 <Text style={{flex: 1}}>TIME</Text>
               </View>
@@ -107,25 +107,41 @@ class ListTeachingHistory extends Component {
               {/* {studentsInSection !== null &&
                 studentsInSection.length > 0 &&
                 studentsInSection.map(s => ( */}
-                  <View style={styles.StyleRow}>
-                    <Text style={{width: 26, paddingLeft: 8}}>1</Text>
-                    <Text style={{flex: 1, paddingLeft: 8}}>
-                       12 Aug 2019
-                    </Text>
+              <View style={styles.StyleRow}>
+                <TouchableHighlight
+                  style={{textDecorationLine: 'underline'}}
+                  onPress={() => {
+                    this.props.navigation.navigate('ListStudentsCheckName', {
+                      token,
+                      // subject_name: s.Subject.subject_name,
+                      // section_number: sec.section_number,
+                      // year,
+                      // semester,
+                    });
+                  }}>
+                  <Text
+                    style={{
+                      color: '#949494',
+                      textDecorationLine: 'underline',
+                      width: 26,
+                      paddingLeft: 8,
+                    }}>
+                    1
+                  </Text>
+                </TouchableHighlight>
+                <Text style={{flex: 1, paddingLeft: 8}}>12 Aug 2019</Text>
 
-                    {/* {s.status === 'APPROVE' && ( */}
-                      <Text style={{flex: 1, color: '#001AFF'}}>08.30 - 10.00</Text>
-                    {/* )} */}
-                  </View>
-                {/* ))} */}
+                {/* {s.status === 'APPROVE' && ( */}
+                <Text style={{flex: 1, color: '#001AFF'}}>08.30 - 10.00</Text>
+                {/* )} */}
+              </View>
+              {/* ))} */}
             </View>
           </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() =>
-                this.props.navigation.navigate('MySubject')
-              }>
+              onPress={() => this.props.navigation.navigate('MySubject')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
