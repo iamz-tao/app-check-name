@@ -19,6 +19,7 @@ import StudentCheckName from './Student/components/checkName';
 import LecturerCloseClass from './Lecturer/components/closeClass';
 import StudentInSection from './Lecturer/components/listStudents';
 import TeachingHistory from './Lecturer/components/teachingHistory';
+import ListStudentsCheckName from './Lecturer/components/teachingHistory/components/studentListCheck';
 
 const optsNavigation = {
   initialRouteName: 'Login',
@@ -45,7 +46,7 @@ const AppNavigator = createStackNavigator(
     LecturerCloseClass: {screen: LecturerCloseClass},
     StudentInSection: {screen: StudentInSection},
     TeachingHistory: {screen: TeachingHistory},
-    
+    ListStudentsCheckName: {screen: ListStudentsCheckName},
   },
   optsNavigation,
 );

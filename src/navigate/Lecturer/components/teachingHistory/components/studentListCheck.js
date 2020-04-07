@@ -10,43 +10,21 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout} from '../../../../actions';
+import {Logout} from '../../../../../actions';
 
-class ListTeachingHistory extends Component {
+class StudentListCheck extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pickerValues: [],
-      section: [],
-      subject_code: '',
-      subject_name: '',
-      token: '',
-    };
   }
 
   componentDidMount() {
     const {
       token,
-      //   subject_name,
-      //   section_number,
-      //   year,
-      //   semester,
     } = this.props.navigation.state.params;
-    // const {ListStudentInSection} = this.props;
+    const {ListStudentInSection} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
-    // const payload = {
-    //   subject_name,
-    //   section_number,
-    //   year,
-    //   semester,
-    // };
-
-    // ListStudentInSection({
-    //   token,
-    //   payload,
-    // });
   }
 
   handleLogout = () => {
@@ -55,14 +33,13 @@ class ListTeachingHistory extends Component {
   };
 
   render() {
-    // const {fetching, studentsInSection} = this.props.students;
-    const {
-      year,
-      semester,
-      token,
-      // subject_name,
-      // section_number,
-    } = this.props.navigation.state.params;
+    // const {
+    //   year,
+    //   semester,
+    //   token,
+    //   subject_name,
+    //   section_number,
+    // } = this.props.navigation.state.params;
     // if (!studentsInSection) {
     //   return (
     //     <View style={styles.loadingWrapper}>
@@ -85,19 +62,21 @@ class ListTeachingHistory extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>TEACHING HISTORY</Text>
+            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : Digital Lab</Text>
+            <Text>SUBJECT NAME : Digital</Text>
             <Text>SECTION : 701</Text>
+            <Text>DATE : 24 Aug 2019</Text>
+            <Text>AMOUNT : 12</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{width: 26, paddingLeft: 8}} />
-                <Text style={{flex: 1, paddingLeft: 8}}>DATE</Text>
-                <Text style={{flex: 1}}>TIME</Text>
+                <Text style={{flex: 1.5, paddingLeft: 8}}>ID</Text>
+                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{flex: 1}}>STATUS</Text>
               </View>
               {/* {studentsInSection !== null && studentsInSection.length === 0 && (
                   <View style={styles.StyleRow, {alignItems: 'center'}}>
@@ -108,31 +87,14 @@ class ListTeachingHistory extends Component {
                 studentsInSection.length > 0 &&
                 studentsInSection.map(s => ( */}
               <View style={styles.StyleRow}>
-                <TouchableHighlight
-                  style={{textDecorationLine: 'underline'}}
-                  onPress={() => {
-                    this.props.navigation.navigate('ListStudentsCheckName', {
-                      token,
-                      // subject_name: s.Subject.subject_name,
-                      // section_number: sec.section_number,
-                      // year,
-                      // semester,
-                    });
-                  }}>
-                  <Text
-                    style={{
-                      color: '#949494',
-                      textDecorationLine: 'underline',
-                      width: 26,
-                      paddingLeft: 8,
-                    }}>
-                    1
-                  </Text>
-                </TouchableHighlight>
-                <Text style={{flex: 1, paddingLeft: 8}}>12 Aug 2019</Text>
+                <Text style={{flex: 1.5, paddingLeft: 8}}>5920504200</Text>
+                <Text style={{flex: 2, paddingLeft: 8}}>Icon Sung</Text>
 
                 {/* {s.status === 'APPROVE' && ( */}
-                <Text style={{flex: 1, color: '#001AFF'}}>08.30 - 10.00</Text>
+                <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
+                {/* late 0029FF
+                    absent FF0000
+                */}
                 {/* )} */}
               </View>
               {/* ))} */}
@@ -141,7 +103,7 @@ class ListTeachingHistory extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('MySubject')}>
+              onPress={() => this.props.navigation.navigate('TeachingHistory')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
@@ -154,7 +116,7 @@ class ListTeachingHistory extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    students: state.subjectReducer,
+    // students: state.subjectReducer,
     currentYear: state.yearReducer,
   };
 };
@@ -167,7 +129,7 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(ListTeachingHistory);
+)(StudentListCheck);
 
 const styles = StyleSheet.create({
   container: {
