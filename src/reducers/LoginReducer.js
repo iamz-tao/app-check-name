@@ -7,6 +7,7 @@ const initialState = {
   isError: false,
   fetching: true,
   status: null,
+  displayName:''
 };
 
 export default (state = initialState, action) => {
@@ -22,6 +23,7 @@ export default (state = initialState, action) => {
         fetching: false,
         data: data.data,
         status: 'SUCCESS',
+        displayName:data.data.user.displayName
       };
     }
 
