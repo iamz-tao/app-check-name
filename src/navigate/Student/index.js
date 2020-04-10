@@ -37,6 +37,9 @@ class StudentHomePage extends Component {
       LoginReducer,
       StudentGetSubjectRegis,
     } = this.props;
+
+    const {displayName} = this.props.LoginReducer;
+
     if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
@@ -71,7 +74,7 @@ class StudentHomePage extends Component {
             />
             <View style={{height: 8}} />
             <Text style={(styles.styleText, {color: '#1D697C'})}>
-              Phiyada Srikhenkan
+              {displayName}
             </Text>
             <Text style={styles.styleText}>STUDENT</Text>
 

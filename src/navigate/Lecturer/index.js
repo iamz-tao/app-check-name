@@ -48,6 +48,7 @@ class LecturerHomePage extends Component {
       LoginReducer: {fetching},
     } = this.props;
 
+    const {displayName} = this.props.LoginReducer;
 
     if (fetching) {
       return (
@@ -81,7 +82,7 @@ class LecturerHomePage extends Component {
             />
             <View style={{height: 8}} />
             <Text style={(styles.styleText, {color: '#1D697C'})}>
-              Thanakit ABC
+              {displayName}
             </Text>
             <Text style={styles.styleText}>Lecturer</Text>
 
