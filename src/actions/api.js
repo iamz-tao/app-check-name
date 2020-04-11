@@ -616,10 +616,12 @@ async function checkname(params){
         major: params.major,
         minor: params.minor,
         distance: params.distance,
-        macAddress: params.macAddress
+        macAddress: params.macAddress,
+        rssi : params.rssi
       })
     })
     const responseJson = await response.json();
+    console.log(responseJson)
     if (responseJson.status.dataStatus === 'SUCCESS') {
       resolve(responseJson);
     } else {

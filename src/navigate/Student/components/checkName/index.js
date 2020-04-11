@@ -70,7 +70,8 @@ class StudentCheckName extends Component {
       major: '',
       minor: '',
       distance: 0,
-      hasbeacon:false
+      hasbeacon:false,
+      rssi : ''
     };
   }
 
@@ -87,14 +88,14 @@ class StudentCheckName extends Component {
     } else {
 
       Beacons.detectIBeacons();
-      Beacons.setForegroundScanPeriod(2000);
+      Beacons.setForegroundScanPeriod(3500);
 
       const request_permission = await requestLocationPermission();
       checkLocationStatus();
 
       if (request_permission) {
-        this.scan();
-        Beacons.setRssiFilter(0, 1000);
+        // this.scan();
+        // Beacons.setRssiFilter(0, 12000);
         this.setState({
           token,
         });
@@ -112,6 +113,7 @@ class StudentCheckName extends Component {
         'beaconsDidRange',
         (data) => {
           if (data.beacons.length > 0) {
+            console.log(data.beacons)
             this.setState({
               beacon: data.beacons
             })
@@ -160,7 +162,8 @@ class StudentCheckName extends Component {
             uuid: b.uuid,
             major: b.major,
             minor: b.minor,
-            distance: b.distance
+            distance: b.distance,
+            rssi : b.rssi
           })
         })
       }
@@ -178,7 +181,7 @@ class StudentCheckName extends Component {
 
     handleCheck = async () => {
       const {Checkname} = this.props;
-      const { macAddress,token,uuid,major,minor,distance} = this.state;
+      const { macAddress,token,uuid,major,minor,distance,rssi} = this.state;
       this.checkBeacon();
       Checkname({
         token,
@@ -186,7 +189,8 @@ class StudentCheckName extends Component {
         uuid,
         major,
         minor,
-        distance
+        distance,
+        rssi
       })
     }
 
@@ -218,7 +222,7 @@ class StudentCheckName extends Component {
     const timecheck = this.props.checkname.timecheck
     const error = this.props.err_message
     // console.log(error)
-
+    this.scan();
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
