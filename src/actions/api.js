@@ -598,6 +598,33 @@ async function DeleteStudentFromSec(data) {
   });
 }
 
+async function getTeacherHistory(params){
+  console.log("----Function get History Teacher----")
+  const token = params.token;
+  const section_id = params.section_id;
+  console.log("section_id",section_id)
+  return new Promise(async (resolve,reject) => {
+    const response = await fetch(`https://us-central1-kpscheckin.cloudfunctions.net/api/TeachHistory/${section_id}`,
+    {
+      method: 'GET',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        token,
+      },
+    })
+    const responseJson = await response.json();
+    if(responseJson.status.dataStatus === 'SUCCESS'){
+      resolve(responseJson);
+    }
+    else{
+      reject(responseJson);
+    }
+    
+  })
+  
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -621,4 +648,5 @@ export const Api = {
   GetStudentInSection,
   DeleteStudentFromSec,
   StudentDrop,
+  getTeacherHistory
 };

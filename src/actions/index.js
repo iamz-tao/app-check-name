@@ -52,6 +52,9 @@ import {
   DELETE_STD_FROM_SECTION_SUCCESS,
   STUDENT_DROP,
   STUDENT_DROP_SUCCESS,
+  GET_TEACHER_HISTORY,
+  GET_TEACHER_HISTORY_SUCCESS,
+  GET_TEACHER_HISTORY_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -319,6 +322,21 @@ export const deleteStudentFromSec = payload => ({
 export const deleteStudentFromSecSuccess = payload => ({
   payload,
   type: DELETE_STD_FROM_SECTION_SUCCESS,
+})
+
+export const getTeacherHistory = payload => ({
+  payload,
+  type:GET_TEACHER_HISTORY
+})
+
+export const getTeacherHistorySuccess = payload => ({
+  payload,
+  type:GET_TEACHER_HISTORY_SUCCESS
+})
+
+export const getTeacherHistoryFailure = payload => ({
+  payload,
+  type:GET_TEACHER_HISTORY_FAILURE
 })
 
 // Auth
@@ -622,3 +640,16 @@ export const DeleteStudentFromSec = params => {
       });
   };
 };
+
+export const getTeacherhistory = params => {
+  return dispatch => {
+    dispatch(getTeacherHistory(params));
+    Api.getTeacherHistory(params)
+    .then(result => {
+      dispatch(getTeacherHistorySuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(getTeacherHistoryFailure(JSON.stringify(err)))
+    })
+  }
+}

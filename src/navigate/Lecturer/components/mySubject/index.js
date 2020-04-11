@@ -49,6 +49,8 @@ class ListMySubject extends Component {
     const state = this.state;
     const name = this.props.user.data.user.displayName  === undefined ? '-' : this.props.user.data.user.displayName
     const subjects = this.props.subjects.subjectsApprove;
+    
+    console.log(subjects)
     const {token} = this.props.navigation.state.params;
     if (this.props.currentYear === [] || !subjects) {
       return (
@@ -149,6 +151,7 @@ class ListMySubject extends Component {
                                 'TeachingHistory',
                                 {
                                   token,
+                                  section_id : sec.id,
                                   subject_name: s.Subject.subject_name,
                                   section_number: sec.section_number,
                                   year,
