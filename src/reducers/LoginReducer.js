@@ -1,4 +1,10 @@
-import {LOGIN, LOGIN_SUCCESS, LOGIN_FAILURE, LOGOUT} from '../constant';
+import {
+  LOGIN,
+  LOGIN_SUCCESS,
+  LOGIN_FAILURE,
+  LOGOUT,
+  UPDATE_PROFILE_SUCCESS,
+} from '../constant';
 
 const initialState = {
   data: [],
@@ -7,7 +13,7 @@ const initialState = {
   isError: false,
   fetching: true,
   status: null,
-  displayName:''
+  displayName: '',
 };
 
 export default (state = initialState, action) => {
@@ -23,7 +29,7 @@ export default (state = initialState, action) => {
         fetching: false,
         data: data.data,
         status: 'SUCCESS',
-        displayName:data.data.user.displayName
+        displayName: data.data.user.displayName,
       };
     }
 
@@ -32,6 +38,16 @@ export default (state = initialState, action) => {
 
     case LOGOUT:
       return {...state, isError: true, data: []};
+
+    case UPDATE_PROFILE_SUCCESS: {
+      const data = action.payload;
+      return {
+        ...state,
+        fetching: false,
+        displayName: `${data.dataUser.firstname} ${data.dataUser.lastname}`,
+        status: 'SUCCESS',
+      };
+    }
 
     default:
       return state;

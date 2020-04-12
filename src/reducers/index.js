@@ -2,6 +2,13 @@ import {combineReducers} from 'redux';
 import loginReducer from './LoginReducer';
 import subjectReducer from './SubjectReducer';
 import yearReducer from './YearReducer'
-import TeachHistoryReducer from './TeachHistoryReducer';
+import teachHistoryReducer from './TeachHistoryReducer';
+import profileReducer from './ProfileReducer';
 
-export default combineReducers({loginReducer, subjectReducer, yearReducer,TeachHistoryReducer});
+export default combineReducers({
+    loginReducer, 
+    subjectReducer, 
+    yearReducer,
+    teachHistoryReducer,
+    profileReducer,
+});
