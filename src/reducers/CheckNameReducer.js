@@ -29,8 +29,8 @@ const initialState = {
       }
   
       case CHECKNAME_FAILURE:
-        // const data = JSON.parse(action.payload)
-        // console.log(action.payload)
+         const data = JSON.parse(action.payload)
+         console.log(action.payload)
         return {...state, isError: true, err_message: data.message, status: 'FAILURE'};
   
       default:

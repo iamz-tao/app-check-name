@@ -29,7 +29,6 @@ import {
 } from '../../../../actions';
 
 
-
 const requestLocationPermission = async () => {
   try {
     const granted = await PermissionsAndroid.request(
@@ -70,8 +69,9 @@ class StudentCheckName extends Component {
       major: '',
       minor: '',
       distance: 0,
-      hasbeacon:false,
-      rssi : ''
+      hasbeacon: false,
+      rssi: '',
+      isBluetooth: true,
     };
   }
 
@@ -88,14 +88,12 @@ class StudentCheckName extends Component {
     } else {
 
       Beacons.detectIBeacons();
-      Beacons.setForegroundScanPeriod(3500);
 
       const request_permission = await requestLocationPermission();
       checkLocationStatus();
 
       if (request_permission) {
-        // this.scan();
-        // Beacons.setRssiFilter(0, 12000);
+        Alert.alert("Hello ")
         this.setState({
           token,
         });
@@ -107,18 +105,24 @@ class StudentCheckName extends Component {
         });
 
         this.getMacAddress();
+
       }
+
 
       this.beacondidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
           if (data.beacons.length > 0) {
-            console.log(data.beacons)
             this.setState({
-              beacon: data.beacons
+              beacon: data.beacons,
             })
-            // console.log(data.beacons)
-
+          }
+          else {
+            this.setState({
+              beacon: [],
+              isBluetooth: false
+            }
+            )
           }
         }
       )
@@ -148,7 +152,8 @@ class StudentCheckName extends Component {
   }
 
   scan = async () => {
-
+    Beacons.setForegroundScanPeriod(3000);
+    Beacons.setRssiFilter(0, 2000);
     Beacons.startRangingBeaconsInRegion('REGION')
       .then(() => {
         console.log('------scanning----------')
@@ -157,72 +162,75 @@ class StudentCheckName extends Component {
 
   setBeacon = () => {
     const { beacon } = this.state;
-        beacon.map(b => {
-          this.setState({
-            uuid: b.uuid,
-            major: b.major,
-            minor: b.minor,
-            distance: b.distance,
-            rssi : b.rssi
-          })
-        })
-      }
+    beacon.map(b => {
+      this.setState({
+        uuid: b.uuid,
+        major: b.major,
+        minor: b.minor,
+        distance: b.distance,
+        rssi: b.rssi
+      })
+    })
+  }
 
   checkname = async () => {
-   
+    this.scan();
     this.setState({ ischecking: true });
-
     setTimeout(async () => {
+      this.scan();
       this.setBeacon();
       await this.handleCheck();
-      this.setState({ischecking : false,modalVisible : true})
-    },5000)
+      this.setState({ ischecking: false, modalVisible: true })
+    }, 3500)
   };
 
-    handleCheck = async () => {
-      const {Checkname} = this.props;
-      const { macAddress,token,uuid,major,minor,distance,rssi} = this.state;
-      this.checkBeacon();
-      Checkname({
-        token,
-        macAddress,
-        uuid,
-        major,
-        minor,
-        distance,
-        rssi
-      })
-    }
+  handleCheck = async () => {
+    const { Checkname } = this.props;
+    const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
+    this.checkBeacon();
+    Checkname({
+      token,
+      macAddress,
+      uuid,
+      major,
+      minor,
+      distance,
+      rssi
+    })
+  }
 
-    checkBeacon = () => {
-      const {beacon} = this.state;
-      if(beacon.length < 1){
-        this.setState({hasbeacon: false})
-      }
-      else{
-        this.setState({hasbeacon: true})
-      }
+  checkBeacon = () => {
+    const { beacon } = this.state;
+    if (beacon.length < 1) {
+      this.setState({ hasbeacon: false })
     }
+    else {
+      this.setState({ hasbeacon: true })
+    }
+  }
 
+  componentWillUnmount() {
+    this.beacondidRange = null;
+    Beacons.stopRangingBeaconsInRegion("REGION1");
+  }
   handleLogout = () => {
     const { Logout } = this.props;
     Logout({});
   };
 
   render() {
-    const { pickerValues, section, token, ischecking, uuid, distance ,hasbeacon} = this.state;
+    const { pickerValues, section, token, ischecking, uuid, distance, hasbeacon } = this.state;
     const {
       currentYear: { year, semester },
     } = this.props.currentYear;
     const { subjectsRegistration } = this.props.Subjects;
-     const statusReq = this.props.Subjects.status;
+    const statusReq = this.props.Subjects.status;
 
     const statusCheckname = this.props.checkname.status;
     // console.log(statusCheckname)
     const timecheck = this.props.checkname.timecheck
     const error = this.props.err_message
-    // console.log(error)
-    this.scan();
+
     const subjectsArr = [];
     const sectionArr = [];
     let teacher_name = '';
@@ -291,7 +299,7 @@ class StudentCheckName extends Component {
                       </Text>
                       <Text style={styles.styleLabel}>
                         You can check history in MY SUBJECT page.
-                        Time_Check : {timecheck} 
+                        Time_Check : {timecheck}
                       </Text>
                     </View>
                   )}
@@ -316,7 +324,7 @@ class StudentCheckName extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
-                      if(statusCheckname === 'SUCCESS'){
+                      if (statusCheckname === 'SUCCESS') {
                         this.props.navigation.navigate('StudentCheckName');
                       }
                     }}>

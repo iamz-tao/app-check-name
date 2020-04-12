@@ -600,7 +600,7 @@ async function DeleteStudentFromSec(data) {
 
 async function checkname(params){
   console.log("Function Checkname")
-  console.log(params)
+  // Alert.alert(params.distance)
   const token = params.token
   return new Promise(async (resolve,reject) => {
     const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
@@ -615,16 +615,16 @@ async function checkname(params){
         uuid: params.uuid,
         major: params.major,
         minor: params.minor,
-        distance: params.distance,
+        distance: 4,
         macAddress: params.macAddress,
         rssi : params.rssi
       })
     })
     const responseJson = await response.json();
-    console.log(responseJson)
     if (responseJson.status.dataStatus === 'SUCCESS') {
       resolve(responseJson);
     } else {
+      // console.log(responseJson)
       reject(responseJson);
     }
   })
