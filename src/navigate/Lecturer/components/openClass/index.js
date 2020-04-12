@@ -94,6 +94,7 @@ class OpenClass extends Component {
     const payload = {
       section_id,
       beacon_id,
+      distance,
     };
 
     LecturerOpenClass({
