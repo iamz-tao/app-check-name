@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
 import {StudentGetSubjectRegis, Logout} from '../../actions';
@@ -73,9 +74,23 @@ class StudentHomePage extends Component {
               }}
             />
             <View style={{height: 8}} />
-            <Text style={(styles.styleText, {color: '#1D697C'})}>
-              {displayName}
-            </Text>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Text style={(styles.styleText, {color: '#1D697C'})}>
+                {displayName}{' '}
+              </Text>
+              <TouchableHighlight
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={() => {
+                  this.props.navigation.navigate('UpdateProfile', {
+                    token,
+                  });
+                }}>
+                <Image
+                  style={styles.CustomImg}
+                  source={require('../../../android/statics/images/edit.png')}
+                />
+              </TouchableHighlight>
+            </View>
             <Text style={styles.styleText}>STUDENT</Text>
 
             <View style={{height: 24}} />
@@ -228,4 +243,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   styleText: {},
+  CustomImg: {
+    width: 12,
+    height: 12,
+  },
 });
