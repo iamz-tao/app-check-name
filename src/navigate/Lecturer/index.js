@@ -42,7 +42,7 @@ class LecturerHomePage extends Component {
   render() {
     const {
       LoginReducer: {
-        data: {token},
+        data: {token, user},
       },
       class: {openClass},
     } = this.props;
@@ -94,6 +94,7 @@ class LecturerHomePage extends Component {
                 onPress={() => {
                   this.props.navigation.navigate('UpdateProfile', {
                     token,
+                    role: user.role,
                   });
                 }}>
                 <Image

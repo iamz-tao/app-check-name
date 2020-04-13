@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { DotsLoader, TextLoader } from 'react-native-indicator';
+import React, {Component} from 'react';
+import {connect} from 'react-redux';
+import {DotsLoader, TextLoader} from 'react-native-indicator';
 
 import {
   StyleSheet,
@@ -10,8 +10,8 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import { Logout, getTeacherhistory } from '../../../../actions';
-import { Table, TableWrapper, Row } from 'react-native-table-component';
+import {Logout, getTeacherhistory} from '../../../../actions';
+import {Table, TableWrapper, Row} from 'react-native-table-component';
 
 class ListTeachingHistory extends Component {
   constructor(props) {
@@ -39,10 +39,10 @@ class ListTeachingHistory extends Component {
       this.props.navigation.navigate('Login');
     }
 
-    const { getTeacherhistory } = this.props;
+    const {getTeacherhistory} = this.props;
     getTeacherhistory({
       token,
-      section_id
+      section_id,
     });
     // const payload = {
     //   subject_name,
@@ -58,21 +58,18 @@ class ListTeachingHistory extends Component {
   }
 
   handleLogout = () => {
-    const { Logout } = this.props;
+    const {Logout} = this.props;
     Logout({});
   };
 
   render() {
     const {
-      year,
-      semester,
       token,
       subject_name,
       section_number,
-      section_id
     } = this.props.navigation.state.params;
 
-    const { classes } = this.props.teacherHistory;
+    const {classes} = this.props.teacherHistory;
 
     if (classes === null) {
       return (
@@ -83,71 +80,75 @@ class ListTeachingHistory extends Component {
       );
     }
     return (
-      <ScrollView style={{ backgroundColor: '#ffffff' }}>
+      <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
-          <View style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight
               style={styles.btnLogout}
               onPress={() => {
                 this.handleLogout();
               }}>
-              <Text style={{ color: 'white' }}>Logout</Text>
+              <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>TEACHING HISTORY</Text>
           </View>
-          <View style={{ marginLeft: 16 }}>
+          <View style={{marginLeft: 16}}>
             <Text>SUBJECT NAME : {subject_name}</Text>
             <Text>SECTION : {section_number}</Text>
           </View>
-          <View style={{ height: 16 }} />
+          <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{ width: 26, paddingLeft: 8 }} />
-                <Text style={{ flex: 1, paddingLeft: 8 }}>DATE</Text>
-                <Text style={{ flex: 1 }}>TIME</Text>
+                <Text style={{width: 26, paddingLeft: 8}} />
+                <Text style={{flex: 1, paddingLeft: 8}}>DATE</Text>
+                <Text style={{flex: 1}}>TIME</Text>
               </View>
-              {classes !== null && classes.map(c => (
-                <View>
-                  {c.class.map(d => (
-                    <View style={styles.StyleRow}>
-                      <TouchableHighlight
-                        style={{ textDecorationLine: 'underline' }}
-                        onPress={() => {
-                          this.props.navigation.navigate('ListStudentsCheckName', {
-                            token,
-                            // subject_name: s.Subject.subject_name,
-                            // section_number: sec.section_number,
-                            // year,
-                            // semester,
-                          });
-                        }}>
-                        <Text
-                          style={{
-                            color: '#949494',
-                            textDecorationLine: 'underline',
-                            width: 26,
-                            paddingLeft: 8,
+              {classes !== null &&
+                classes.map(c => (
+                  <View>
+                    {c.class.map(d => (
+                      <View style={styles.StyleRow}>
+                        <TouchableHighlight
+                          style={{textDecorationLine: 'underline'}}
+                          onPress={() => {
+                            this.props.navigation.navigate(
+                              'ListStudentsCheckName',
+                              {
+                                token,
+                                class_id: d.class_id,
+                                subject_name: c.subject_name,
+                                date: d.date,
+                              },
+                            );
                           }}>
-                          {d.number}
+                          <Text
+                            style={{
+                              color: '#949494',
+                              textDecorationLine: 'underline',
+                              width: 26,
+                              paddingLeft: 8,
+                            }}>
+                            {d.number}
+                          </Text>
+                        </TouchableHighlight>
+                        <Text style={{flex: 1, paddingLeft: 8}}>{d.date}</Text>
+                        <Text style={{flex: 1, color: '#001AFF'}}>
+                          {d.time}
                         </Text>
-                      </TouchableHighlight>
-                      <Text style={{ flex: 1, paddingLeft: 8 }}>{d.date}</Text>
-                      <Text style={{ flex: 1, color: '#001AFF' }}>{d.time}</Text>
-                    </View>
-                  ))}
-                </View>
-              ))}
-
+                      </View>
+                    ))}
+                  </View>
+                ))}
             </View>
           </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => this.props.navigation.navigate('MySubject')}>
-              <Text style={{ color: '#949494' }}>BACK</Text>
+              <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
         </View>
@@ -161,14 +162,14 @@ const mapStateToProps = state => {
   return {
     students: state.subjectReducer,
     currentYear: state.yearReducer,
-    teacherHistory: state.TeachHistoryReducer
+    teacherHistory: state.teachHistoryReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
   Logout,
-  getTeacherhistory
+  getTeacherhistory,
 };
 
 export default connect(
@@ -242,8 +243,8 @@ const styles = StyleSheet.create({
     borderWidth: 0.3,
     borderColor: '#D0CDCD',
   }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
-  text: { margin: 6, color: '#525252' },
-  textHeader: { margin: 6, color: '#000000' },
+  text: {margin: 6, color: '#525252'},
+  textHeader: {margin: 6, color: '#000000'},
   row: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
@@ -251,8 +252,8 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderColor: '#D0CDCD',
   },
-  btn: { width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18 },
-  btnText: { textAlign: 'center', color: 'black' },
+  btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
+  btnText: {textAlign: 'center', color: 'black'},
   btnLogout: {
     alignItems: 'center',
     alignContent: 'flex-end',

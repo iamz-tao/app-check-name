@@ -53,7 +53,7 @@ class UpdateProfile extends Component {
         profile: {email, id, firstname, lastname, mobile},
       },
     } = this.props;
-    const token = this.props.navigation.state.params;
+    const {token} = this.props.navigation.state.params;
     const dataUser = {
       id: idUpdate === '' ? id : idUpdate,
       firstname: firstnameUpdate === '' ? firstname : firstnameUpdate,
@@ -71,6 +71,8 @@ class UpdateProfile extends Component {
     const {
       profile: {fetching, profile},
     } = this.props;
+    const {role} = this.props.navigation.state.params;
+
     if (fetching || !profile) {
       return (
         <View style={styles.loadingWrapper}>
@@ -84,6 +86,7 @@ class UpdateProfile extends Component {
         profile: {email, firstname, id, lastname, mobile},
       },
     } = this.props;
+  
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -156,7 +159,14 @@ class UpdateProfile extends Component {
               <TouchableHighlight
                 style={styles.btnCancel}
                 onPress={() =>
-                  this.props.navigation.navigate('LecturerHomePage')
+                  {
+                    if(role === 'PROFESSOR'){
+                      this.props.navigation.navigate('LecturerHomePage')
+                    }
+                    if(role === 'NISIT'){
+                      this.props.navigation.navigate('StudentHomePage')
+                    }
+                  }
                 }>
                 <Text style={{color: '#949494'}}>BACK</Text>
               </TouchableHighlight>
