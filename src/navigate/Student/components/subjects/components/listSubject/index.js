@@ -11,7 +11,7 @@ import NavigationServices from '../../../../../NavigationServices';
 
 const SubjectList = props => {
   const {subjects, handleDrop, token} = props;
-  // console.log('subjects', subjects);
+  console.log('subjects', subjects);
   return (
     <ScrollView style={{backgroundColor: '#ffffff'}}>
       <View style={styles.Column}>
@@ -38,12 +38,13 @@ const SubjectList = props => {
                       
                       {s.status === 'APPROVE' && (
                       <TouchableHighlight
-                        style={{textDecorationLine: 'underline'}}
+                        style={{textDecorationLine: 'underline', top: 6}}
                         onPress={() => {
                           NavigationServices.navigate('StudentListCheckName', {
                             token,
                             subject_name: s.subject_name,
                             section_number: s.section_number,
+                            section_id: s.section_id,
                           });
                         }}>
                         <Text

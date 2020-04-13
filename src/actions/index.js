@@ -59,6 +59,8 @@ import {
   UPDATE_PROFILE_SUCCESS,
   GET_PROFILE,
   GET_PROFILE_SUCCESS,
+  STUDENT_GET_HISTORY,
+  STUDENT_SET_HISTORY,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -362,6 +364,16 @@ export const getProfileSuccess = payload => ({
   type: GET_PROFILE_SUCCESS,
 });
 
+export const studentGetHistory = payload => ({
+  payload,
+  type: STUDENT_GET_HISTORY,
+})
+
+export const studentSetHistory = payload => ({
+  payload,
+  type: STUDENT_SET_HISTORY,
+})
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -447,6 +459,20 @@ export const StudentDrop = params => {
         dispatch(studentDropSuccess(JSON.stringify(result)));
       })
       .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const StudentGetHistory = params => {
+  return dispatch => {
+    dispatch(studentGetHistory(params));
+    Api.StudentGetHistory(params)
+      .then(result => {
+        dispatch(studentSetHistory(JSON.stringify(result)));
+      })
+      .catch(err => {
+        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };
