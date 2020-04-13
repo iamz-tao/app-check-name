@@ -75,7 +75,16 @@ class StudentCheckName extends Component {
     alert(select);
   };
 
-  handleSubmit = () => {};
+  handleSubmit = () => {
+   const {openingClass : {openingClass},pickerValues} = this.props;
+   if(openingClass.length === 1 ){
+     let class_id = openingClass[0].class_id;
+   }
+   else{
+
+   }
+  
+  };
 
   handleLogout = () => {
     const {Logout} = this.props;
@@ -295,6 +304,7 @@ class StudentCheckName extends Component {
               style={styles.btnReq}
               onPress={() => {
                 // this.handleSubmit(token, section_id);
+                this.handleSubmit();
                 this.setModalVisible();
               }}>
               <Text style={{color: 'white'}}>CHECK</Text>
