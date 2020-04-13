@@ -61,6 +61,8 @@ import {
   GET_PROFILE_SUCCESS,
   STUDENT_GET_HISTORY,
   STUDENT_SET_HISTORY,
+  GET_CLASS_CHECK_NAME,
+  SET_CLASS_CHECK_NAME,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -374,6 +376,16 @@ export const studentSetHistory = payload => ({
   type: STUDENT_SET_HISTORY,
 })
 
+export const getClassCheckName = payload => ({
+  payload,
+  type: GET_CLASS_CHECK_NAME,
+})
+
+export const setClassCheckName = payload => ({
+  payload,
+  type: SET_CLASS_CHECK_NAME,
+})
+
 // Auth
 export const Login = params => {
   return dispatch => {
@@ -444,6 +456,19 @@ export const GetSubjectRegistration = params => {
     Api.GetSubjectRegistration(params)
       .then(result => {
         dispatch(setSubjectRegistration(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const GetClassCheckName = params => {
+  return dispatch => {
+    dispatch(getClassCheckName(params));
+    Api.getClassCheckName(params)
+      .then(result => {
+        dispatch(setClassCheckName(JSON.stringify(result)));
       })
       .catch(err => {
         dispatch(requestError(err));

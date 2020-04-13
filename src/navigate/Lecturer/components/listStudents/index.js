@@ -10,7 +10,11 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout, ListStudentInSection, DeleteStudentFromSec} from '../../../../actions';
+import {
+  Logout,
+  ListStudentInSection,
+  DeleteStudentFromSec,
+} from '../../../../actions';
 
 class StudentInSection extends Component {
   constructor(props) {
@@ -55,10 +59,10 @@ class StudentInSection extends Component {
   };
 
   handelDelete = id => {
-    const {DeleteStudentFromSec} = this.props
+    const {DeleteStudentFromSec} = this.props;
     const {token} = this.props.navigation.state.params;
     // console.log(id)
-    DeleteStudentFromSec({token,id})
+    DeleteStudentFromSec({token, id});
   };
 
   render() {
@@ -78,7 +82,6 @@ class StudentInSection extends Component {
         </View>
       );
     }
-    // console.log('studentsInSection', studentsInSection);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -102,26 +105,38 @@ class StudentInSection extends Component {
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{flex: 1, paddingLeft: 8}}>ID</Text>
-                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{width: 94, paddingLeft: 4}}>ID</Text>
+                <Text style={{width: 130, paddingLeft: 4}}>NAME</Text>
                 <Text style={{flex: 1}}>STATUS</Text>
               </View>
               {studentsInSection !== null && studentsInSection.length === 0 && (
-                  <View style={styles.StyleRow, {alignItems: 'center'}}>
-                    <Text>There are no student in section.</Text>
-</View>
+                <View style={(styles.StyleRow, {alignItems: 'center'})}>
+                  <Text>There are no student in section.</Text>
+                </View>
               )}
               {studentsInSection !== null &&
                 studentsInSection.length > 0 &&
                 studentsInSection.map(s => (
                   <View style={styles.StyleRow}>
-                    <Text style={{flex: 1, paddingLeft: 8}}>{s.std_id}</Text>
-                    <Text style={{flex: 2, paddingLeft: 8}}>
+                    <Text style={{width: 94, paddingLeft: 4, paddingRight: 4}}>
+                      {s.std_id}
+                    </Text>
+                    <Text
+                      style={{
+                        width: 130,
+                        paddingLeft: 4,
+                        paddingRight: 4,
+                        overflow: 'hidden',
+                      }}
+                      numberOfLines={1}>
                       {s.firstname} {s.lastname}
                     </Text>
 
                     {s.status === 'APPROVE' && (
-                      <Text style={{flex: 1, color: '#001AFF'}}>ACTIVE</Text>
+                      <Text style={{flex: 1, color: '#001AFF'}}>Active</Text>
+                    )}
+                    {s.status === 'PENDING' && (
+                      <Text style={{color: '#1AB433'}}> Pending </Text>
                     )}
                     {s.status === 'DROP' && (
                       <View style={{flex: 1}}>
@@ -129,19 +144,16 @@ class StudentInSection extends Component {
                           style={styles.btnDrop}
                           onPress={() => {
                             this.handelDelete(s.regis_id);
-                            this.props.navigation.navigate(
-                              'StudentInSection',
-                              {
-                                token,
-                                subject_name,
-                                section_number,
-                                year,
-                                semester,
-                              },
-                            );
+                            this.props.navigation.navigate('StudentInSection', {
+                              token,
+                              subject_name,
+                              section_number,
+                              year,
+                              semester,
+                            });
                           }}>
                           <Text style={{color: 'white', fontSize: 10}}>
-                            DELETE
+                            Delete
                           </Text>
                         </TouchableHighlight>
                       </View>

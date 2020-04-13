@@ -4,6 +4,7 @@ import subjectReducer from './SubjectReducer';
 import yearReducer from './YearReducer'
 import teachHistoryReducer from './TeachHistoryReducer';
 import profileReducer from './ProfileReducer';
+import checkNameReducer from './CheckNameReducer';
 
 export default combineReducers({
     loginReducer, 
@@ -11,4 +12,5 @@ export default combineReducers({
     yearReducer,
     teachHistoryReducer,
     profileReducer,
+    checkNameReducer,
 });
