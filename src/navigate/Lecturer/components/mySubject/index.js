@@ -50,7 +50,6 @@ class ListMySubject extends Component {
     const name = this.props.user.data.user.displayName  === undefined ? '-' : this.props.user.data.user.displayName
     const subjects = this.props.subjects.subjectsApprove;
     
-    console.log(subjects)
     const {token} = this.props.navigation.state.params;
     if (this.props.currentYear === [] || !subjects) {
       return (

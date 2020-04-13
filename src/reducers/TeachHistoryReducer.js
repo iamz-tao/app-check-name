@@ -4,12 +4,15 @@ import {
   GET_TEACHER_HISTORY_FAILURE,
   STUDENT_SET_HISTORY,
   STUDENT_GET_HISTORY,
+  GET_STUDENT_CHECKNAME_IN_CLASS,
+  SET_STUDENT_CHECKNAME_IN_CLASS,
 } from '../constant';
 
 const initialState = {
   error: [],
   classes: null,
   stdHistory: null,
+  stdInClass: null,
   status: '',
   fetching: false,
 };
@@ -47,6 +50,14 @@ export default (state = initialState, action) => {
       return {...state, fetching: false, stdHistory: data.data};
     }
     
+    case GET_STUDENT_CHECKNAME_IN_CLASS:
+      return {...state, fetching: true};
+
+    case SET_STUDENT_CHECKNAME_IN_CLASS: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, stdInClass: data.data};
+    }
+
     default:
       return state;
   }

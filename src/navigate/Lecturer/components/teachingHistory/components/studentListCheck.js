@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout} from '../../../../../actions';
+import {Logout, GetStudentChecknameInClass} from '../../../../../actions';
 
 class StudentListCheck extends Component {
   constructor(props) {
@@ -18,13 +18,15 @@ class StudentListCheck extends Component {
   }
 
   componentDidMount() {
-    const {
-      token,
-    } = this.props.navigation.state.params;
-    const {ListStudentInSection} = this.props;
+    const {token, class_id} = this.props.navigation.state.params;
+    const {GetStudentChecknameInClass} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
+    GetStudentChecknameInClass({
+      token,
+      class_id,
+    });
   }
 
   handleLogout = () => {
@@ -33,22 +35,20 @@ class StudentListCheck extends Component {
   };
 
   render() {
-    // const {
-    //   year,
-    //   semester,
-    //   token,
-    //   subject_name,
-    //   section_number,
-    // } = this.props.navigation.state.params;
-    // if (!studentsInSection) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
-    // console.log('studentsInSection', studentsInSection);
+    const {
+      subject_name,
+      date,
+    } = this.props.navigation.state.params;
+    const {fetching, stdInClass} = this.props.teachingHistory;
+    if ((fetching, !stdInClass)) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+    
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -65,10 +65,11 @@ class StudentListCheck extends Component {
             <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : Digital</Text>
-            <Text>SECTION : 701</Text>
-            <Text>DATE : 24 Aug 2019</Text>
-            <Text>AMOUNT : 12</Text>
+            <Text>
+              SUBJECT NAME : {subject_name}
+            </Text>
+            <Text>DATE : {date}</Text>
+            <Text>AMOUNT : {stdInClass.amount}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -78,26 +79,31 @@ class StudentListCheck extends Component {
                 <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
                 <Text style={{flex: 1}}>STATUS</Text>
               </View>
-              {/* {studentsInSection !== null && studentsInSection.length === 0 && (
-                  <View style={styles.StyleRow, {alignItems: 'center'}}>
-                    <Text>There are no student in section.</Text>
-</View>
-              )} */}
-              {/* {studentsInSection !== null &&
-                studentsInSection.length > 0 &&
-                studentsInSection.map(s => ( */}
-              <View style={styles.StyleRow}>
-                <Text style={{flex: 1.5, paddingLeft: 8}}>5920504200</Text>
-                <Text style={{flex: 2, paddingLeft: 8}}>Icon Sung</Text>
-
-                {/* {s.status === 'APPROVE' && ( */}
-                <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
-                {/* late 0029FF
-                    absent FF0000
-                */}
-                {/* )} */}
-              </View>
-              {/* ))} */}
+              {stdInClass.students !== null &&
+                stdInClass.students.length === 0 && (
+                  <View style={(styles.StyleRow, {alignItems: 'center'})}>
+                    <Text>There're no student checked name in this class.</Text>
+                  </View>
+                )}
+              {stdInClass.students !== null &&
+                stdInClass.students.length > 0 &&
+                stdInClass.students.map(s => (
+                  <View style={styles.StyleRow}>
+                    <Text style={{flex: 1.5, paddingLeft: 8}}>{s.id}</Text>
+                    <Text style={{flex: 2, paddingLeft: 8}}>
+                      {s.firstname} {s.lastname}
+                    </Text>
+                    {s.status === 'ONTIME' && (
+                      <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
+                    )}
+                    {s.status === 'LATE' && (
+                      <Text style={{flex: 1, color: '#0029FF'}}>Late</Text>
+                    )}
+                    {s.status === 'ABSENT' && (
+                      <Text style={{flex: 1, color: '#FF0000'}}>Absent</Text>
+                    )}
+                  </View>
+                ))}
             </View>
           </View>
           <View style={styles.btnWrapper}>
@@ -116,13 +122,14 @@ class StudentListCheck extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    // students: state.subjectReducer,
+    teachingHistory: state.teachHistoryReducer,
     currentYear: state.yearReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  GetStudentChecknameInClass,
   Logout,
 };
 

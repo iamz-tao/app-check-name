@@ -717,6 +717,29 @@ async function getTeacherHistory(params) {
   });
 }
 
+async function getStudentChecknameInClass(params) {
+  const {token, class_id} = params;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/studentInClass/${class_id}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -745,4 +768,5 @@ export const Api = {
   getProfile,
   StudentGetHistory,
   getClassCheckName,
+  getStudentChecknameInClass,
 };

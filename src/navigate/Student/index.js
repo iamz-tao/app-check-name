@@ -32,7 +32,7 @@ class StudentHomePage extends Component {
   render() {
     const {
       LoginReducer: {
-        data: {token},
+        data: {token, user},
         fetching,
       },
       LoginReducer,
@@ -83,6 +83,7 @@ class StudentHomePage extends Component {
                 onPress={() => {
                   this.props.navigation.navigate('UpdateProfile', {
                     token,
+                    role: user.role,
                   });
                 }}>
                 <Image
