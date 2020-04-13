@@ -35,10 +35,7 @@ class StudentListCheck extends Component {
   };
 
   render() {
-    const {
-      subject_name,
-      date,
-    } = this.props.navigation.state.params;
+    const {subject_name, date, time} = this.props.navigation.state.params;
     const {fetching, stdInClass} = this.props.teachingHistory;
     if ((fetching, !stdInClass)) {
       return (
@@ -48,7 +45,7 @@ class StudentListCheck extends Component {
         </View>
       );
     }
-    
+
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -65,18 +62,24 @@ class StudentListCheck extends Component {
             <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>
-              SUBJECT NAME : {subject_name}
-            </Text>
+            <Text>SUBJECT NAME : {subject_name}</Text>
             <Text>DATE : {date}</Text>
+              <Text>TIME : 
+                {time === 'OPENING' ? (
+                  <Text style={{color: '#1AB433'}}>{' '}Opening</Text>
+                ):(
+                  <Text>{time}</Text>
+                )}
+                </Text>
             <Text>AMOUNT : {stdInClass.amount}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{flex: 1.5, paddingLeft: 8}}>ID</Text>
-                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{flex: 1.5}}>ID</Text>
+                <Text style={{flex: 2, paddingLeft: 3}}>NAME</Text>
+                <Text style={{flex: 1, paddingLeft: 3}}>TIME</Text>
                 <Text style={{flex: 1}}>STATUS</Text>
               </View>
               {stdInClass.students !== null &&
@@ -89,10 +92,11 @@ class StudentListCheck extends Component {
                 stdInClass.students.length > 0 &&
                 stdInClass.students.map(s => (
                   <View style={styles.StyleRow}>
-                    <Text style={{flex: 1.5, paddingLeft: 8}}>{s.id}</Text>
-                    <Text style={{flex: 2, paddingLeft: 8}}>
+                    <Text style={{flex: 1.5}}>{s.id}</Text>
+                    <Text style={{flex: 2, paddingLeft: 3, overflow: 'hidden'}} numberOfLines={1}>
                       {s.firstname} {s.lastname}
                     </Text>
+                    <Text style={{flex: 1, paddingLeft: 3}}>{s.time}</Text>
                     {s.status === 'ONTIME' && (
                       <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
                     )}
@@ -160,8 +164,8 @@ const styles = StyleSheet.create({
     borderRadius: 21,
   },
   ViewWrapper: {
-    width: 300,
-    height: 300,
+    width: 312,
+    minHeight: 300,
     padding: 8,
     borderWidth: 1,
     borderRadius: 18,
@@ -170,7 +174,7 @@ const styles = StyleSheet.create({
     borderColor: '#D0CDCD',
   },
   StyleRow: {
-    width: 286,
+    width: 300,
     height: 20,
     padding: 2,
     flexDirection: 'row',
@@ -182,7 +186,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ViewHeader: {
-    width: 286,
+    width: 300,
     height: 32,
     padding: 4,
     borderBottomWidth: 1,

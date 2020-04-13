@@ -119,7 +119,8 @@ class ListTeachingHistory extends Component {
                               {
                                 token,
                                 class_id: d.class_id,
-                                subject_name: c.subject_name,
+                                time: d.time,
+                                subject_name: `${c.subject_code} ${c.subject_name}`,
                                 date: d.date,
                               },
                             );
