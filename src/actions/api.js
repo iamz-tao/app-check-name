@@ -740,6 +740,10 @@ async function getStudentChecknameInClass(params) {
   });
 }
 
+async function CheckName(params){
+  console.log("Checkname function")
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -769,4 +773,5 @@ export const Api = {
   StudentGetHistory,
   getClassCheckName,
   getStudentChecknameInClass,
+  CheckName
 };
