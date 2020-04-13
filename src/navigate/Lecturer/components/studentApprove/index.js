@@ -66,11 +66,11 @@ class StudentApprove extends Component {
 
     if (subjects !== null && pickerValues !== '') {
       subjects
-        .filter(s => s.Subject.subject_code === pickerValues)
-        .map((s, i) => {
+        .filter(s => s.Subject.subject_code === pickerValues)[0].
+        sections.map((sec, i) => {
           sectionArr.push({
-            label: `${s.sections[i].section_number}`,
-            value: s.sections[i].id,
+            label: sec.section_number,
+            value: sec.id,
           });
         });
     }
@@ -83,6 +83,7 @@ class StudentApprove extends Component {
         </View>
       );
     }
+   
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>

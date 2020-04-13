@@ -232,7 +232,7 @@ class StudentSubjectRegister extends Component {
                       pickerValues: itemValue,
                     })
                   }>
-                  <Picker.Item label="Select Section" value="" />
+                  <Picker.Item label="Select Subject" value="" />
 
                   {subjectsArr.length > 0 &&
                     subjectsArr.map(s => (

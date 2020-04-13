@@ -25,7 +25,8 @@ import {
   Logout,
   GetCurrentYear,
   GetSubjectRegistration,
-  Checkname
+  Checkname,
+  GetClassCheckName,
 } from '../../../../actions';
 
 
@@ -82,50 +83,26 @@ class StudentCheckName extends Component {
         data: { token },
       },
     } = this.props.navigation.state.params;
-    const { GetSubjectRegistration, GetCurrentYear } = this.props;
+    const {
+      GetSubjectRegistration,
+      GetCurrentYear,
+      GetClassCheckName,
+    } = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     } else {
-
-      Beacons.detectIBeacons();
-
-      const request_permission = await requestLocationPermission();
-      checkLocationStatus();
-
-      if (request_permission) {
-        Alert.alert("Hello ")
-        this.setState({
-          token,
-        });
-        GetCurrentYear({
-          token,
-        });
-        GetSubjectRegistration({
-          token,
-        });
-
-        this.getMacAddress();
-
-      }
-
-
-      this.beacondidRange = DeviceEventEmitter.addListener(
-        'beaconsDidRange',
-        (data) => {
-          if (data.beacons.length > 0) {
-            this.setState({
-              beacon: data.beacons,
-            })
-          }
-          else {
-            this.setState({
-              beacon: [],
-              isBluetooth: false
-            }
-            )
-          }
-        }
-      )
+      this.setState({
+        token,
+      });
+      GetCurrentYear({
+        token,
+      });
+      GetSubjectRegistration({
+        token,
+      });
+      GetClassCheckName({
+        token,
+      });
     }
   }
 
@@ -223,7 +200,10 @@ class StudentCheckName extends Component {
     const {
       currentYear: { year, semester },
     } = this.props.currentYear;
-    const { subjectsRegistration } = this.props.Subjects;
+    const {
+      openingClass: {fetching, openingClass},
+    } = this.props;
+    // const {subjectsRegistration} = this.props.Subjects;
     const statusReq = this.props.Subjects.status;
 
     const statusCheckname = this.props.checkname.status;
@@ -233,10 +213,11 @@ class StudentCheckName extends Component {
 
     const subjectsArr = [];
     const sectionArr = [];
-    let teacher_name = '';
     let subject_name = '';
-
-    if (ischecking) {
+    let sectionId = '';
+    let time = '';
+    let time2 = '';
+    if (fetching || !openingClass) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -244,36 +225,26 @@ class StudentCheckName extends Component {
         </View>
       );
     }
-
-    if (subjectsRegistration === null) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <DotsLoader color="#CA5353" />
-          <TextLoader text="Loading" />
-        </View>
-      );
-    }
-
-    const subjectApprove = subjectsRegistration.registrations.filter(
-      s => s.status === 'APPROVE',
-    );
-    subjectApprove.map((s, i) => {
+    openingClass.map((s, i) => {
       subjectsArr.push({
-        label: `${s.subject_code} ${s.subject_name}`,
-        value: s.subject_code,
+        label: `${s.Section.subject_code} ${s.Section.subject_name}`,
+        value: s.class_id,
       });
     });
     if (pickerValues !== '') {
-      // subject_name = subjectApprove.filter(s=>s.subject_code === pickerValues)[0].subject_name
-      // teacher_name = subjectApprove.filter(s=>s.subject_code === pickerValues)[0].section_number
-      subjectApprove
-        .filter(s => s.subject_code === pickerValues)
-        .map((s, i) => {
-          sectionArr.push({
-            label: `${s.section_number}`,
-            value: s.request_id,
-          });
-        });
+      const classDetail = openingClass.filter(
+        s => s.class_id === pickerValues,
+      )[0].Section;
+      subject_name = classDetail.subject_name;
+      sectionId = classDetail.section_number;
+      time = `${classDetail.Time[0].day} ${classDetail.Time[0].start_time} - ${
+        classDetail.Time[0].end_time
+      }`;
+      time2 =
+        classDetail.Time.length === 2 &&
+        `${classDetail.Time[1].day} ${classDetail.Time[1].start_time} - ${
+          classDetail.Time[1].end_time
+        }}`;
     }
     // console.log('subjects>>',subjects)
     return (
@@ -351,74 +322,88 @@ class StudentCheckName extends Component {
           <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
             YEAR / SEMESTER : {year} / {semester}
           </Text>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{ height: 45 }}
-                  selectedValue={pickerValues}
-                  onValueChange={(itemValue, itemIndex) =>
-                    this.setState({
-                      pickerValues: itemValue,
-                    })
+          <View style={{height: 21}} />
+          {openingClass !== null && openingClass.length === 1 && (
+            <View>
+              <Text
+                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                SUBJECT NAME : {openingClass[0].Section.subject_code}{' '}
+                {openingClass[0].Section.subject_name}
+              </Text>
+              <Text
+                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                SECTION : {openingClass[0].Section.section_number}
+              </Text>
+              <View style={{display: 'flex', flexDirection: 'column'}}>
+                <Text
+                  style={
+                    (styles.styleLabel, {paddingLeft: 16, marginBottom: 6})
                   }>
-                  <Picker.Item label="Select Subject" value="" />
-
-                  {subjectsArr.length > 0 &&
-                    subjectsArr.map(s => (
-                      <Picker.Item label={s.label} value={s.value} />
-                    ))}
-                </Picker>
+                  TIME : {openingClass[0].Section.Time[0].day}{' '}
+                  {openingClass[0].Section.Time[0].start_time} -{' '}
+                  {openingClass[0].Section.Time[0].end_time}
+                </Text>
+                {openingClass[0].Section.Time[1] && (
+                  <Text
+                    style={
+                      (styles.styleLabel, {paddingLeft: 58, marginBottom: 6})
+                    }>
+                    TIME : {openingClass[0].Section.Time[1].day}{' '}
+                    {openingClass[0].Section.Time[1].start_time} -{' '}
+                    {openingClass[0].Section.Time[1].end_time}
+                  </Text>
+                )}
               </View>
             </View>
-          </View>
-          <View style={styles.styleInputWrapper}>
-            <View style={styles.inputContainer}>
-              <Text style={styles.styleLabel}>SELECT SECTION :</Text>
-              <View style={styles.stylePicker}>
-                <Picker
-                  style={{ height: 45 }}
-                  selectedValue={section}
-                  onValueChange={(itemValue, itemIndex) => {
-                    this.setState({
-                      section: itemValue,
-                    });
-                  }}>
-                  <Picker.Item label="Select Section" value="" />
+          )}
+          {openingClass !== null && openingClass.length > 1 && (
+            <View>
+              <View style={styles.styleInputWrapper}>
+                <View style={styles.inputContainer}>
+                  <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
+                  <View style={styles.stylePicker}>
+                    <Picker
+                      style={{height: 45}}
+                      selectedValue={pickerValues}
+                      onValueChange={(itemValue, itemIndex) =>
+                        this.setState({
+                          pickerValues: itemValue,
+                        })
+                      }>
+                      <Picker.Item label="Select Subject" value="" />
 
-                  {sectionArr.length > 0 &&
-                    sectionArr.map(sec => (
-                      <Picker.Item label={sec.label} value={sec.value} />
-                    ))}
-                </Picker>
+                      {subjectsArr.length > 0 &&
+                        subjectsArr.map(s => (
+                          <Picker.Item label={s.label} value={s.value} />
+                        ))}
+                    </Picker>
+                  </View>
+                </View>
+              </View>
+              <View style={{display: 'flex', paddingLeft: 21, width: 340}}>
+                <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={
+                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
+                    }>
+                    Subject Name :{' '}
+                  </Text>
+                  <Text style={{flex: 3}}>{subject_name}</Text>
+                </View>
+                <View style={{height: 8}} />
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={(styles.styleLabel, {width: 100})}>
+                    Date/Time :
+                  </Text>
+                  <View style={{display: 'flex', flexDirection: 'column'}}>
+                    <Text style={styles.styleLabel}>{time}</Text>
+                    <Text style={styles.styleLabel}>{time2}</Text>
+                  </View>
+                </View>
               </View>
             </View>
-          </View>
-          {/* <View style={{display: 'flex', paddingLeft: 16, width: 340}}>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={(styles.styleLabel, {width: 116, alignSelf: 'center'})}>
-                Subject Name :{' '}
-              </Text>
-              <Text style={{flex: 1}}>{subject_name}</Text>
-            </View>
-            <View style={{height: 8}}/>
-            <View style={{flexDirection: 'row'}}>
-              <Text
-                style={(styles.styleLabel, {width: 116, alignSelf: 'center'})}>
-                Lecturer Name :{' '}
-              </Text>
-              <Text style={{flex: 1}}>{teacher_name}</Text>
-            </View>
-             <View style={{flexDirection: 'row'}}>
-              <Text style={(styles.styleLabel, {width: 116})}>Date/Time :</Text>
-              <Text style={(styles.styleLabel, {flex: 1})}>
-                {day} {time}
-              </Text>
-            </View>
-          </View>  */}
-          <View style={{ height: 8 }} />
+          )}
+          <View style={{height: 8}} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
@@ -444,6 +429,7 @@ class StudentCheckName extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
+    openingClass: state.checkNameReducer,
     currentYear: state.yearReducer,
     Subjects: state.subjectReducer,
     checkname: state.checknameReducer
@@ -452,6 +438,7 @@ const mapStateToProps = state => {
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  GetClassCheckName,
   GetCurrentYear,
   GetSubjectRegistration,
   Logout,

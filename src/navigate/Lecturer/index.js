@@ -8,9 +8,10 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
-import {Logout, GetClass, CloseClass} from '../../actions'
+import {Logout, GetClass, CloseClass} from '../../actions';
 class LecturerHomePage extends Component {
   constructor(props) {
     super(props);
@@ -22,32 +23,34 @@ class LecturerHomePage extends Component {
 
   componentDidMount() {
     const {
-      LoginReducer: {data: {token}},
+      LoginReducer: {
+        data: {token, user},
+      },
       GetClass,
     } = this.props;
     // if (!token) {
     //   this.props.navigation.navigate('Login');
     // }
-    GetClass({token})
+    GetClass({token});
   }
 
   handleLogout = () => {
-    const {Logout} = this.props
-    Logout({})
-  }
-
+    const {Logout} = this.props;
+    Logout({});
+  };
 
   render() {
     const {
       LoginReducer: {
-        data: {token},
+        data: {token, user},
       },
-      class: {openClass}
+      class: {openClass},
     } = this.props;
     const {
       LoginReducer: {fetching},
     } = this.props;
 
+    const {displayName} = this.props.LoginReducer;
 
     if (fetching) {
       return (
@@ -58,13 +61,15 @@ class LecturerHomePage extends Component {
       );
     }
 
-    // console.log('class>>>',this.props.class)
-
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
-            <TouchableHighlight style={styles.btnLogout} onPress={() => {this.handleLogout()}} >
+            <TouchableHighlight
+              style={styles.btnLogout}
+              onPress={() => {
+                this.handleLogout();
+              }}>
               <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
@@ -80,10 +85,25 @@ class LecturerHomePage extends Component {
               }}
             />
             <View style={{height: 8}} />
-            <Text style={(styles.styleText, {color: '#1D697C'})}>
-              Thanakit ABC
-            </Text>
-            <Text style={styles.styleText}>Lecturer</Text>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Text style={(styles.styleText, {color: '#1D697C'})}>
+                {displayName}{' '}
+              </Text>
+              <TouchableHighlight
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={() => {
+                  this.props.navigation.navigate('UpdateProfile', {
+                    token,
+                    role: user.role,
+                  });
+                }}>
+                <Image
+                  style={styles.CustomImg}
+                  source={require('../../../android/statics/images/edit.png')}
+                />
+              </TouchableHighlight>
+            </View>
+            <Text style={styles.styleText}>LECTURER</Text>
 
             <View style={{height: 24}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
@@ -109,13 +129,11 @@ class LecturerHomePage extends Component {
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonCloseClass}
-                onPress={
-                  () => {
-                    this.props.navigation.navigate('LecturerCloseClass', {
-                      token,
-                    });
-                  }
-                }>
+                onPress={() => {
+                  this.props.navigation.navigate('LecturerCloseClass', {
+                    token,
+                  });
+                }}>
                 <Text style={styles.LabelText}>CLOSE CLASS</Text>
               </TouchableHighlight>
             </View>
@@ -161,13 +179,13 @@ class LecturerHomePage extends Component {
 const mapStateToProps = state => {
   return {
     LoginReducer: state.loginReducer,
-    class: state.subjectReducer
+    class: state.subjectReducer,
   };
 };
 
 const mapDispatchToProps = {
   GetClass,
-    Logout,
+  Logout,
 };
 
 export default connect(
@@ -181,6 +199,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     fontFamily: 'Kanit',
     fontStyle: 'normal',
+  },
+  CustomImg: {
+    width: 12,
+    height: 12,
   },
   loadingWrapper: {
     display: 'flex',

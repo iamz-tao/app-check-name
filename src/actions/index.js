@@ -54,7 +54,20 @@ import {
   STUDENT_DROP_SUCCESS,
   CHECKNAME,
   CHECKNAME_SUCCESS,
-  CHECKNAME_FAILURE
+  CHECKNAME_FAILURE,
+  GET_TEACHER_HISTORY,
+  GET_TEACHER_HISTORY_SUCCESS,
+  GET_TEACHER_HISTORY_FAILURE,
+  UPDATE_PROFILE,
+  UPDATE_PROFILE_SUCCESS,
+  GET_PROFILE,
+  GET_PROFILE_SUCCESS,
+  STUDENT_GET_HISTORY,
+  STUDENT_SET_HISTORY,
+  GET_CLASS_CHECK_NAME,
+  SET_CLASS_CHECK_NAME,
+  GET_STUDENT_CHECKNAME_IN_CLASS,
+  SET_STUDENT_CHECKNAME_IN_CLASS,
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -183,7 +196,6 @@ export const rejectStudents = payload => ({
   type: REJECT_STUDENTS,
 });
 
-
 export const rejectStudentSuccess = payload => ({
   payload,
   type: REJECT_STUDENT_SUCCESS,
@@ -282,46 +294,111 @@ export const closeClassSuccess = payload => ({
 export const getClass = payload => ({
   payload,
   type: GET_CLASS,
-})
+});
 
 export const getClassSuccess = payload => ({
   payload,
   type: GET_CLASS_SUCCESS,
-})
+});
 
 export const getClassFailed = payload => ({
   payload,
   type: GET_CLASS_FAILED,
-})
+});
 
 export const getStudentInSection = payload => ({
   payload,
   type: GET_STUDENT_IN_SECTION,
-})
+});
 
 export const setStudentInSection = payload => ({
   payload,
   type: SET_STUDENT_IN_SECTION,
-})
+});
 
 export const studentDrop = payload => ({
   payload,
   type: STUDENT_DROP,
-})
+});
 
 export const studentDropSuccess = payload => ({
   payload,
   type: STUDENT_DROP_SUCCESS,
-})
+});
 
 export const deleteStudentFromSec = payload => ({
   payload,
   type: DELETE_STD_FROM_SECTION,
-})
+});
 
 export const deleteStudentFromSecSuccess = payload => ({
   payload,
   type: DELETE_STD_FROM_SECTION_SUCCESS,
+});
+
+export const getTeacherHistory = payload => ({
+  payload,
+  type: GET_TEACHER_HISTORY,
+});
+
+export const getTeacherHistorySuccess = payload => ({
+  payload,
+  type: GET_TEACHER_HISTORY_SUCCESS,
+});
+
+export const getTeacherHistoryFailure = payload => ({
+  payload,
+  type: GET_TEACHER_HISTORY_FAILURE,
+});
+
+export const updateProfile = payload => ({
+  payload,
+  type: UPDATE_PROFILE,
+});
+
+export const updateProfileSuccess = payload => ({
+  payload,
+  type: UPDATE_PROFILE_SUCCESS,
+});
+
+export const getProfile = payload => ({
+  payload,
+  type: GET_PROFILE,
+});
+
+export const getProfileSuccess = payload => ({
+  payload,
+  type: GET_PROFILE_SUCCESS,
+});
+
+export const studentGetHistory = payload => ({
+  payload,
+  type: STUDENT_GET_HISTORY,
+})
+
+export const studentSetHistory = payload => ({
+  payload,
+  type: STUDENT_SET_HISTORY,
+})
+
+export const getClassCheckName = payload => ({
+  payload,
+  type: GET_CLASS_CHECK_NAME,
+})
+
+export const setClassCheckName = payload => ({
+  payload,
+  type: SET_CLASS_CHECK_NAME,
+})
+
+export const getStudentChecknameInClass = payload => ({
+  payload,
+  type: GET_STUDENT_CHECKNAME_IN_CLASS,
+})
+
+export const setStudentChecknameInClass = payload => ({
+  payload,
+  type: SET_STUDENT_CHECKNAME_IN_CLASS,
 })
 
 export const checkname = payload => ({
@@ -416,6 +493,19 @@ export const GetSubjectRegistration = params => {
   };
 };
 
+export const GetClassCheckName = params => {
+  return dispatch => {
+    dispatch(getClassCheckName(params));
+    Api.getClassCheckName(params)
+      .then(result => {
+        dispatch(setClassCheckName(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
 export const StudentDrop = params => {
   return dispatch => {
     dispatch(studentDrop(params));
@@ -429,7 +519,19 @@ export const StudentDrop = params => {
   };
 };
 
-
+export const StudentGetHistory = params => {
+  return dispatch => {
+    dispatch(studentGetHistory(params));
+    Api.StudentGetHistory(params)
+      .then(result => {
+        dispatch(studentSetHistory(JSON.stringify(result)));
+      })
+      .catch(err => {
+        // console.log('error>>>',err)
+        dispatch(requestError(err));
+      });
+  };
+};
 
 // Lecturer
 export const GetSubjectsApprove = params => {
@@ -497,7 +599,6 @@ export const ApproveStudents = params => {
       });
   };
 };
-
 
 export const RejectStudent = params => {
   return dispatch => {
@@ -641,7 +742,59 @@ export const DeleteStudentFromSec = params => {
   };
 };
 
-//CheckName
+export const getTeacherhistory = params => {
+  return dispatch => {
+    dispatch(getTeacherHistory(params));
+    Api.getTeacherHistory(params)
+      .then(result => {
+        dispatch(getTeacherHistorySuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(getTeacherHistoryFailure(JSON.stringify(err)));
+      });
+  };
+};
+
+// Profile
+export const UserUpdateProfile = params => {
+  return dispatch => {
+    dispatch(updateProfile(params));
+    Api.updateProfile(params)
+      .then(result => {
+        dispatch(updateProfileSuccess(params));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const userGetProfile = params => {
+  return dispatch => {
+    dispatch(getProfile(params));
+    Api.getProfile(params)
+      .then(result => {
+        dispatch(getProfileSuccess(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
+export const GetStudentChecknameInClass = params => {
+  return dispatch => {
+    dispatch(getStudentChecknameInClass(params));
+    Api.getStudentChecknameInClass(params)
+      .then(result => {
+        dispatch(setStudentChecknameInClass(JSON.stringify(result)));
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
+  };
+};
+
 export const Checkname = params => {
   return dispatch => {
     dispatch(checkname(params));

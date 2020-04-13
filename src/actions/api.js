@@ -1,7 +1,7 @@
-import { StackActions } from '@react-navigation/native';
+import {StackActions} from '@react-navigation/native';
 import NavigationServices from '../navigate/NavigationServices';
 
-import { Alert } from 'react-native';
+import {Alert} from 'react-native';
 
 // Auth
 async function Login(data) {
@@ -31,15 +31,15 @@ async function Login(data) {
       } else {
         Alert.alert(
           'Login failed!',
-          `You don't have permission to access application.`,
+          "You don't have permission to access application.",
           [
             {
               text: 'Cancel',
               style: 'cancel',
             },
-            { text: 'OK' },
+            {text: 'OK'},
           ],
-          { cancelable: false },
+          {cancelable: false},
         );
       }
     } else {
@@ -51,10 +51,59 @@ async function Login(data) {
             text: 'Cancel',
             style: 'cancel',
           },
-          { text: 'OK' },
+          {text: 'OK'},
         ],
-        { cancelable: false },
+        {cancelable: false},
       );
+      reject(responseJson);
+    }
+  });
+}
+
+async function updateProfile(data) {
+  const {token, dataUser} = data;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/updateUser',
+      {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token: token.token,
+        },
+        body: JSON.stringify({
+          ...dataUser,
+        }),
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function getProfile(params) {
+  const token = params.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/getProfile`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
       reject(responseJson);
     }
   });
@@ -160,6 +209,53 @@ async function GetSubjectRegistration(data) {
   });
 }
 
+async function StudentGetHistory(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/studentHistory/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
+async function getClassCheckName(data) {
+  const token = data.token;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      'https://us-central1-kpscheckin.cloudfunctions.net/api/getClassForCheckName',
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 // Lecturer
 async function GetSubjectsApprove(data) {
   const token = data.token;
@@ -186,7 +282,7 @@ async function GetSubjectsApprove(data) {
 
 async function GetStudentsApprove(data) {
   const token = data.token;
-  const id = data.id
+  const id = data.id;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
       `https://us-central1-kpscheckin.cloudfunctions.net/api/ListStudentInSection/${id}`,
@@ -420,9 +516,9 @@ async function GetAllBeacon(data) {
 }
 
 async function RegisterBeacon(params) {
-  const token = params.token.token
-  const payload = params.payload
-  return new Promise(async (resolve,reject) => {
+  const token = params.token.token;
+  const payload = params.payload;
+  return new Promise(async (resolve, reject) => {
     const response = await fetch(
       'https://us-central1-kpscheckin.cloudfunctions.net/api/createBeacon',
       {
@@ -438,15 +534,14 @@ async function RegisterBeacon(params) {
       },
     );
     const responseJson = await response.json();
-    if(responseJson.status.dataStatus === 'SUCCESS'){
-        resolve(responseJson)
-        Alert.alert('Add Beacon Success')
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+      Alert.alert('Add Beacon Success');
+    } else {
+      reject(responseJson);
+      Alert.alert(responseJson.message);
     }
-    else{
-      reject(responseJson)
-      Alert.alert(responseJson.message)
-    }
-  })
+  });
 }
 
 async function OpenClass(data) {
@@ -478,7 +573,7 @@ async function OpenClass(data) {
 
 async function CloseClass(data) {
   const token = data.token;
-  const id = data.id
+  const id = data.id;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
       `https://us-central1-kpscheckin.cloudfunctions.net/api/closeClass/${id}`,
@@ -598,9 +693,56 @@ async function DeleteStudentFromSec(data) {
   });
 }
 
+async function getTeacherHistory(params) {
+  const token = params.token;
+  const section_id = params.section_id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/TeachHistory/${section_id}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      // console.log(responseJson)
+      reject(responseJson);
+    }
+  })
+}
+
+async function getStudentChecknameInClass(params) {
+  const {token, class_id} = params;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/studentInClass/${class_id}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 async function checkname(params){
-  console.log("Function Checkname")
-  // Alert.alert(params.distance)
+  console.log("Function Checkname");
   const token = params.token
   return new Promise(async (resolve,reject) => {
     const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
@@ -620,13 +762,6 @@ async function checkname(params){
         rssi : params.rssi
       })
     })
-    const responseJson = await response.json();
-    if (responseJson.status.dataStatus === 'SUCCESS') {
-      resolve(responseJson);
-    } else {
-      // console.log(responseJson)
-      reject(responseJson);
-    }
   })
 }
 
@@ -653,5 +788,11 @@ export const Api = {
   GetStudentInSection,
   DeleteStudentFromSec,
   StudentDrop,
-  checkname
+  checkname,
+  getTeacherHistory,
+  updateProfile,
+  getProfile,
+  StudentGetHistory,
+  getClassCheckName,
+  getStudentChecknameInClass,
 };

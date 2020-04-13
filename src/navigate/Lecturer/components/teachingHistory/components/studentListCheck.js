@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -8,95 +7,40 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
-  Picker,
-  Modal,
-  Image,
 } from 'react-native';
 
-import SubjectList from './components/listSubject';
-import {Logout, GetSubjectRegistration, StudentDrop} from '../../../../actions';
+import {Logout, GetStudentChecknameInClass} from '../../../../../actions';
 
-const Header = () => (
-  <View style={styles.Header}>
-    <View style={styles.HeaderWrapper,{flex: 2}}>
-      <Text style={{paddingLeft: 8}}>SUBJECT</Text>
-    </View>
-    <View style={styles.HeaderWrapper, {width: 66}}>
-      <Text>SECTION</Text>
-    </View>
-    <View style={styles.HeaderWrapper}>
-      <Text>STATUS</Text>
-    </View>
-    <View style={styles.HeaderWrapper}>
-    </View>
-  </View>
-);
-
-class StudentListSubject extends Component {
+class StudentListCheck extends Component {
   constructor(props) {
     super(props);
-    this.state = {
-      pickerValues: [],
-      section: [],
-      subject_code: '',
-      subject_name: '',
-      token: '',
-      modalVisible: false,
-    };
   }
 
   componentDidMount() {
-    const {token} = this.props.navigation.state.params;
-    const {GetSubjectRegistration} = this.props;
+    const {token, class_id} = this.props.navigation.state.params;
+    const {GetStudentChecknameInClass} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
-    GetSubjectRegistration({
+    GetStudentChecknameInClass({
       token,
-    })
+      class_id,
+    });
   }
-
-  setModalVisible(status) {
-    if (status === 'SUCCESS') {
-      this.setState({modalVisible: false});
-    } else {
-      this.setState({modalVisible: true});
-    }
-  }
-
-  handleSelect = () => {
-    const select = this.state.pickerValues;
-    if (select === '') {
-      alert('Please select!');
-    }
-    alert(select);
-  };
-
-  handleSubmit = (token, section_id) => {};
 
   handleLogout = () => {
     const {Logout} = this.props;
     Logout({});
   };
 
-  handleDrop = (id) => {
-    const {StudentDrop} = this.props
-    // console.log(id)
-    const {token} = this.props.navigation.state.params;
-    StudentDrop({
-      token,
-      id,
-    })
-  }
-
   render() {
-    const {token} = this.props.navigation.state.params;
-    const {subjectsRegistration,fetching} = this.props.subjects
-    // console.log(this.props.subjects.subjectsRegistration)
-    if (!subjectsRegistration) {
+    const {
+      subject_name,
+      date,
+    } = this.props.navigation.state.params;
+    const {fetching, stdInClass} = this.props.teachingHistory;
+    if ((fetching, !stdInClass)) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -104,6 +48,7 @@ class StudentListSubject extends Component {
         </View>
       );
     }
+    
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -117,20 +62,54 @@ class StudentListSubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>MY SUBJECT</Text>
+            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
+          </View>
+          <View style={{marginLeft: 16}}>
+            <Text>
+              SUBJECT NAME : {subject_name}
+            </Text>
+            <Text>DATE : {date}</Text>
+            <Text>AMOUNT : {stdInClass.amount}</Text>
           </View>
           <View style={{height: 16}} />
-          <View style={styles.btnWrapper}>
-          <Header />
+          <View style={styles.StyleWrapper}>
+            <View style={styles.ViewWrapper}>
+              <View style={styles.ViewHeader}>
+                <Text style={{flex: 1.5, paddingLeft: 8}}>ID</Text>
+                <Text style={{flex: 2, paddingLeft: 8}}>NAME</Text>
+                <Text style={{flex: 1}}>STATUS</Text>
+              </View>
+              {stdInClass.students !== null &&
+                stdInClass.students.length === 0 && (
+                  <View style={(styles.StyleRow, {alignItems: 'center'})}>
+                    <Text>There're no student checked name in this class.</Text>
+                  </View>
+                )}
+              {stdInClass.students !== null &&
+                stdInClass.students.length > 0 &&
+                stdInClass.students.map(s => (
+                  <View style={styles.StyleRow}>
+                    <Text style={{flex: 1.5, paddingLeft: 8}}>{s.id}</Text>
+                    <Text style={{flex: 2, paddingLeft: 8}}>
+                      {s.firstname} {s.lastname}
+                    </Text>
+                    {s.status === 'ONTIME' && (
+                      <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
+                    )}
+                    {s.status === 'LATE' && (
+                      <Text style={{flex: 1, color: '#0029FF'}}>Late</Text>
+                    )}
+                    {s.status === 'ABSENT' && (
+                      <Text style={{flex: 1, color: '#FF0000'}}>Absent</Text>
+                    )}
+                  </View>
+                ))}
+            </View>
           </View>
-          <View style={{height: 8}} />
-          <SubjectList subjects={subjectsRegistration} handleDrop={this.handleDrop} token={token} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => {
-                this.props.navigation.navigate('StudentHomePage')
-              }}>
+              onPress={() => this.props.navigation.navigate('TeachingHistory')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
@@ -143,21 +122,21 @@ class StudentListSubject extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    subjects: state.subjectReducer,
+    teachingHistory: state.teachHistoryReducer,
+    currentYear: state.yearReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  GetSubjectRegistration,
-  StudentDrop,
+  GetStudentChecknameInClass,
   Logout,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StudentListSubject);
+)(StudentListCheck);
 
 const styles = StyleSheet.create({
   container: {
@@ -168,6 +147,74 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
+  btnDrop: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    backgroundColor: '#CA5353',
+    borderColor: '#CA5353',
+    color: '#ffffff',
+    width: 46,
+    height: 22,
+    borderRadius: 21,
+  },
+  ViewWrapper: {
+    width: 300,
+    height: 300,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 18,
+    display: 'flex',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  StyleRow: {
+    width: 286,
+    height: 20,
+    padding: 2,
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  StyleWrapper: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+  },
+  ViewHeader: {
+    width: 286,
+    height: 32,
+    padding: 4,
+    borderBottomWidth: 1,
+    marginBottom: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  containerTest: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: '#FFFFFF',
+  },
+  head: {
+    height: 40,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderColor: '#D0CDCD',
+  }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
+  text: {margin: 6, color: '#525252'},
+  textHeader: {margin: 6, color: '#000000'},
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderTopWidth: 0,
+    borderColor: '#D0CDCD',
+  },
+  btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
+  btnText: {textAlign: 'center', color: 'black'},
   btnLogout: {
     alignItems: 'center',
     alignContent: 'flex-end',
@@ -222,8 +269,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginRight: 8,
     borderWidth: 1,
-    backgroundColor: '#CA5353',
-    borderColor: '#CA5353',
+    backgroundColor: '#006765',
+    borderColor: '#006765',
     color: '#ffffff',
     width: 96,
     height: 46,
@@ -249,18 +296,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingRight: 8,
-  },
-  HeaderWrapper: {
-    flex: 1,
-    display: 'flex',
-    // alignItems: 'center',
-  },
-  Header: {
-    width: 300,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   styleHeader: {
     display: 'flex',

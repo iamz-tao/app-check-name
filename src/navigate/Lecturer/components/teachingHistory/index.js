@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 
@@ -8,34 +7,13 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
-  Picker,
-  Modal,
-  Image,
 } from 'react-native';
 
-import SubjectList from './components/listSubject';
-import {Logout, GetSubjectRegistration, StudentDrop} from '../../../../actions';
+import {Logout, getTeacherhistory} from '../../../../actions';
+import {Table, TableWrapper, Row} from 'react-native-table-component';
 
-const Header = () => (
-  <View style={styles.Header}>
-    <View style={styles.HeaderWrapper,{flex: 2}}>
-      <Text style={{paddingLeft: 8}}>SUBJECT</Text>
-    </View>
-    <View style={styles.HeaderWrapper, {width: 66}}>
-      <Text>SECTION</Text>
-    </View>
-    <View style={styles.HeaderWrapper}>
-      <Text>STATUS</Text>
-    </View>
-    <View style={styles.HeaderWrapper}>
-    </View>
-  </View>
-);
-
-class StudentListSubject extends Component {
+class ListTeachingHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -44,59 +22,56 @@ class StudentListSubject extends Component {
       subject_code: '',
       subject_name: '',
       token: '',
-      modalVisible: false,
     };
   }
 
   componentDidMount() {
-    const {token} = this.props.navigation.state.params;
-    const {GetSubjectRegistration} = this.props;
+    const {
+      token,
+      section_id,
+      subject_name,
+      section_number,
+      //   year,
+      //   semester,
+    } = this.props.navigation.state.params;
+    // const {ListStudentInSection} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
-    GetSubjectRegistration({
+
+    const {getTeacherhistory} = this.props;
+    getTeacherhistory({
       token,
-    })
+      section_id,
+    });
+    // const payload = {
+    //   subject_name,
+    //   section_number,
+    //   year,
+    //   semester,
+    // };
+
+    // ListStudentInSection({
+    //   token,
+    //   payload,
+    // });
   }
-
-  setModalVisible(status) {
-    if (status === 'SUCCESS') {
-      this.setState({modalVisible: false});
-    } else {
-      this.setState({modalVisible: true});
-    }
-  }
-
-  handleSelect = () => {
-    const select = this.state.pickerValues;
-    if (select === '') {
-      alert('Please select!');
-    }
-    alert(select);
-  };
-
-  handleSubmit = (token, section_id) => {};
 
   handleLogout = () => {
     const {Logout} = this.props;
     Logout({});
   };
 
-  handleDrop = (id) => {
-    const {StudentDrop} = this.props
-    // console.log(id)
-    const {token} = this.props.navigation.state.params;
-    StudentDrop({
-      token,
-      id,
-    })
-  }
-
   render() {
-    const {token} = this.props.navigation.state.params;
-    const {subjectsRegistration,fetching} = this.props.subjects
-    // console.log(this.props.subjects.subjectsRegistration)
-    if (!subjectsRegistration) {
+    const {
+      token,
+      subject_name,
+      section_number,
+    } = this.props.navigation.state.params;
+
+    const {classes} = this.props.teacherHistory;
+
+    if (classes === null) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -117,20 +92,62 @@ class StudentListSubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>MY SUBJECT</Text>
+            <Text style={styles.styleHeader}>TEACHING HISTORY</Text>
+          </View>
+          <View style={{marginLeft: 16}}>
+            <Text>SUBJECT NAME : {subject_name}</Text>
+            <Text>SECTION : {section_number}</Text>
           </View>
           <View style={{height: 16}} />
-          <View style={styles.btnWrapper}>
-          <Header />
+          <View style={styles.StyleWrapper}>
+            <View style={styles.ViewWrapper}>
+              <View style={styles.ViewHeader}>
+                <Text style={{width: 26, paddingLeft: 8}} />
+                <Text style={{flex: 1, paddingLeft: 8}}>DATE</Text>
+                <Text style={{flex: 1}}>TIME</Text>
+              </View>
+              {classes !== null &&
+                classes.map(c => (
+                  <View>
+                    {c.class.map(d => (
+                      <View style={styles.StyleRow}>
+                        <TouchableHighlight
+                          style={{textDecorationLine: 'underline'}}
+                          onPress={() => {
+                            this.props.navigation.navigate(
+                              'ListStudentsCheckName',
+                              {
+                                token,
+                                class_id: d.class_id,
+                                subject_name: c.subject_name,
+                                date: d.date,
+                              },
+                            );
+                          }}>
+                          <Text
+                            style={{
+                              color: '#949494',
+                              textDecorationLine: 'underline',
+                              width: 26,
+                              paddingLeft: 8,
+                            }}>
+                            {d.number}
+                          </Text>
+                        </TouchableHighlight>
+                        <Text style={{flex: 1, paddingLeft: 8}}>{d.date}</Text>
+                        <Text style={{flex: 1, color: '#001AFF'}}>
+                          {d.time}
+                        </Text>
+                      </View>
+                    ))}
+                  </View>
+                ))}
+            </View>
           </View>
-          <View style={{height: 8}} />
-          <SubjectList subjects={subjectsRegistration} handleDrop={this.handleDrop} token={token} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => {
-                this.props.navigation.navigate('StudentHomePage')
-              }}>
+              onPress={() => this.props.navigation.navigate('MySubject')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
@@ -143,21 +160,22 @@ class StudentListSubject extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    subjects: state.subjectReducer,
+    students: state.subjectReducer,
+    currentYear: state.yearReducer,
+    teacherHistory: state.teachHistoryReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
-  GetSubjectRegistration,
-  StudentDrop,
   Logout,
+  getTeacherhistory,
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps,
-)(StudentListSubject);
+)(ListTeachingHistory);
 
 const styles = StyleSheet.create({
   container: {
@@ -168,6 +186,74 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
+  btnDrop: {
+    alignItems: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    borderWidth: 1,
+    backgroundColor: '#CA5353',
+    borderColor: '#CA5353',
+    color: '#ffffff',
+    width: 46,
+    height: 22,
+    borderRadius: 21,
+  },
+  ViewWrapper: {
+    width: 300,
+    height: 300,
+    padding: 8,
+    borderWidth: 1,
+    borderRadius: 18,
+    display: 'flex',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  StyleRow: {
+    width: 286,
+    height: 20,
+    padding: 2,
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  StyleWrapper: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+  },
+  ViewHeader: {
+    width: 286,
+    height: 32,
+    padding: 4,
+    borderBottomWidth: 1,
+    marginBottom: 6,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderColor: '#D0CDCD',
+  },
+  containerTest: {
+    flex: 1,
+    padding: 16,
+    paddingTop: 30,
+    backgroundColor: '#FFFFFF',
+  },
+  head: {
+    height: 40,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderColor: '#D0CDCD',
+  }, // borderTopLeftRadius: 18, borderTopRightRadius: 18},
+  text: {margin: 6, color: '#525252'},
+  textHeader: {margin: 6, color: '#000000'},
+  row: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderWidth: 0.3,
+    borderTopWidth: 0,
+    borderColor: '#D0CDCD',
+  },
+  btn: {width: 58, height: 18, backgroundColor: '#FFFFFF', borderRadius: 18},
+  btnText: {textAlign: 'center', color: 'black'},
   btnLogout: {
     alignItems: 'center',
     alignContent: 'flex-end',
@@ -222,8 +308,8 @@ const styles = StyleSheet.create({
     marginTop: 8,
     marginRight: 8,
     borderWidth: 1,
-    backgroundColor: '#CA5353',
-    borderColor: '#CA5353',
+    backgroundColor: '#006765',
+    borderColor: '#006765',
     color: '#ffffff',
     width: 96,
     height: 46,
@@ -249,18 +335,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingRight: 8,
-  },
-  HeaderWrapper: {
-    flex: 1,
-    display: 'flex',
-    // alignItems: 'center',
-  },
-  Header: {
-    width: 300,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   styleHeader: {
     display: 'flex',

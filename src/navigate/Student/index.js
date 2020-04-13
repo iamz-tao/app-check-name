@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
 import {StudentGetSubjectRegis, Logout} from '../../actions';
@@ -31,12 +32,15 @@ class StudentHomePage extends Component {
   render() {
     const {
       LoginReducer: {
-        data: {token},
+        data: {token, user},
         fetching,
       },
       LoginReducer,
       StudentGetSubjectRegis,
     } = this.props;
+
+    const {displayName} = this.props.LoginReducer;
+
     if (fetching) {
       return (
         <View style={styles.loadingWrapper}>
@@ -70,9 +74,24 @@ class StudentHomePage extends Component {
               }}
             />
             <View style={{height: 8}} />
-            <Text style={(styles.styleText, {color: '#1D697C'})}>
-              Phiyada Srikhenkan
-            </Text>
+            <View style={{display: 'flex', flexDirection: 'row'}}>
+              <Text style={(styles.styleText, {color: '#1D697C'})}>
+                {displayName}{' '}
+              </Text>
+              <TouchableHighlight
+                style={{justifyContent: 'center', alignItems: 'center'}}
+                onPress={() => {
+                  this.props.navigation.navigate('UpdateProfile', {
+                    token,
+                    role: user.role,
+                  });
+                }}>
+                <Image
+                  style={styles.CustomImg}
+                  source={require('../../../android/statics/images/edit.png')}
+                />
+              </TouchableHighlight>
+            </View>
             <Text style={styles.styleText}>STUDENT</Text>
 
             <View style={{height: 24}} />
@@ -225,4 +244,8 @@ const styles = StyleSheet.create({
     color: '#ffffff',
   },
   styleText: {},
+  CustomImg: {
+    width: 12,
+    height: 12,
+  },
 });

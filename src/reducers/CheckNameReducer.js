@@ -1,39 +1,23 @@
-import {CHECKNAME,CHECKNAME_SUCCESS,CHECKNAME_FAILURE} from '../constant'
+import {GET_CLASS_CHECK_NAME, SET_CLASS_CHECK_NAME} from '../constant';
 
 const initialState = {
-    data: [],
-    err_message: '',
-    ischecking: false,
-    isError: false,
-    status:false,
-    timecheck : ''
-  };
+  error: [],
+  openingClass: null,
+  status: '',
+  fetching: false,
+};
 
-  export default (state = initialState, action) => {
-    switch (action.type) {
-      case CHECKNAME:
-        return {...state, ischecking: true, data: [],timecheck:''};
-  
-      case CHECKNAME_SUCCESS: {
-         const data = JSON.parse(action.payload);
-         console.log(data)
-        return {
-          ...state,
-          isLogin: false,
-          fetching: false,
-          status:'SUCCESS',
-          timecheck:data.dateTime
-        //   data: data.data,
-        //   status: 'SUCCESS',
-        };
-      }
-  
-      case CHECKNAME_FAILURE:
-         const data = JSON.parse(action.payload)
-         console.log(action.payload)
-        return {...state, isError: true, err_message: data.message, status: 'FAILURE'};
-  
-      default:
-        return state;
+export default (state = initialState, action) => {
+  switch (action.type) {
+    case GET_CLASS_CHECK_NAME:
+      return {...state, fetching: true};
+
+    case SET_CLASS_CHECK_NAME: {
+      const data = JSON.parse(action.payload);
+      return {...state, fetching: false, openingClass: data.data};
     }
-  };
+
+    default:
+      return state;
+  }
+};

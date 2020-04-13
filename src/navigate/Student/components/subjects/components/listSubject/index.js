@@ -1,59 +1,65 @@
 import React from 'react';
-import {connect} from 'react-redux';
-import {DotsLoader, TextLoader} from 'react-native-indicator';
-import NavigationServices from '../../../../../NavigationServices';
 import {
   StyleSheet,
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
-  Picker,
-  Modal,
   Image,
 } from 'react-native';
+import NavigationServices from '../../../../../NavigationServices';
 
 const SubjectList = props => {
-  const {subjects, handleDrop} = props;
-  // console.log('subjects', subjects);
+  const {subjects, handleDrop, token} = props;
   return (
     <ScrollView style={{backgroundColor: '#ffffff'}}>
       <View style={styles.Column}>
         <View style={styles.Wrapper}>
-          <View style={styles.Column}>
-            <View style={styles.ItemWrapper}>
-              {subjects !== null &&
-                subjects.registrations.length > 0 &&
-                subjects.registrations.map(s => (
+          {subjects !== null &&
+            subjects.registrations.length > 0 &&
+            subjects.registrations.map(s => (
+              <View style={styles.Column}>
+                <View style={styles.ItemWrapper}>
                   <View style={styles.Row}>
-                    <View style={(styles.ListDetail, {minWidth: 130})}>
-                      <Text View style={styles.ItemSpan}>
+                    <View style={(styles.ListDetail, {flex: 2})}>
+                      <Text View style={styles.ItemSpan, {paddingLeft: 8}}>
                         {s.subject_name}
                       </Text>
                     </View>
-                    <View style={(styles.ListDetail, {width: 36})}>
-                      <Text View style={styles.ItemSpan}>
+                    <View style={(styles.ListDetail, {width: 66})}>
+                      <Text
+                        // View
+                        style={styles.ItemSpan}>
                         {s.section_number}
                       </Text>
                     </View>
-                    <View style={(styles.SubjectList, {width: 66})}>
-                      <Text View style={styles.ItemSpan}>
-                        {s.status === 'APPROVE' && (
-                          <Text
-                            style={{
-                              color: '#1AB433',
-                              textDecorationLine: 'underline',
-                            }}>
-                            {' '}
-                            History{' '}
-                          </Text>
-                        )}
-                        {s.status === 'PENDING' && (
+                    <View style={styles.ListDetail}>
+                      
+                      {s.status === 'APPROVE' && (
+                      <TouchableHighlight
+                        style={{textDecorationLine: 'underline', top: 6}}
+                        onPress={() => {
+                          NavigationServices.navigate('StudentListCheckName', {
+                            token,
+                            subject_name: s.subject_name,
+                            section_number: s.section_number,
+                            section_id: s.section_id,
+                          });
+                        }}>
+                        <Text
+                          style={{
+                            color: '#1AB433',
+                            textDecorationLine: 'underline',
+                          }}>
+                          history
+                        </Text>
+                      </TouchableHighlight>
+                     )}
+                     <Text View style={styles.ItemSpan}>
+                         {s.status === 'PENDING' && (
                           <Text style={{color: '#0038FF'}}> Pending </Text>
                         )}
-                         {s.status === 'DROP' && (
+                        {s.status === 'DROP' && (
                           <Text style={{color: '#FF0000'}}> Drop </Text>
                         )}
                       </Text>
@@ -63,21 +69,22 @@ const SubjectList = props => {
                         (styles.SubjectList,
                         {width: 56, alignItems: 'flex-end', paddingRight: 8})
                       }>
-                        {s.status !== 'DROP' && (
-                          <TouchableHighlight
+                      {s.status !== 'DROP' && (
+                        <TouchableHighlight
                           style={styles.btnDrop}
                           onPress={() => {
-                            handleDrop(s.request_id)
+                            handleDrop(s.request_id);
                           }}>
-                          <Text style={{color: 'white', fontSize: 10}}>DROP</Text>
+                          <Text style={{color: 'white', fontSize: 10}}>
+                            DROP
+                          </Text>
                         </TouchableHighlight>
-                        )}
-                      
+                      )}
                     </View>
                   </View>
-                ))}
-            </View>
-          </View>
+                </View>
+              </View>
+            ))}
         </View>
       </View>
     </ScrollView>
@@ -91,6 +98,10 @@ const styles = StyleSheet.create({
     display: 'flex',
     alignItems: 'flex-start',
     width: '90%',
+  },
+  ListDetail: {
+    display: 'flex',
+    flex: 1,
   },
   ItemWrapper: {
     width: '100%',
@@ -116,7 +127,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     flexDirection: 'row',
-    minHeight: 20,
+    minHeight: 42,
     width: '100%',
     padding: 4,
   },
@@ -124,7 +135,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     fontFamily: 'kanit',
     fontWeight: '600',
-    paddingLeft: 8,
   },
   OtherWrapper: {
     display: 'flex',
