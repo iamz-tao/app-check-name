@@ -19,6 +19,8 @@ export const STUDENT_DROP = 'student/STUDENT_DROP'
 export const STUDENT_DROP_SUCCESS = 'student/STUDENT_DROP_SUCCESS'
 export const STUDENT_GET_HISTORY = 'student/STUDENT_GET_HISTORY'
 export const STUDENT_SET_HISTORY = 'student/STUDENT_SET_HISTORY'
+export const GET_CLASS_CHECK_NAME = 'student/GET_CLASS_CHECK_NAME'
+export const SET_CLASS_CHECK_NAME = 'student/SET_CLASS_CHECK_NAME'
 
 export const GET_STUDENT_APPROVE = 'lecturer/GET_STUDENT_APPROVE'
 export const SET_STUDENT_APPROVE = 'lecturer/SET_STUDENT_APPROVE'

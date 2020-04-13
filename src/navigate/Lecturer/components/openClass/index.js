@@ -165,11 +165,11 @@ class OpenClass extends Component {
 
     if (subjects !== null && pickerValues !== '') {
       subjects
-        .filter(s => s.Subject.subject_code === pickerValues)
+        .filter(s => s.Subject.subject_code === pickerValues)[0].sections
         .map((s, i) => {
           sectionArr.push({
-            label: `${s.sections[i].section_number}`,
-            value: s.sections[i].id,
+            label: `${s.section_number}`,
+            value: s.id,
           });
         });
     }

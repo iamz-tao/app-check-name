@@ -11,7 +11,6 @@ import NavigationServices from '../../../../../NavigationServices';
 
 const SubjectList = props => {
   const {subjects, handleDrop, token} = props;
-  console.log('subjects', subjects);
   return (
     <ScrollView style={{backgroundColor: '#ffffff'}}>
       <View style={styles.Column}>
