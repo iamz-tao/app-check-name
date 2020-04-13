@@ -10,7 +10,7 @@ import {
   TouchableHighlight,
 } from 'react-native';
 
-import {Logout} from '../../../../../actions';
+import {Logout, StudentGetHistory} from '../../../../../actions';
 
 class StudentListCheckName extends Component {
   constructor(props) {
@@ -18,12 +18,15 @@ class StudentListCheckName extends Component {
   }
 
   componentDidMount() {
-    const {
-      token,
-    } = this.props.navigation.state.params;
+    const {token, section_id} = this.props.navigation.state.params;
     if (!token) {
       this.props.navigation.navigate('Login');
     }
+    const {StudentGetHistory} = this.props;
+    StudentGetHistory({
+      token,
+      id: section_id,
+    });
   }
 
   handleLogout = () => {
@@ -33,21 +36,19 @@ class StudentListCheckName extends Component {
 
   render() {
     const {
-    //   year,
-    //   semester,
-    //   token,
       subject_name,
       section_number,
     } = this.props.navigation.state.params;
-    // if (!studentsInSection) {
-    //   return (
-    //     <View style={styles.loadingWrapper}>
-    //       <DotsLoader color="#CA5353" />
-    //       <TextLoader text="Loading" />
-    //     </View>
-    //   );
-    // }
-    // console.log('studentsInSection', studentsInSection);
+    const { history: {fetching, stdHistory} } = this.props
+     
+    if (fetching || !stdHistory) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -61,7 +62,7 @@ class StudentListCheckName extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
+            <Text style={styles.styleHeader}>CHECK NAME HISTORY</Text>
           </View>
           <View style={{marginLeft: 16}}>
             <Text>SUBJECT NAME : {subject_name}</Text>
@@ -71,37 +72,40 @@ class StudentListCheckName extends Component {
           <View style={styles.StyleWrapper}>
             <View style={styles.ViewWrapper}>
               <View style={styles.ViewHeader}>
-                <Text style={{flex: 1.5, paddingLeft: 8}}>DATE</Text>
+                <Text style={{flex: 2, paddingLeft: 8}}>DATE</Text>
                 <Text style={{flex: 1}}>STATUS</Text>
                 <Text style={{flex: 1}}>TIME</Text>
               </View>
-              {/* {studentsInSection !== null && studentsInSection.length === 0 && (
-                  <View style={styles.StyleRow, {alignItems: 'center'}}>
-                    <Text>There are no student in section.</Text>
-</View>
-              )} */}
-              {/* {studentsInSection !== null &&
-                studentsInSection.length > 0 &&
-                studentsInSection.map(s => ( */}
-              <View style={styles.StyleRow}>
-                <Text style={{flex: 1.5, paddingLeft: 8}}>12 Aug 2019</Text>
-                <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
-                {/* {s.status === 'APPROVE' && ( */}
-                {/* late 0029FF
-                    absent FF0000
-                */}
-                {/* )} */}
-                <Text style={{flex: 1, color: '#1AB433'}}>10.30</Text>
-
-
-              </View>
-              {/* ))} */}
+              {stdHistory !== null && stdHistory.length === 0 && (
+                <View style={(styles.StyleRow, {alignItems: 'center'})}>
+                  <Text>You have never check name in this class.</Text>
+                </View>
+              )}
+              {stdHistory !== null &&
+                stdHistory.length > 0 &&
+                stdHistory.map(s => (
+                  <View style={styles.StyleRow}>
+                    <Text style={{flex: 2, paddingLeft: 8}}>{s.date}</Text>
+                    {s.status === 'ONTIME' && (
+                      <Text style={{flex: 1, color: '#1AB433'}}>On Time</Text>
+                    )}
+                    {s.status === 'ABSENT' && (
+                      <Text style={{flex: 1, color: '#FF0000'}}>Absent</Text>
+                    )}
+                    {s.status === 'LATE' && (
+                      <Text style={{flex: 1, color: '#0029FF'}}>Late</Text>
+                    )}
+                    <Text style={{flex: 1, color: '#1AB433'}}>{s.time}</Text>
+                  </View>
+                ))}
             </View>
           </View>
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('StudentListSubject')}>
+              onPress={() =>
+                this.props.navigation.navigate('StudentListSubject')
+              }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
@@ -114,13 +118,14 @@ class StudentListCheckName extends Component {
 //use to add reducer state to props
 const mapStateToProps = state => {
   return {
-    // students: state.subjectReducer,
+    history: state.teachHistoryReducer,
     currentYear: state.yearReducer,
   };
 };
 
 //use to add action(dispatch) to props
 const mapDispatchToProps = {
+  StudentGetHistory,
   Logout,
 };
 

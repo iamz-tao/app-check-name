@@ -209,6 +209,30 @@ async function GetSubjectRegistration(data) {
   });
 }
 
+async function StudentGetHistory(data) {
+  const token = data.token;
+  const id = data.id;
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/studentHistory/${id}`,
+      {
+        method: 'GET',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        },
+      },
+    );
+    const responseJson = await response.json();
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      resolve(responseJson);
+    } else {
+      reject(responseJson);
+    }
+  });
+}
+
 // Lecturer
 async function GetSubjectsApprove(data) {
   const token = data.token;
@@ -696,4 +720,5 @@ export const Api = {
   getTeacherHistory,
   updateProfile,
   getProfile,
+  StudentGetHistory,
 };
