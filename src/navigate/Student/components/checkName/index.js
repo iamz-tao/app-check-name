@@ -103,7 +103,27 @@ class StudentCheckName extends Component {
       GetClassCheckName({
         token,
       });
+
+      this.getMacAddress();
     }
+    this.beacondidRange = DeviceEventEmitter.addListener(
+      'beaconsDidRange',
+      (data) => {
+         console.log(data.beacons)
+        if (data.beacons.length > 0) {
+          this.setState({
+            beacon: data.beacons,
+          })
+        }
+        else {
+          this.setState({
+            beacon: [],
+            isBluetooth: false
+          }
+          )
+        }
+      }
+    )
   }
 
   setModalVisible() {
@@ -150,6 +170,21 @@ class StudentCheckName extends Component {
     })
   }
 
+  getClassId = () => {
+    const {pickerValues} = this.state;
+    const {
+      openingClass: {openingClass },
+    } = this.props;
+    let class_id;
+    if(openingClass.length === 1){
+      class_id = openingClass[0].class_id      
+    }
+    else{
+      class_id = pickerValues;
+    }
+    return class_id;
+  }
+
   checkname = async () => {
     this.scan();
     this.setState({ ischecking: true });
@@ -164,7 +199,8 @@ class StudentCheckName extends Component {
   handleCheck = async () => {
     const { Checkname } = this.props;
     const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
-    this.checkBeacon();
+    const check = this.checkBeaconEmpty();
+    const class_id = this.getClassId();
     Checkname({
       token,
       macAddress,
@@ -172,17 +208,19 @@ class StudentCheckName extends Component {
       major,
       minor,
       distance,
-      rssi
+      rssi,
+      check,
+      class_id
     })
   }
 
-  checkBeacon = () => {
+  checkBeaconEmpty = () => {
     const { beacon } = this.state;
     if (beacon.length < 1) {
-      this.setState({ hasbeacon: false })
+      return true;
     }
     else {
-      this.setState({ hasbeacon: true })
+      return false;
     }
   }
 
@@ -201,15 +239,14 @@ class StudentCheckName extends Component {
       currentYear: { year, semester },
     } = this.props.currentYear;
     const {
-      openingClass: {fetching, openingClass},
+      openingClass: { fetching, openingClass },
     } = this.props;
     // const {subjectsRegistration} = this.props.Subjects;
     const statusReq = this.props.Subjects.status;
-
     const statusCheckname = this.props.checkname.status;
     // console.log(statusCheckname)
-    const timecheck = this.props.checkname.timecheck
-    const error = this.props.err_message
+    // const timecheck = this.props.checkname.timecheck
+    const error = this.props.checkname.error_message
 
     const subjectsArr = [];
     const sectionArr = [];
@@ -218,6 +255,14 @@ class StudentCheckName extends Component {
     let time = '';
     let time2 = '';
     if (fetching || !openingClass) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+    if (ischecking) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -239,11 +284,11 @@ class StudentCheckName extends Component {
       sectionId = classDetail.section_number;
       time = `${classDetail.Time[0].day} ${classDetail.Time[0].start_time} - ${
         classDetail.Time[0].end_time
-      }`;
+        }`;
       time2 =
         classDetail.Time.length === 2 &&
         `${classDetail.Time[1].day} ${classDetail.Time[1].start_time} - ${
-          classDetail.Time[1].end_time
+        classDetail.Time[1].end_time
         }}`;
     }
     // console.log('subjects>>',subjects)
@@ -258,7 +303,7 @@ class StudentCheckName extends Component {
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
                 <View style={{ width: '100%', alignItems: 'center' }}>
-                  {statusCheckname === 'SUCCESS' && (
+                  {statusReq === 'SUCCESS' && (
                     <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
@@ -285,8 +330,8 @@ class StudentCheckName extends Component {
                         CHECK NAME FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        Check your internet or turn on your bluetooth and turn on your location.
-                        {/* {error} */}
+                        {/* Check your internet or turn on your bluetooth and turn on your location. */}
+                        {error}
                       </Text>
                     </View>
                   )}
@@ -295,7 +340,7 @@ class StudentCheckName extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
-                      if (statusCheckname === 'SUCCESS') {
+                      if (statusReq === 'SUCCESS') {
                         this.props.navigation.navigate('StudentCheckName');
                       }
                     }}>
@@ -322,22 +367,22 @@ class StudentCheckName extends Component {
           <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
             YEAR / SEMESTER : {year} / {semester}
           </Text>
-          <View style={{height: 21}} />
+          <View style={{ height: 21 }} />
           {openingClass !== null && openingClass.length === 1 && (
             <View>
               <Text
-                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
                 SUBJECT NAME : {openingClass[0].Section.subject_code}{' '}
                 {openingClass[0].Section.subject_name}
               </Text>
               <Text
-                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
                 SECTION : {openingClass[0].Section.section_number}
               </Text>
-              <View style={{display: 'flex', flexDirection: 'column'}}>
+              <View style={{ display: 'flex', flexDirection: 'column' }}>
                 <Text
                   style={
-                    (styles.styleLabel, {paddingLeft: 16, marginBottom: 6})
+                    (styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })
                   }>
                   TIME : {openingClass[0].Section.Time[0].day}{' '}
                   {openingClass[0].Section.Time[0].start_time} -{' '}
@@ -346,7 +391,7 @@ class StudentCheckName extends Component {
                 {openingClass[0].Section.Time[1] && (
                   <Text
                     style={
-                      (styles.styleLabel, {paddingLeft: 58, marginBottom: 6})
+                      (styles.styleLabel, { paddingLeft: 58, marginBottom: 6 })
                     }>
                     TIME : {openingClass[0].Section.Time[1].day}{' '}
                     {openingClass[0].Section.Time[1].start_time} -{' '}
@@ -363,7 +408,7 @@ class StudentCheckName extends Component {
                   <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
                   <View style={styles.stylePicker}>
                     <Picker
-                      style={{height: 45}}
+                      style={{ height: 45 }}
                       selectedValue={pickerValues}
                       onValueChange={(itemValue, itemIndex) =>
                         this.setState({
@@ -380,22 +425,22 @@ class StudentCheckName extends Component {
                   </View>
                 </View>
               </View>
-              <View style={{display: 'flex', paddingLeft: 21, width: 340}}>
-                <View style={{flexDirection: 'row'}}>
+              <View style={{ display: 'flex', paddingLeft: 21, width: 340 }}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text
                     style={
-                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
+                      (styles.styleLabel, { width: 116, alignSelf: 'center' })
                     }>
                     Subject Name :{' '}
                   </Text>
-                  <Text style={{flex: 3}}>{subject_name}</Text>
+                  <Text style={{ flex: 3 }}>{subject_name}</Text>
                 </View>
-                <View style={{height: 8}} />
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={(styles.styleLabel, {width: 100})}>
+                <View style={{ height: 8 }} />
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={(styles.styleLabel, { width: 100 })}>
                     Date/Time :
                   </Text>
-                  <View style={{display: 'flex', flexDirection: 'column'}}>
+                  <View style={{ display: 'flex', flexDirection: 'column' }}>
                     <Text style={styles.styleLabel}>{time}</Text>
                     <Text style={styles.styleLabel}>{time2}</Text>
                   </View>
@@ -403,7 +448,7 @@ class StudentCheckName extends Component {
               </View>
             </View>
           )}
-          <View style={{height: 8}} />
+          <View style={{ height: 8 }} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
@@ -432,7 +477,7 @@ const mapStateToProps = state => {
     openingClass: state.checkNameReducer,
     currentYear: state.yearReducer,
     Subjects: state.subjectReducer,
-    checkname: state.checknameReducer
+    checkname: state.checkNameReducer
   };
 };
 

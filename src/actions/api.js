@@ -1,7 +1,7 @@
-import {StackActions} from '@react-navigation/native';
+import { StackActions } from '@react-navigation/native';
 import NavigationServices from '../navigate/NavigationServices';
 
-import {Alert} from 'react-native';
+import { Alert } from 'react-native';
 
 // Auth
 async function Login(data) {
@@ -37,9 +37,9 @@ async function Login(data) {
               text: 'Cancel',
               style: 'cancel',
             },
-            {text: 'OK'},
+            { text: 'OK' },
           ],
-          {cancelable: false},
+          { cancelable: false },
         );
       }
     } else {
@@ -51,9 +51,9 @@ async function Login(data) {
             text: 'Cancel',
             style: 'cancel',
           },
-          {text: 'OK'},
+          { text: 'OK' },
         ],
-        {cancelable: false},
+        { cancelable: false },
       );
       reject(responseJson);
     }
@@ -61,7 +61,7 @@ async function Login(data) {
 }
 
 async function updateProfile(data) {
-  const {token, dataUser} = data;
+  const { token, dataUser } = data;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
       'https://us-central1-kpscheckin.cloudfunctions.net/api/updateUser',
@@ -719,7 +719,7 @@ async function getTeacherHistory(params) {
 }
 
 async function getStudentChecknameInClass(params) {
-  const {token, class_id} = params;
+  const { token, class_id } = params;
   return new Promise(async (resolve, reject) => {
     const response = await fetch(
       `https://us-central1-kpscheckin.cloudfunctions.net/api/studentInClass/${class_id}`,
@@ -741,28 +741,39 @@ async function getStudentChecknameInClass(params) {
   });
 }
 
-async function checkname(params){
+async function checkname(params) {
   console.log("Function Checkname");
   const token = params.token
-  return new Promise(async (resolve,reject) => {
-    const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
-    {
-      method: 'POST',
-      headers:{
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        token,
-      },
-      body: JSON.stringify({
-        uuid: params.uuid,
-        major: params.major,
-        minor: params.minor,
-        distance: 4,
-        macAddress: params.macAddress,
-        rssi : params.rssi
-      })
+  const check = params.check;
+  let error = {};
+  return new Promise(async (resolve, reject) => {
+    if (check === true) {
+      error.message = "No Detect Beacon In this Area. Please Check Again"
+      error.status = { dataStatus: 'FAILURE' }
+      reject(error)
+    }
+    else {
+      console.log(params.class_id)
+      resolve("SUCCESS")
+      // const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
+      //   {
+      //     method: 'POST',
+      //     headers: {
+      //       Accept: 'application/json',
+      //       'Content-Type': 'application/json',
+      //       token,
+      //     },
+      //     body: JSON.stringify({
+      //       uuid: params.uuid,
+      //       major: params.major,
+      //       minor: params.minor,
+      //       distance: 4,
+      //       macAddress: params.macAddress,
+      //       rssi: params.rssi
+      //     })
+      //   })
+      }
     })
-  })
 }
 
 export const Api = {
