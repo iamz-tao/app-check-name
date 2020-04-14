@@ -2,6 +2,7 @@ import {StackActions} from '@react-navigation/native';
 import NavigationServices from '../navigate/NavigationServices';
 
 import {Alert} from 'react-native';
+import firestore from '@react-native-firebase/firestore';
 
 // Auth
 async function Login(data) {
@@ -740,6 +741,49 @@ async function getStudentChecknameInClass(params) {
   });
 }
 
+async function getAttandanceRealTime(params){
+  
+  return new Promise(async (resolve,reject) => {
+    let response = {};
+
+    try{
+      let users = [];
+      let promise = [];
+      // let class_id = params.class_id;
+
+      //edit fix value to class_id
+    
+      firestore().collection('class_attendance').where('class_id','==','V9xOlwbYsQXrJkdIz36a').onSnapshot(async function(snapshot){
+        let changes = snapshot.docChanges();
+        let uid;
+        changes.forEach(change => {
+          if(change.type === 'added'){
+            uid = change.doc.data().uid;
+            promise.push(firestore().collection('users').doc(uid).get()
+            .then(user => {
+              users.push({
+                id : user.data().id,
+                firstname : user.data().firstname,
+                lastname : user.data().lastname,
+                status : change.doc.data().status
+              })
+            }))
+          }
+        })
+        await Promise.all(promise);
+        response.message = "Get Data Success"
+        response.status = {dataStatus : "SUCCESS"}
+        response.data = users
+         resolve(response);
+     })
+    }catch(error){
+      response.message = error.message
+      response.status = {dataStatus:"FAILURE"}
+      reject(response);
+    }
+  })
+}
+
 export const Api = {
   Login,
   StudentGetSubjectRegister,
@@ -769,4 +813,5 @@ export const Api = {
   StudentGetHistory,
   getClassCheckName,
   getStudentChecknameInClass,
+  getAttandanceRealTime
 };

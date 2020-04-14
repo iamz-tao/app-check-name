@@ -24,6 +24,7 @@ import {
   GetAllBeacon,
   OpenClass as LecturerOpenClass,
   GetClass,
+  getAttandance
 } from '../../../../actions';
 
 const Header = props => {
@@ -71,6 +72,7 @@ class OpenClass extends Component {
       GetSubjectsApprove,
       GetAllBeacon,
       GetClass,
+      getAttandance
     } = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
@@ -85,6 +87,7 @@ class OpenClass extends Component {
       token,
     });
     GetClass({token});
+    getAttandance();
   }
 
   handleSubmit = (section_id, beacon_id) => {
@@ -454,6 +457,7 @@ const mapDispatchToProps = {
   LecturerOpenClass,
   GetClass,
   Logout,
+  getAttandance
 };
 
 export default connect(
