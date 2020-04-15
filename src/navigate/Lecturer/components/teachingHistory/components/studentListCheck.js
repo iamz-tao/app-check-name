@@ -65,7 +65,7 @@ class StudentListCheck extends Component {
             <Text>SUBJECT NAME : {subject_name}</Text>
             <Text>DATE : {date}</Text>
               <Text>TIME : 
-                {time === 'OPENING' ? (
+                {time.includes('OPENING') ? (
                   <Text style={{color: '#1AB433'}}>{' '}Opening</Text>
                 ):(
                   <Text>{time}</Text>
