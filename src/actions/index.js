@@ -65,6 +65,9 @@ import {
   SET_CLASS_CHECK_NAME,
   GET_STUDENT_CHECKNAME_IN_CLASS,
   SET_STUDENT_CHECKNAME_IN_CLASS,
+  CHECKNAME,
+  CHECKNAME_SUCCESS,
+  CHECKNAME_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -396,6 +399,21 @@ export const getStudentChecknameInClass = payload => ({
 export const setStudentChecknameInClass = payload => ({
   payload,
   type: SET_STUDENT_CHECKNAME_IN_CLASS,
+})
+
+export const checkname = payload => ({
+  payload,
+  type: CHECKNAME
+})
+
+export const checknameSuccess = payload => ({
+  payload,
+  type: CHECKNAME_SUCCESS
+})
+
+export const checknameFailure = payload => ({
+  payload,
+  type: CHECKNAME_FAILURE
 })
 
 // Auth
@@ -776,3 +794,16 @@ export const GetStudentChecknameInClass = params => {
       });
   };
 };
+
+export const Checkname = params => {
+  return dispatch => {
+    dispatch(checkname(params));
+    Api.checkname(params)
+    .then((result) => {
+      dispatch(checknameSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(checknameFailure(JSON.stringify(err)));
+    })
+  }
+}

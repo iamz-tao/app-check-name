@@ -739,6 +739,49 @@ async function getStudentChecknameInClass(params) {
     }
   });
 }
+async function checkname(params) {
+  console.log("Function Checkname");
+  const token = params.token
+  const check = params.check;
+  let error = {};
+  return new Promise(async (resolve, reject) => {
+    if (check === true) {
+      error.message = "No Detect Beacon In this Area. Please Check Again"
+      error.status = { dataStatus: 'FAILURE' }
+      reject(error)
+    }
+    else {
+      // console.log(params)
+      const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            token,
+          },
+          body: JSON.stringify({
+            uuid: params.uuid,
+            major: params.major,
+            minor: params.minor,
+            distance: params.distance,
+            macAddress: params.macAddress,
+            rssi: params.rssi,
+            class_id : params.class_id
+          })
+        })
+        const responseJson = await response.json();
+        if(responseJson.status.dataStatus === 'SUCCESS'){
+          resolve(responseJson)
+        }
+        else{
+          console.log(responseJson)
+          reject(responseJson)
+        }
+        
+      }
+    })
+}
 
 export const Api = {
   Login,
@@ -769,4 +812,5 @@ export const Api = {
   StudentGetHistory,
   getClassCheckName,
   getStudentChecknameInClass,
+  checkname
 };
