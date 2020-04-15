@@ -800,6 +800,7 @@ export const getAttandance = params => {
     dispatch(getstudentattandance(params));
     Api.getAttandanceRealTime(params)
       .then(result => {
+        // console.log(result)
         dispatch(getstudentattandanceSuccess(JSON.stringify(result)));
       })
       .catch(err => {

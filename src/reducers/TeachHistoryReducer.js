@@ -68,6 +68,7 @@ export default (state = initialState, action) => {
 
     case GET_STUDENT_ATTENDANCE_CLASS_SUCCESS: {
       const data = JSON.parse(action.payload);
+      console.log(data)
       return {...state, status: 'SUCCESS', fetching: false, users: data.data};
     }
 

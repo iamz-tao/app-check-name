@@ -3,6 +3,7 @@ import NavigationServices from '../navigate/NavigationServices';
 
 import {Alert} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
+import moment from 'moment-timezone';
 
 // Auth
 async function Login(data) {
@@ -749,7 +750,6 @@ async function getAttandanceRealTime(params) {
       let users = [];
       let promise = [];
       let class_id = params.class_id;
-      //edit fix value to class_id
 
       firestore()
         .collection('class_attendance')
@@ -766,14 +766,20 @@ async function getAttandanceRealTime(params) {
                   .doc(uid)
                   .get()
                   .then(user => {
+                    let time = moment(change.doc.data().time).tz('Asia/Bangkok').format('HH:mm');
                     users.push({
+                      doc_id : change.doc.id,
                       id: user.data().id,
                       firstname: user.data().firstname,
                       lastname: user.data().lastname,
                       status: change.doc.data().status,
+                      time : time
                     });
                   }),
               );
+            }
+            else if (change.type === 'removed'){
+                users.pop(change.doc.id);
             }
           });
           await Promise.all(promise);

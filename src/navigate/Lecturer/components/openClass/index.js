@@ -16,6 +16,7 @@ import {CheckBox} from 'react-native-elements';
 
 import {Table, TableWrapper} from 'react-native-table-component';
 import SuccessModal from '../../../../components/successModal';
+import firestore from '@react-native-firebase/firestore';
 
 import {
   GetCurrentYear,
@@ -94,13 +95,39 @@ class OpenClass extends Component {
     const class_id =
       this.props.subjects.openClass &&
       this.props.subjects.openClass[0].class_id;
-    if (class_id) {
-      getAttandance({
-        class_id,
-      });
-    }
+    // if (class_id) {
+    //   getAttandance({
+    //     class_id,
+    //   });
+    // }
+    this.GetAttandance();
   }
 
+  GetAttandance = async () => {
+    try{
+      firestore()
+      .collection('class_attendance')
+      .where('class_id','==','saITNX6mwQov8JUROmJW')
+      .onSnapshot(documentSnapshot => {
+          
+      });
+
+    //   firestore().collection('class_attendance')
+    //   .where('class_id','==','saITNX6mwQov8JUROmJW')
+    //   .onSnapshot(documentSnapshot => {
+    //      let changes = documentSnapshot.docChanges();
+    //      changes.forEach(change => {
+    //         if(change.type === 'added'){
+    //            let uid = change.doc.data().uid;
+    //            console.log(uid)
+    //         }
+    //      })
+    //   })
+    }
+    catch(err){
+      console.log(err.message)
+    }
+  }
 
   handleSubmit = (section_id, beacon_id) => {
     const {token} = this.props.navigation.state.params;
@@ -231,7 +258,7 @@ class OpenClass extends Component {
             <Text style={(styles.styleLabel, {paddingLeft: 16})}>
               LECTURER NAME : {name}
             </Text>
-            {users !== null && users.lenght === 0 ? (
+            {users !== null && users.length === 0 ? (
               <View style={styles.NotFound}>
                 <Image
                   style={styles.CustomImg}
