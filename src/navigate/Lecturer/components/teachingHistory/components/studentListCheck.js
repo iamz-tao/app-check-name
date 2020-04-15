@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
 import {Logout, GetStudentChecknameInClass} from '../../../../../actions';
@@ -64,9 +65,9 @@ class StudentListCheck extends Component {
           <View style={{marginLeft: 16}}>
             <Text>SUBJECT NAME : {subject_name}</Text>
             <Text>DATE : {date}</Text>
-              <Text>TIME : 
+              <Text>TIME : {' '}
                 {time.includes('OPENING') ? (
-                  <Text style={{color: '#1AB433'}}>{' '}Opening</Text>
+                  <Text style={{color: '#1AB433'}}>{' '}{time}</Text>
                 ):(
                   <Text>{time}</Text>
                 )}
@@ -84,9 +85,13 @@ class StudentListCheck extends Component {
               </View>
               {stdInClass.students !== null &&
                 stdInClass.students.length === 0 && (
-                  <View style={(styles.StyleRow, {alignItems: 'center'})}>
-                    <Text>There're no student checked name in this class.</Text>
-                  </View>
+                  <View style={styles.NotFound}>
+              <Image
+                style={styles.CustomImg}
+                source={require('../../../../../../android/statics/images/nodata.png')}
+              />
+              <Text>There are no students checked name.</Text>
+            </View>
                 )}
               {stdInClass.students !== null &&
                 stdInClass.students.length > 0 &&
@@ -236,7 +241,13 @@ const styles = StyleSheet.create({
   CustomImg: {
     width: 116,
     height: 116,
-    top: 20,
+  },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
   },
   ModalWrapper: {
     display: 'flex',
@@ -293,6 +304,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 46,
     borderRadius: 21,
+    marginBottom: 16,
   },
   containerWrapper: {
     display: 'flex',
