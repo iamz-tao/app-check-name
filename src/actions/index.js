@@ -65,6 +65,9 @@ import {
   SET_CLASS_CHECK_NAME,
   GET_STUDENT_CHECKNAME_IN_CLASS,
   SET_STUDENT_CHECKNAME_IN_CLASS,
+  GET_STUDENT_ATTENDANCE_CLASS,
+  GET_STUDENT_ATTENDANCE_CLASS_SUCCESS,
+  GET_STUDENT_ATTENDANCE_CLASS_FAILURE
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -396,6 +399,21 @@ export const getStudentChecknameInClass = payload => ({
 export const setStudentChecknameInClass = payload => ({
   payload,
   type: SET_STUDENT_CHECKNAME_IN_CLASS,
+})
+
+export const getstudentattandance = payload => ({
+  payload,
+  type : GET_STUDENT_ATTENDANCE_CLASS
+})
+
+export const getstudentattandanceSuccess = payload => ({
+  payload,
+  type: GET_STUDENT_ATTENDANCE_CLASS_SUCCESS
+})
+
+export const getstudentattandanceFailure = payload => ({
+  payload,
+  type : GET_STUDENT_ATTENDANCE_CLASS_FAILURE
 })
 
 // Auth
@@ -776,3 +794,17 @@ export const GetStudentChecknameInClass = params => {
       });
   };
 };
+
+export const getAttandance = params => {
+  return dispatch => {
+    dispatch(getstudentattandance(params))
+    Api.getAttandanceRealTime(params)
+    .then(result => {
+      dispatch(getstudentattandanceSuccess(JSON.stringify(result)))
+    })
+    .catch(err =>{
+      dispatch(getstudentattandanceFailure(JSON.stringify(err)))
+    })
+    
+  }
+}
