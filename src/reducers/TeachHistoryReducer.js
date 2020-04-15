@@ -8,7 +8,7 @@ import {
   SET_STUDENT_CHECKNAME_IN_CLASS,
   GET_STUDENT_ATTENDANCE_CLASS_FAILURE,
   GET_STUDENT_ATTENDANCE_CLASS_SUCCESS,
-  GET_STUDENT_ATTENDANCE_CLASS
+  GET_STUDENT_ATTENDANCE_CLASS,
 } from '../constant';
 
 const initialState = {
@@ -18,7 +18,7 @@ const initialState = {
   stdInClass: null,
   status: '',
   fetching: false,
-  users : null
+  users: null,
 };
 
 export default (state = initialState, action) => {
@@ -53,7 +53,7 @@ export default (state = initialState, action) => {
       const data = JSON.parse(action.payload);
       return {...state, fetching: false, stdHistory: data.data};
     }
-    
+
     case GET_STUDENT_CHECKNAME_IN_CLASS:
       return {...state, fetching: true};
 
@@ -62,16 +62,17 @@ export default (state = initialState, action) => {
       return {...state, fetching: false, stdInClass: data.data};
     }
 
-    case GET_STUDENT_ATTENDANCE_CLASS : {
-      return {...state,users: []}
+    case GET_STUDENT_ATTENDANCE_CLASS: {
+      return {...state, fetching: true };
     }
 
-    case GET_STUDENT_ATTENDANCE_CLASS_SUCCESS : {
-       return {...state,status:"SUCCESS"}
+    case GET_STUDENT_ATTENDANCE_CLASS_SUCCESS: {
+      const data = JSON.parse(action.payload);
+      return {...state, status: 'SUCCESS', fetching: false, users: data.data};
     }
 
     case GET_STUDENT_ATTENDANCE_CLASS_FAILURE: {
-      return {...state,status:"FAILURE"}
+      return {...state, status: 'FAILURE', fetching: false};
     }
 
     default:
