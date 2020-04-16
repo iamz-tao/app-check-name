@@ -65,11 +65,13 @@ class OpenClass extends Component {
       tableHead: ['ID', '', 'NAME', 'STATUS'],
       checked: false,
       distance: 3,
+      class_id: null,
     };
   }
 
   componentDidMount() {
     const {token} = this.props.navigation.state.params;
+    const {class_id} = this.state;
     const {
       GetCurrentYear,
       GetSubjectsApprove,
@@ -91,9 +93,6 @@ class OpenClass extends Component {
     });
     GetClass({token});
 
-    const class_id =
-      this.props.subjects.openClass &&
-      this.props.subjects.openClass[0].class_id;
     if (class_id) {
       getAttandance({
         class_id,
@@ -101,6 +100,12 @@ class OpenClass extends Component {
     }
   }
 
+  static getDerivedStateFromProps(props, state) {
+    if (props.subjects.openClass && props.subjects.openClass.length > 0) {
+      const class_id = props.subjects.openClass[0].class_id;
+      return {class_id: class_id}
+    }
+  }
 
   handleSubmit = (section_id, beacon_id) => {
     const {token} = this.props.navigation.state.params;
@@ -164,7 +169,9 @@ class OpenClass extends Component {
       fetching,
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjectsApprove;
-    const {studentsAttendance: {users}} = this.props;
+    const {
+      studentsAttendance: {users},
+    } = this.props;
     const {beacons, status, openClass} = this.props.subjects;
     const subjectsArr = [];
     const sectionArr = [];
@@ -199,7 +206,7 @@ class OpenClass extends Component {
           });
         });
     }
-    if (fetching || !subjects || !openClass || !users) {
+    if (!subjects || !openClass || !users) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -207,9 +214,9 @@ class OpenClass extends Component {
         </View>
       );
     }
-    const name = this.props.subjects.openClass[0].Lecturer_name;
 
     if (openClass.length > 0) {
+      const name = this.props.subjects.openClass[0].Lecturer_name;
       return (
         <ScrollView style={{backgroundColor: '#ffffff'}}>
           <View style={styles.container}>
