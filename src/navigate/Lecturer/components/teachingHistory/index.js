@@ -120,7 +120,9 @@ class ListTeachingHistory extends Component {
                                 token,
                                 class_id: d.class_id,
                                 time: d.time,
-                                subject_name: `${c.subject_code} ${c.subject_name}`,
+                                subject_name: `${c.subject_code} ${
+                                  c.subject_name
+                                }`,
                                 date: d.date,
                               },
                             );
@@ -136,9 +138,15 @@ class ListTeachingHistory extends Component {
                           </Text>
                         </TouchableHighlight>
                         <Text style={{flex: 1, paddingLeft: 8}}>{d.date}</Text>
-                        <Text style={{flex: 1, color: '#001AFF'}}>
-                          {d.time}
-                        </Text>
+                        {d.time.includes('OPENING') ? (
+                          <Text style={{flex: 1, color: '#1AB433'}}>
+                            {d.time}
+                          </Text>
+                        ) : (
+                          <Text style={{flex: 1,}}>
+                            {d.time}
+                          </Text>
+                        )}
                       </View>
                     ))}
                   </View>

@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
 import {
@@ -110,9 +111,13 @@ class StudentInSection extends Component {
                 <Text style={{flex: 1}}>STATUS</Text>
               </View>
               {studentsInSection !== null && studentsInSection.length === 0 && (
-                <View style={(styles.StyleRow, {alignItems: 'center'})}>
-                  <Text>There are no student in section.</Text>
-                </View>
+                <View style={styles.NotFound}>
+                <Image
+                  style={styles.CustomImg}
+                  source={require('../../../../../android/statics/images/nodata.png')}
+                />
+                <Text>There are no students in section.</Text>
+              </View>
               )}
               {studentsInSection !== null &&
                 studentsInSection.length > 0 &&
@@ -292,6 +297,13 @@ const styles = StyleSheet.create({
     width: 116,
     height: 116,
     top: 20,
+  },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
   },
   ModalWrapper: {
     display: 'flex',

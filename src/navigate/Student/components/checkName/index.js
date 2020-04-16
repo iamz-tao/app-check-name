@@ -115,7 +115,7 @@ class StudentCheckName extends Component {
         //  console.log(data.beacons)
         if (data.beacons.length > 0) {
           this.setState({
-            beacon: data.beacons,
+            beacon:data.beacons,
           })
         }
         else {
@@ -216,18 +216,11 @@ class StudentCheckName extends Component {
     }, 3500)
   };
 
-  // beforecheck = async () => {
-  //   const {token} = this.state;
-  //   const {GetBeaconClass} = this.props;
-  //   const class_id = this.getClassId();
-  //   await GetBeaconClass({token,class_id});
-  // }
   handleCheck = async () => {
     const { Checkname } = this.props;
     const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
     const check = this.checkBeaconEmpty();
     const class_id = this.getClassId();
-    // await this.beforecheck();
     Checkname({
       token,
       macAddress,
@@ -302,6 +295,7 @@ class StudentCheckName extends Component {
         value: s.class_id,
       });
     });
+    // console.log(openingClass)
     if (pickerValues !== '') {
       const classDetail = openingClass.filter(
         s => s.class_id === pickerValues,
@@ -317,6 +311,7 @@ class StudentCheckName extends Component {
         classDetail.Time[1].end_time
         }}`;
     }
+    
     // console.log('subjects>>',subjects)
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
@@ -341,7 +336,7 @@ class StudentCheckName extends Component {
                       </Text>
                       <Text style={styles.styleLabel}>
                         You can check history in MY SUBJECT page.{"\n"}
-                        Time_Check : {time_check}. {"\n"}
+                        Time   : {time_check}. {"\n"}
                         Status : {statusCheckin === 'ONTIME' && 
                         (<Text style={{color: 'green'}}>On Time</Text>)}
                         {statusCheckin === 'LATE' && (<Text style={{color: '#0029FF'}}>Late</Text>)}
@@ -370,7 +365,7 @@ class StudentCheckName extends Component {
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
                       if (status === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentCheckName');
+                        // this.props.navigation.navigate('StudentListCheckName');
                       }
                       else {
                         console.log("KKOKOKo")
@@ -491,7 +486,6 @@ class StudentCheckName extends Component {
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                // this.handleSubmit(token, section_id);
                 this.checkname();
                 // this.setModalVisible();
               }}>

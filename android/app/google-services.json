@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "234319136184",
+    "firebase_url": "https://kpscheckin.firebaseio.com",
+    "project_id": "kpscheckin",
+    "storage_bucket": "kpscheckin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:234319136184:android:172a8398726393be7bbb4d",
+        "android_client_info": {
+          "package_name": "com.app_checkname"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "234319136184-cn5vgmldc49lf5cdcif4p3emsjg7vjuf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbCvyjUJl_0Kj5rrKyNhPGTMOw4e9aeM8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "234319136184-cn5vgmldc49lf5cdcif4p3emsjg7vjuf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
