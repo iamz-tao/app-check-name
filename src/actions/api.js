@@ -743,6 +743,8 @@ async function checkname(params) {
   console.log("Function Checkname");
   const token = params.token
   const check = params.check;
+  // let beaconinclass = await GetBeaconClass(token,params.class_id)
+  // console.log(beaconinclass)
   let error = {};
   return new Promise(async (resolve, reject) => {
     if (check === true) {
@@ -751,7 +753,6 @@ async function checkname(params) {
       reject(error)
     }
     else {
-      // console.log(params)
       const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
         {
           method: 'POST',
@@ -778,9 +779,29 @@ async function checkname(params) {
           console.log(responseJson)
           reject(responseJson)
         }
-        
       }
     })
+}
+
+async function getBeaconInClass(params){
+   console.log("get Beacon in class");
+   const token = params.token;
+   const class_id = params.class_id;
+  //  console.log(token)
+  //  console.log(class_id)
+   return new Promise(async (resolve,reject) => {
+      const response = await fetch(`https://us-central1-kpscheckin.cloudfunctions.net/api/getBeaconByClass/${class_id}`,
+      {
+        method:"GET",
+        headers:{
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        }
+      })
+      const responseJson = await response.json();
+      console.log(responseJson);
+   })
 }
 
 export const Api = {
@@ -812,5 +833,6 @@ export const Api = {
   StudentGetHistory,
   getClassCheckName,
   getStudentChecknameInClass,
-  checkname
+  checkname,
+  getBeaconInClass
 };

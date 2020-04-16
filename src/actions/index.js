@@ -67,7 +67,10 @@ import {
   SET_STUDENT_CHECKNAME_IN_CLASS,
   CHECKNAME,
   CHECKNAME_SUCCESS,
-  CHECKNAME_FAILURE
+  CHECKNAME_FAILURE,
+  GET_BEACON_IN_CLASS_FAILURE,
+  GET_BEACON_IN_CLASS_SUCCESS,
+  GET_BEACON_IN_CLASS
 } from '../constant';
 import {Api} from './api';
 import NavigationServices from '../navigate/NavigationServices';
@@ -414,6 +417,21 @@ export const checknameSuccess = payload => ({
 export const checknameFailure = payload => ({
   payload,
   type: CHECKNAME_FAILURE
+})
+
+export const getbeaconinclass = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS
+})
+
+export const getbeaconinclassSuccess = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS_SUCCESS
+})
+
+export const getbeaconinclassFailure = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS_FAILURE
 })
 
 // Auth
@@ -804,6 +822,19 @@ export const Checkname = params => {
     })
     .catch(err => {
       dispatch(checknameFailure(JSON.stringify(err)));
+    })
+  }
+}
+
+export const GetBeaconClass = params => {
+  return dispatch => {
+    dispatch(getbeaconinclass(params))
+    Api.getBeaconInClass(params)
+    .then(result => {
+      dispatch(getbeaconinclassSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(getbeaconinclassFailure(JSON.stringify(err)))
     })
   }
 }

@@ -20,7 +20,7 @@
     "react-native-beacons-manager": "^1.0.7",
     "react-native-bluetooth-state-manager": "^1.1.0",
     "react-native-date-picker": "^2.7.8",
-    "react-native-device-info": "^5.5.4",
+    "react-native-device-info": "^5.5.5",
     "react-native-elements": "^1.2.7",
     "react-native-gesture-handler": "^1.6.0",
     "react-native-indicator": "^1.2.0",

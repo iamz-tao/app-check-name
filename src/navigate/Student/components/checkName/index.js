@@ -27,6 +27,7 @@ import {
   GetSubjectRegistration,
   Checkname,
   GetClassCheckName,
+  GetBeaconClass
 } from '../../../../actions';
 
 
@@ -90,20 +91,23 @@ class StudentCheckName extends Component {
     if (!token) {
       this.props.navigation.navigate('Login');
     } else {
-      this.setState({
-        token,
-      });
-      GetCurrentYear({
-        token,
-      });
-      GetSubjectRegistration({
-        token,
-      });
-      GetClassCheckName({
-        token,
-      });
+      const request = await requestLocationPermission();
+      if (request) {
+        this.setState({
+          token,
+        });
+        GetCurrentYear({
+          token,
+        });
+        GetSubjectRegistration({
+          token,
+        });
+        GetClassCheckName({
+          token,
+        });
 
-      this.getMacAddress();
+        this.getMacAddress();
+      }
     }
     this.beacondidRange = DeviceEventEmitter.addListener(
       'beaconsDidRange',
@@ -170,18 +174,35 @@ class StudentCheckName extends Component {
   }
 
   getClassId = () => {
-    const {pickerValues} = this.state;
+    const { pickerValues } = this.state;
     const {
-      openingClass: {openingClass },
+      openingClass: { openingClass },
     } = this.props;
     let class_id;
-    if(openingClass.length === 1){
-      class_id = openingClass[0].class_id      
+    if (openingClass.length === 1) {
+      class_id = openingClass[0].class_id
     }
-    else{
+    else {
       class_id = pickerValues;
     }
     return class_id;
+  }
+
+  getBeaconInClass = () => {
+    const { GetBeaconClass } = this.props;
+    GetBeaconClass();
+    // const { openingClass: { openingClass }} = this.props;
+    // let beacon = [];
+    // if(openingClass.length === 1){
+    //    beacon.push({
+    //       uuid : openingClass[0].beacon.uuid,
+    //       major : openingClass[0].beacon.major,
+    //       minor : openingClass[0].beacon.minor
+    //    })
+    // }
+    // else{
+
+    // }
   }
 
   checkname = async () => {
@@ -195,11 +216,18 @@ class StudentCheckName extends Component {
     }, 3500)
   };
 
+  // beforecheck = async () => {
+  //   const {token} = this.state;
+  //   const {GetBeaconClass} = this.props;
+  //   const class_id = this.getClassId();
+  //   await GetBeaconClass({token,class_id});
+  // }
   handleCheck = async () => {
     const { Checkname } = this.props;
     const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
     const check = this.checkBeaconEmpty();
     const class_id = this.getClassId();
+    // await this.beforecheck();
     Checkname({
       token,
       macAddress,
@@ -223,10 +251,21 @@ class StudentCheckName extends Component {
     }
   }
 
+  checkBeaconLength = async () => {
+    const { beacon } = this.state;
+    if (beacon.length > 1) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
   componentWillUnmount() {
     this.beacondidRange = null;
     Beacons.stopRangingBeaconsInRegion("REGION1");
   }
+
   handleLogout = () => {
     const { Logout } = this.props;
     Logout({});
@@ -240,28 +279,16 @@ class StudentCheckName extends Component {
     const {
       openingClass: { fetching, openingClass },
     } = this.props;
-    // const {subjectsRegistration} = this.props.Subjects;
-    const statusReq = this.props.Subjects.status;
-    const statusCheckname = this.props.checkname.status;
-    // console.log(statusCheckname)
-    // const timecheck = this.props.checkname.timecheck
-    const error = this.props.checkname.error_message
 
+
+    const { statusCheckin, time_check, status, error_message } = this.props.checkname
     const subjectsArr = [];
     const sectionArr = [];
     let subject_name = '';
     let sectionId = '';
     let time = '';
     let time2 = '';
-    if (fetching || !openingClass) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <DotsLoader color="#CA5353" />
-          <TextLoader text="Loading" />
-        </View>
-      );
-    }
-    if (ischecking) {
+    if (fetching || !openingClass || ischecking) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -302,7 +329,7 @@ class StudentCheckName extends Component {
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
                 <View style={{ width: '100%', alignItems: 'center' }}>
-                  {statusReq === 'SUCCESS' && (
+                  {status === 'SUCCESS' && (
                     <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
@@ -313,12 +340,16 @@ class StudentCheckName extends Component {
                         CHECK NAME SUCCESS
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You can check history in MY SUBJECT page.
-                        Time_Check : {timecheck}
+                        You can check history in MY SUBJECT page.{"\n"}
+                        Time_Check : {time_check}. {"\n"}
+                        Status : {statusCheckin === 'ONTIME' && 
+                        (<Text style={{color: 'green'}}>On Time</Text>)}
+                        {statusCheckin === 'LATE' && (<Text style={{color: '#0029FF'}}>Late</Text>)}
+                        {statusCheckin === 'ABSENT' && (<Text style={{color: '#FF0000'}}>Absent</Text>)}
                       </Text>
                     </View>
                   )}
-                  {statusCheckname === 'FAILURE' && (
+                  {status === 'FAILURE' && (
                     <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
@@ -329,8 +360,7 @@ class StudentCheckName extends Component {
                         CHECK NAME FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        {/* Check your internet or turn on your bluetooth and turn on your location. */}
-                        {error}
+                        {error_message}
                       </Text>
                     </View>
                   )}
@@ -339,9 +369,13 @@ class StudentCheckName extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
-                      if (statusReq === 'SUCCESS') {
+                      if (status === 'SUCCESS') {
                         this.props.navigation.navigate('StudentCheckName');
                       }
+                      else {
+                        console.log("KKOKOKo")
+                      }
+
                     }}>
                     <Text style={{ color: 'white' }}>OK</Text>
                   </TouchableHighlight>
@@ -486,7 +520,8 @@ const mapDispatchToProps = {
   GetCurrentYear,
   GetSubjectRegistration,
   Logout,
-  Checkname
+  Checkname,
+  GetBeaconClass
 };
 
 export default connect(

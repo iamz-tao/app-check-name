@@ -1,4 +1,4 @@
-import {GET_CLASS_CHECK_NAME, SET_CLASS_CHECK_NAME,CHECKNAME_FAILURE,CHECKNAME_SUCCESS,CHECKNAME} from '../constant';
+import {GET_CLASS_CHECK_NAME, SET_CLASS_CHECK_NAME,CHECKNAME_FAILURE,CHECKNAME_SUCCESS,CHECKNAME,GET_BEACON_IN_CLASS,GET_BEACON_IN_CLASS_SUCCESS,GET_BEACON_IN_CLASS_FAILURE} from '../constant';
 
 const initialState = {
   error: [],
@@ -8,7 +8,9 @@ const initialState = {
   time_check: '',
   error_message : '',
   ischecking : false,
-  data : []
+  data : [],
+  beacon : null,
+  statusCheckin : ''
 };
 
 export default (state = initialState, action) => {
@@ -22,20 +24,30 @@ export default (state = initialState, action) => {
     }
     
     case CHECKNAME : {
-      return {...state,ischecking : true , data : []}
+      return {...state,ischecking : true , data : [],status:''}
     }
 
     case CHECKNAME_SUCCESS : {
       const data = JSON.parse(action.payload);
-      console.log("CHeCKNAME_SUCCESS")
-      console.log(data)
-      return {...state,ischecking:false,data:action.payload,status:"SUCCESS"}
+      return {...state,ischecking:false,time_check:data.dateTime,statusCheckin : data.statusCheckIn,status:"SUCCESS"}
     }
 
     case CHECKNAME_FAILURE : {
       console.log("CHECKNAME_FAILURE")
       const data = JSON.parse(action.payload);
       return {...state,ischecking:false,error_message: data.message,status:"FAILURE"}
+    }
+    
+    case GET_BEACON_IN_CLASS : {
+      return {...state,beacon: []}
+    }
+
+    case GET_BEACON_IN_CLASS_SUCCESS:{
+      return {...state,beacon : action.payload, status:"SUCCESS"}
+    }
+
+    case GET_BEACON_IN_CLASS_FAILURE : {
+      return {...state, status : "FAILURE"}
     }
     
     default:
