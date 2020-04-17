@@ -65,6 +65,12 @@ import {
   SET_CLASS_CHECK_NAME,
   GET_STUDENT_CHECKNAME_IN_CLASS,
   SET_STUDENT_CHECKNAME_IN_CLASS,
+  CHECKNAME,
+  CHECKNAME_SUCCESS,
+  CHECKNAME_FAILURE,
+  GET_BEACON_IN_CLASS_FAILURE,
+  GET_BEACON_IN_CLASS_SUCCESS,
+  GET_BEACON_IN_CLASS,
   GET_STUDENT_ATTENDANCE_CLASS,
   GET_STUDENT_ATTENDANCE_CLASS_SUCCESS,
   GET_STUDENT_ATTENDANCE_CLASS_FAILURE,
@@ -415,6 +421,36 @@ export const getstudentattandanceFailure = payload => ({
   payload,
   type: GET_STUDENT_ATTENDANCE_CLASS_FAILURE,
 });
+
+export const checkname = payload => ({
+  payload,
+  type: CHECKNAME
+})
+
+export const checknameSuccess = payload => ({
+  payload,
+  type: CHECKNAME_SUCCESS
+})
+
+export const checknameFailure = payload => ({
+  payload,
+  type: CHECKNAME_FAILURE
+})
+
+export const getbeaconinclass = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS
+})
+
+export const getbeaconinclassSuccess = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS_SUCCESS
+})
+
+export const getbeaconinclassFailure = payload => ({
+  payload,
+  type : GET_BEACON_IN_CLASS_FAILURE
+})
 
 // Auth
 export const Login = params => {
@@ -794,6 +830,32 @@ export const GetStudentChecknameInClass = params => {
       });
   };
 };
+
+export const Checkname = params => {
+  return dispatch => {
+    dispatch(checkname(params));
+    Api.checkname(params)
+    .then((result) => {
+      dispatch(checknameSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(checknameFailure(JSON.stringify(err)));
+    })
+  }
+}
+
+export const GetBeaconClass = params => {
+  return dispatch => {
+    dispatch(getbeaconinclass(params))
+    Api.getBeaconInClass(params)
+    .then(result => {
+      dispatch(getbeaconinclassSuccess(JSON.stringify(result)))
+    })
+    .catch(err => {
+      dispatch(getbeaconinclassFailure(JSON.stringify(err)))
+    })
+  }
+}
 
 export const getAttandance = params => {
   return dispatch => {

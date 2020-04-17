@@ -740,6 +740,66 @@ async function getStudentChecknameInClass(params) {
     }
   });
 }
+async function checkname(params) {
+  const token = params.token
+  const check = params.check;
+  let error = {};
+  return new Promise(async (resolve, reject) => {
+    if (check === true) {
+      error.message = "Application dosen't detect beacon in this area. Please Check Again"
+      error.status = { dataStatus: 'FAILURE' }
+      reject(error)
+    }
+    else {
+      const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
+        {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            token,
+          },
+          body: JSON.stringify({
+            uuid: params.uuid,
+            major: params.major,
+            minor: params.minor,
+            distance: params.distance,
+            macAddress: params.macAddress,
+            rssi: params.rssi,
+            class_id : params.class_id
+          })
+        })
+        const responseJson = await response.json();
+        if(responseJson.status.dataStatus === 'SUCCESS'){
+          resolve(responseJson)
+        }
+        else{
+          reject(responseJson)
+        }
+      }
+    })
+}
+
+async function getBeaconInClass(params){
+   console.log("get Beacon in class");
+   const token = params.token;
+   const class_id = params.class_id;
+  //  console.log(token)
+  //  console.log(class_id)
+   return new Promise(async (resolve,reject) => {
+      const response = await fetch(`https://us-central1-kpscheckin.cloudfunctions.net/api/getBeaconByClass/${class_id}`,
+      {
+        method:"GET",
+        headers:{
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          token,
+        }
+      })
+      const responseJson = await response.json();
+      console.log(responseJson);
+   })
+}
 
 async function getAttandanceRealTime(params) {
   return new Promise(async (resolve, reject) => {
@@ -819,5 +879,7 @@ export const Api = {
   StudentGetHistory,
   getClassCheckName,
   getStudentChecknameInClass,
-  getAttandanceRealTime,
+  checkname,
+  getBeaconInClass,
+  getAttandanceRealTime
 };
