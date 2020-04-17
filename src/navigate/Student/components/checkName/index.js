@@ -1,10 +1,10 @@
-import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
-import {connect} from 'react-redux';
-import {DotsLoader, TextLoader} from 'react-native-indicator';
+import React, { Component } from 'react';
+import { Avatar, ButtonGroup } from 'react-native-elements';
+import { connect } from 'react-redux';
+import { DotsLoader, TextLoader } from 'react-native-indicator';
 import Device from 'react-native-device-info';
 import Beacons from 'react-native-beacons-manager';
-import {checkLocationStatus} from '../../../../AuthBeacon/func';
+import { checkLocationStatus } from '../../../../AuthBeacon/func'
 
 import {
   StyleSheet,
@@ -18,7 +18,7 @@ import {
   Modal,
   Image,
   DeviceEventEmitter,
-  PermissionsAndroid,
+  PermissionsAndroid
 } from 'react-native';
 
 import {
@@ -27,8 +27,9 @@ import {
   GetSubjectRegistration,
   Checkname,
   GetClassCheckName,
-  GetBeaconClass,
+  GetBeaconClass
 } from '../../../../actions';
+
 
 const requestLocationPermission = async () => {
   try {
@@ -53,7 +54,7 @@ const requestLocationPermission = async () => {
     console.warn(err);
     return false;
   }
-};
+}
 
 class StudentCheckName extends Component {
   constructor(props) {
@@ -79,7 +80,7 @@ class StudentCheckName extends Component {
   async componentDidMount() {
     const {
       LoginReducer: {
-        data: {token},
+        data: { token },
       },
     } = this.props.navigation.state.params;
     const {
@@ -110,23 +111,26 @@ class StudentCheckName extends Component {
     }
     this.beacondidRange = DeviceEventEmitter.addListener(
       'beaconsDidRange',
-      data => {
+      (data) => {
+        //  console.log(data.beacons)
         if (data.beacons.length > 0) {
           this.setState({
-            beacon: data.beacons,
-          });
-        } else {
+            beacon:data.beacons,
+          })
+        }
+        else {
           this.setState({
             beacon: [],
-            isBluetooth: false,
-          });
+            isBluetooth: false
+          }
+          )
         }
-      },
-    );
+      }
+    )
   }
 
   setModalVisible() {
-    this.setState({modalVisible: true});
+    this.setState({ modalVisible: true });
   }
 
   handleSelect = () => {
@@ -140,63 +144,81 @@ class StudentCheckName extends Component {
   getMacAddress = () => {
     Device.getMacAddress()
       .then(address => {
-        this.setState({macAddress: address});
+        this.setState({ macAddress: address })
       })
       .catch(err => {
-        console.warn(err);
-      });
-  };
+        console.warn(err)
+      })
+  }
 
   scan = async () => {
-    //Set Scan Beacon 3 s
     Beacons.setForegroundScanPeriod(3000);
     Beacons.setRssiFilter(0, 2000);
-    Beacons.startRangingBeaconsInRegion('REGION').then(() => {
-      console.log('------scanning----------');
-    });
-  };
+    Beacons.startRangingBeaconsInRegion('REGION')
+      .then(() => {
+        console.log('------scanning----------')
+      })
+  }
 
   setBeacon = () => {
-    const {beacon} = this.state;
+    const { beacon } = this.state;
     beacon.map(b => {
       this.setState({
         uuid: b.uuid,
         major: b.major,
         minor: b.minor,
         distance: b.distance,
-        rssi: b.rssi,
-      });
-    });
-  };
+        rssi: b.rssi
+      })
+    })
+  }
 
   getClassId = () => {
-    const {pickerValues} = this.state;
+    const { pickerValues } = this.state;
     const {
-      openingClass: {openingClass},
+      openingClass: { openingClass },
     } = this.props;
     let class_id;
     if (openingClass.length === 1) {
-      class_id = openingClass[0].class_id;
-    } else {
+      class_id = openingClass[0].class_id
+    }
+    else {
       class_id = pickerValues;
     }
     return class_id;
-  };
+  }
+
+  getBeaconInClass = () => {
+    const { GetBeaconClass } = this.props;
+    GetBeaconClass();
+    // const { openingClass: { openingClass }} = this.props;
+    // let beacon = [];
+    // if(openingClass.length === 1){
+    //    beacon.push({
+    //       uuid : openingClass[0].beacon.uuid,
+    //       major : openingClass[0].beacon.major,
+    //       minor : openingClass[0].beacon.minor
+    //    })
+    // }
+    // else{
+
+    // }
+  }
 
   checkname = async () => {
     this.scan();
-    this.setState({ischecking: true});
+    this.setState({ ischecking: true });
     setTimeout(async () => {
       // this.scan();
       this.setBeacon();
       await this.handleCheck();
-      this.setState({ischecking: false, modalVisible: true});
-    }, 3500);
+      this.setState({ ischecking: false, modalVisible: true })
+    }, 3500)
   };
 
   handleCheck = async () => {
-    const {Checkname} = this.props;
-    const {macAddress, token, uuid, major, minor, distance, rssi} = this.state;
+    const { Checkname } = this.props;
+    const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
     const check = this.checkBeaconEmpty();
     const class_id = this.getClassId();
     Checkname({
@@ -208,68 +230,57 @@ class StudentCheckName extends Component {
       distance,
       rssi,
       check,
-      class_id,
-    });
-  };
+      class_id
+    })
+  }
 
   checkBeaconEmpty = () => {
-    const {beacon} = this.state;
+    const { beacon } = this.state;
     if (beacon.length < 1) {
       return true;
-    } else {
+    }
+    else {
       return false;
     }
-  };
+  }
 
   checkBeaconLength = async () => {
-    const {beacon} = this.state;
+    const { beacon } = this.state;
     if (beacon.length > 1) {
       return true;
-    } else {
+    }
+    else {
       return false;
     }
-  };
+  }
 
   componentWillUnmount() {
     this.beacondidRange = null;
-    Beacons.stopRangingBeaconsInRegion('REGION1');
+    Beacons.stopRangingBeaconsInRegion("REGION1");
   }
 
   handleLogout = () => {
-    const {Logout} = this.props;
+    const { Logout } = this.props;
     Logout({});
   };
 
   render() {
+    const { pickerValues, section, token, ischecking, uuid, distance, hasbeacon } = this.state;
     const {
-      pickerValues,
-      section,
-      token,
-      ischecking,
-      uuid,
-      distance,
-      hasbeacon,
-    } = this.state;
-    const {
-      currentYear: {year, semester},
+      currentYear: { year, semester },
     } = this.props.currentYear;
     const {
-      openingClass: {fetching, openingClass},
+      openingClass: { fetching, openingClass },
     } = this.props;
 
-    const {
-      statusCheckin,
-      time_check,
-      status,
-      error_message,
-    } = this.props.checkname;
+
+    const { statusCheckin, time_check, status, error_message } = this.props.checkname
     const subjectsArr = [];
     const sectionArr = [];
     let subject_name = '';
     let sectionId = '';
     let time = '';
     let time2 = '';
-    let beaconInClass = [];
     if (fetching || !openingClass || ischecking) {
       return (
         <View style={styles.loadingWrapper}>
@@ -293,22 +304,17 @@ class StudentCheckName extends Component {
       sectionId = classDetail.section_number;
       time = `${classDetail.Time[0].day} ${classDetail.Time[0].start_time} - ${
         classDetail.Time[0].end_time
-      }`;
+        }`;
       time2 =
         classDetail.Time.length === 2 &&
         `${classDetail.Time[1].day} ${classDetail.Time[1].start_time} - ${
-          classDetail.Time[1].end_time
+        classDetail.Time[1].end_time
         }}`;
-      beaconInClass = classDetail.beacon;
     }
-
-    if (openingClass !== null && openingClass.length === 1) {
-      beaconInClass = openingClass[0].beacon;
-    }
-
-    // console.log('beaconInClass>>', status);
+    
+    // console.log('subjects>>',subjects)
     return (
-      <ScrollView style={{backgroundColor: '#ffffff'}}>
+      <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View>
           <Modal
             animationType="slide"
@@ -317,9 +323,9 @@ class StudentCheckName extends Component {
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
-                <View style={{width: '100%', alignItems: 'center'}}>
+                <View style={{ width: '100%', alignItems: 'center' }}>
                   {status === 'SUCCESS' && (
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/success.png')}
@@ -410,7 +416,7 @@ class StudentCheckName extends Component {
               <View style={{display: 'flex', flexDirection: 'column'}}>
                 <Text
                   style={
-                    (styles.styleLabel, {paddingLeft: 16, marginBottom: 6})
+                    (styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })
                   }>
                   TIME : {openingClass[0].Section.Time[0].day}{' '}
                   {openingClass[0].Section.Time[0].start_time} -{' '}
@@ -419,7 +425,7 @@ class StudentCheckName extends Component {
                 {openingClass[0].Section.Time[1] && (
                   <Text
                     style={
-                      (styles.styleLabel, {paddingLeft: 58, marginBottom: 6})
+                      (styles.styleLabel, { paddingLeft: 58, marginBottom: 6 })
                     }>
                     TIME : {openingClass[0].Section.Time[1].day}{' '}
                     {openingClass[0].Section.Time[1].start_time} -{' '}
