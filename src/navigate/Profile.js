@@ -92,7 +92,7 @@ class UpdateProfile extends Component {
         <View style={styles.container}>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>UPDATE PROFILE</Text>
-            <Avatar
+            {/* <Avatar
               rounded
               size="large"
               source={{
@@ -100,7 +100,7 @@ class UpdateProfile extends Component {
                   'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
               }}
               showEditButton
-            />
+            /> */}
           </View>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -222,7 +222,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     flexDirection: 'row',
-    marginTop: 20,
   },
   containerWrapper: {
     display: 'flex',
@@ -230,6 +229,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     paddingRight: 8,
+    paddingTop: 12,
   },
   styleHeader: {
     display: 'flex',

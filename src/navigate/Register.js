@@ -76,7 +76,7 @@ export default class Register extends Component {
         <View style={styles.container}>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>REGISTER</Text>
-            <Avatar
+            {/* <Avatar
               rounded
               size="large"
               source={{
@@ -84,7 +84,7 @@ export default class Register extends Component {
                   'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
               }}
               showEditButton
-            />
+            /> */}
           </View>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -102,6 +102,7 @@ export default class Register extends Component {
                   borderColor: 'rgba(36, 52, 69, 0.5)',
                   borderRadius: 21,
                   height: 45,
+                  width: 200,
                 }}
                 selectedButtonStyle={{
                   backgroundColor: '#CA5353',
