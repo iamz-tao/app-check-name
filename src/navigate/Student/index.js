@@ -64,7 +64,7 @@ class StudentHomePage extends Component {
 
           <View style={styles.containerWrapper}>
             {/* <View style={{height: 18}} /> */}
-            <Avatar
+            {/* <Avatar
               rounded
               size="xlarge"
               // showEditButton
@@ -72,6 +72,10 @@ class StudentHomePage extends Component {
                 uri:
                   'https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg',
               }}
+            /> */}
+            <Image
+              source={require('../../../android/statics/images/student.jpg')}
+              style={{width: 212, height: 184}}
             />
             <View style={{height: 8}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
