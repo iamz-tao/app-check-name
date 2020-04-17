@@ -8,6 +8,7 @@ import {
   View,
   Text,
   TouchableHighlight,
+  Image,
 } from 'react-native';
 
 import {Logout, getTeacherhistory} from '../../../../actions';
@@ -79,6 +80,7 @@ class ListTeachingHistory extends Component {
         </View>
       );
     }
+    // console.log(classes[0].class.length)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -106,7 +108,17 @@ class ListTeachingHistory extends Component {
                 <Text style={{flex: 1, paddingLeft: 8}}>DATE</Text>
                 <Text style={{flex: 1}}>TIME</Text>
               </View>
+              {classes !== null && classes[0].class.length === 0 && (
+                <View style={styles.NotFound}>
+                  <Image
+                    style={styles.CustomImg}
+                    source={require('../../../../../android/statics/images/nodata.png')}
+                  />
+                  <Text>There are no students checked name.</Text>
+                </View>
+              )}
               {classes !== null &&
+                classes[0].class.length > 0 &&
                 classes.map(c => (
                   <View>
                     {c.class.map(d => (
@@ -143,9 +155,7 @@ class ListTeachingHistory extends Component {
                             {d.time}
                           </Text>
                         ) : (
-                          <Text style={{flex: 1,}}>
-                            {d.time}
-                          </Text>
+                          <Text style={{flex: 1}}>{d.time}</Text>
                         )}
                       </View>
                     ))}
@@ -281,6 +291,14 @@ const styles = StyleSheet.create({
     width: 116,
     height: 116,
     top: 20,
+    marginBottom: 6,
+  },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
   },
   ModalWrapper: {
     display: 'flex',
