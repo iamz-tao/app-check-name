@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { DotsLoader, TextLoader } from 'react-native-indicator';
 import Device from 'react-native-device-info';
 import Beacons from 'react-native-beacons-manager';
-import { checkLocationStatus } from '../../../../AuthBeacon/func'
+import { checkLocationStatus } from '../../../../AuthBeacon/func';
 
 import {
   StyleSheet,
@@ -18,7 +18,7 @@ import {
   Modal,
   Image,
   DeviceEventEmitter,
-  PermissionsAndroid
+  PermissionsAndroid,
 } from 'react-native';
 
 import {
@@ -27,9 +27,8 @@ import {
   GetSubjectRegistration,
   Checkname,
   GetClassCheckName,
-  GetBeaconClass
+  GetBeaconClass,
 } from '../../../../actions';
-
 
 const requestLocationPermission = async () => {
   try {
@@ -54,7 +53,7 @@ const requestLocationPermission = async () => {
     console.warn(err);
     return false;
   }
-}
+};
 
 class StudentCheckName extends Component {
   constructor(props) {
@@ -74,6 +73,7 @@ class StudentCheckName extends Component {
       hasbeacon: false,
       rssi: '',
       isBluetooth: true,
+      beaconInClass: []
     };
   }
 
@@ -111,22 +111,19 @@ class StudentCheckName extends Component {
     }
     this.beacondidRange = DeviceEventEmitter.addListener(
       'beaconsDidRange',
-      (data) => {
-        //  console.log(data.beacons)
+      data => {
         if (data.beacons.length > 0) {
           this.setState({
-            beacon:data.beacons,
-          })
-        }
-        else {
+            beacon: data.beacons,
+          });
+        } else {
           this.setState({
             beacon: [],
-            isBluetooth: false
-          }
-          )
+            isBluetooth: false,
+          });
         }
-      }
-    )
+      },
+    );
   }
 
   setModalVisible() {
@@ -144,34 +141,54 @@ class StudentCheckName extends Component {
   getMacAddress = () => {
     Device.getMacAddress()
       .then(address => {
-        this.setState({ macAddress: address })
+        this.setState({ macAddress: address });
       })
       .catch(err => {
-        console.warn(err)
-      })
-  }
+        console.warn(err);
+      });
+  };
 
   scan = async () => {
+    //Set Scan Beacon 3 s
     Beacons.setForegroundScanPeriod(3000);
     Beacons.setRssiFilter(0, 2000);
-    Beacons.startRangingBeaconsInRegion('REGION')
-      .then(() => {
-        console.log('------scanning----------')
+    Beacons.startRangingBeaconsInRegion('REGION').then(() => {
+      console.log('------scanning----------');
+    });
+  };
+
+  CheckBeacon = async () => {
+    const { beaconInClass, beacon } = this.state;
+    if (beacon.length > 1) {
+      const arr = beacon.filter(b => {
+        return b.uuid === beaconInClass.uuid
       })
+      return arr;
+    }
+    else {
+      const chk = beacon.filter(b => {
+        return b.uuid === beaconInClass.uuid;
+      })
+      if(chk.length < 1){
+        return false;
+      }
+      else{
+        return beacon;
+      }
+    }
   }
 
-  setBeacon = () => {
-    const { beacon } = this.state;
+  setBeacon = (beacon) => {
     beacon.map(b => {
       this.setState({
         uuid: b.uuid,
         major: b.major,
         minor: b.minor,
         distance: b.distance,
-        rssi: b.rssi
-      })
-    })
-  }
+        rssi: b.rssi,
+      });
+    });
+  };
 
   getClassId = () => {
     const { pickerValues } = this.state;
@@ -180,43 +197,28 @@ class StudentCheckName extends Component {
     } = this.props;
     let class_id;
     if (openingClass.length === 1) {
-      class_id = openingClass[0].class_id
-    }
-    else {
+      class_id = openingClass[0].class_id;
+    } else {
       class_id = pickerValues;
     }
     return class_id;
-  }
-
-  getBeaconInClass = () => {
-    const { GetBeaconClass } = this.props;
-    GetBeaconClass();
-    // const { openingClass: { openingClass }} = this.props;
-    // let beacon = [];
-    // if(openingClass.length === 1){
-    //    beacon.push({
-    //       uuid : openingClass[0].beacon.uuid,
-    //       major : openingClass[0].beacon.major,
-    //       minor : openingClass[0].beacon.minor
-    //    })
-    // }
-    // else{
-
-    // }
-  }
+  };
 
   checkname = async () => {
     this.scan();
     this.setState({ ischecking: true });
     setTimeout(async () => {
-      // this.scan();
-      this.setBeacon();
-      await this.handleCheck();
-      this.setState({ ischecking: false, modalVisible: true })
-    }, 3500)
+      const beacon_flag = await this.CheckBeacon();
+      if(beacon_flag !== false){
+        this.setBeacon(beacon_flag);
+      }
+      await this.handleCheck(beacon_flag);
+      this.setState({ ischecking: false, modalVisible: true });
+    }, 3500);
   };
 
-  handleCheck = async () => {
+
+  handleCheck = async (beacon_flag) => {
     const { Checkname } = this.props;
     const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
     const check = this.checkBeaconEmpty();
@@ -230,33 +232,32 @@ class StudentCheckName extends Component {
       distance,
       rssi,
       check,
-      class_id
-    })
-  }
+      class_id,
+      beacon_flag
+    });
+  };
 
   checkBeaconEmpty = () => {
     const { beacon } = this.state;
     if (beacon.length < 1) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
-  }
+  };
 
   checkBeaconLength = async () => {
     const { beacon } = this.state;
     if (beacon.length > 1) {
       return true;
-    }
-    else {
+    } else {
       return false;
     }
-  }
+  };
 
   componentWillUnmount() {
     this.beacondidRange = null;
-    Beacons.stopRangingBeaconsInRegion("REGION1");
+    Beacons.stopRangingBeaconsInRegion('REGION1');
   }
 
   handleLogout = () => {
@@ -265,7 +266,15 @@ class StudentCheckName extends Component {
   };
 
   render() {
-    const { pickerValues, section, token, ischecking, uuid, distance, hasbeacon } = this.state;
+    const {
+      pickerValues,
+      section,
+      token,
+      ischecking,
+      uuid,
+      distance,
+      hasbeacon,
+    } = this.state;
     const {
       currentYear: { year, semester },
     } = this.props.currentYear;
@@ -273,14 +282,19 @@ class StudentCheckName extends Component {
       openingClass: { fetching, openingClass },
     } = this.props;
 
-
-    const { statusCheckin, time_check, status, error_message } = this.props.checkname
+    const {
+      statusCheckin,
+      time_check,
+      status,
+      error_message,
+    } = this.props.checkname;
     const subjectsArr = [];
     const sectionArr = [];
     let subject_name = '';
     let sectionId = '';
     let time = '';
     let time2 = '';
+    let beaconInClass = [];
     if (fetching || !openingClass || ischecking) {
       return (
         <View style={styles.loadingWrapper}>
@@ -295,7 +309,6 @@ class StudentCheckName extends Component {
         value: s.class_id,
       });
     });
-    // console.log(openingClass)
     if (pickerValues !== '') {
       const classDetail = openingClass.filter(
         s => s.class_id === pickerValues,
@@ -310,9 +323,15 @@ class StudentCheckName extends Component {
         `${classDetail.Time[1].day} ${classDetail.Time[1].start_time} - ${
         classDetail.Time[1].end_time
         }}`;
+      beaconInClass = classDetail.beacon;
     }
-    
-    // console.log('subjects>>',subjects)
+
+    if (openingClass !== null && openingClass.length === 1) {
+      beaconInClass = openingClass[0].Section.beacon;
+    }
+
+    // this.setState({beaconInClass})
+    // console.log('beaconInClass>>', status);
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View>
@@ -330,7 +349,7 @@ class StudentCheckName extends Component {
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/success.png')}
                       />
-                      <View style={{height: 36}} />
+                      <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
                         CHECK NAME SUCCESS
                       </Text>
@@ -339,37 +358,37 @@ class StudentCheckName extends Component {
                         Time : {time_check}. {'\n'}
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
-                          <Text style={{color: 'green'}}>On Time</Text>
+                          <Text style={{ color: 'green' }}>On Time</Text>
                         )}
                         {statusCheckin === 'LATE' && (
-                          <Text style={{color: '#0029FF'}}>Late</Text>
+                          <Text style={{ color: '#0029FF' }}>Late</Text>
                         )}
                         {statusCheckin === 'ABSENT' && (
-                          <Text style={{color: '#FF0000'}}>Absent</Text>
+                          <Text style={{ color: '#FF0000' }}>Absent</Text>
                         )}
                       </Text>
                     </View>
                   )}
                   {status === 'FAILURE' && (
-                    <View style={{alignItems: 'center'}}>
+                    <View style={{ alignItems: 'center' }}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/icon-failure.png')}
                       />
-                      <View style={{height: 36}} />
+                      <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
                         CHECK NAME FAILED
                       </Text>
                       <Text style={styles.styleLabel}>{error_message}</Text>
                     </View>
                   )}
-                  <View style={{height: 16}} />
+                  <View style={{ height: 16 }} />
                   <TouchableHighlight
                     style={styles.btnReq}
                     onPress={() => {
-                      this.setState({modalVisible: !this.state.modalVisible});
+                      this.setState({ modalVisible: !this.state.modalVisible });
                       if (status === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentListCheckName',{
+                        this.props.navigation.navigate('StudentListCheckName', {
                           token,
                           subject_name: openingClass[0].Section.subject_name,
                           section_number: openingClass[0].Section.section_number,
@@ -378,7 +397,7 @@ class StudentCheckName extends Component {
                       } else {
                       }
                     }}>
-                    <Text style={{color: 'white'}}>OK</Text>
+                    <Text style={{ color: 'white' }}>OK</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -386,34 +405,34 @@ class StudentCheckName extends Component {
           </Modal>
         </View>
         <View style={styles.container}>
-          <View style={{display: 'flex', alignItems: 'flex-end'}}>
+          <View style={{ display: 'flex', alignItems: 'flex-end' }}>
             <TouchableHighlight
               style={styles.btnLogout}
               onPress={() => {
                 this.handleLogout();
               }}>
-              <Text style={{color: 'white'}}>Logout</Text>
+              <Text style={{ color: 'white' }}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>CHECK NAME</Text>
           </View>
-          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+          <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
             YEAR / SEMESTER : {year} / {semester}
           </Text>
-          <View style={{height: 21}} />
+          <View style={{ height: 21 }} />
           {openingClass !== null && openingClass.length === 1 && (
             <View>
               <Text
-                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
                 SUBJECT NAME : {openingClass[0].Section.subject_code}{' '}
                 {openingClass[0].Section.subject_name}
               </Text>
               <Text
-                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
                 SECTION : {openingClass[0].Section.section_number}
               </Text>
-              <View style={{display: 'flex', flexDirection: 'column'}}>
+              <View style={{ display: 'flex', flexDirection: 'column' }}>
                 <Text
                   style={
                     (styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })
@@ -442,7 +461,7 @@ class StudentCheckName extends Component {
                   <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
                   <View style={styles.stylePicker}>
                     <Picker
-                      style={{height: 45}}
+                      style={{ height: 45 }}
                       selectedValue={pickerValues}
                       onValueChange={(itemValue, itemIndex) =>
                         this.setState({
@@ -459,22 +478,22 @@ class StudentCheckName extends Component {
                   </View>
                 </View>
               </View>
-              <View style={{display: 'flex', paddingLeft: 21, width: 340}}>
-                <View style={{flexDirection: 'row'}}>
+              <View style={{ display: 'flex', paddingLeft: 21, width: 340 }}>
+                <View style={{ flexDirection: 'row' }}>
                   <Text
                     style={
-                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
+                      (styles.styleLabel, { width: 116, alignSelf: 'center' })
                     }>
                     Subject Name :{' '}
                   </Text>
-                  <Text style={{flex: 3}}>{subject_name}</Text>
+                  <Text style={{ flex: 3 }}>{subject_name}</Text>
                 </View>
-                <View style={{height: 8}} />
-                <View style={{flexDirection: 'row'}}>
-                  <Text style={(styles.styleLabel, {width: 100})}>
+                <View style={{ height: 8 }} />
+                <View style={{ flexDirection: 'row' }}>
+                  <Text style={(styles.styleLabel, { width: 100 })}>
                     Date/Time :
                   </Text>
-                  <View style={{display: 'flex', flexDirection: 'column'}}>
+                  <View style={{ display: 'flex', flexDirection: 'column' }}>
                     <Text style={styles.styleLabel}>{time}</Text>
                     <Text style={styles.styleLabel}>{time2}</Text>
                   </View>
@@ -482,20 +501,21 @@ class StudentCheckName extends Component {
               </View>
             </View>
           )}
-          <View style={{height: 8}} />
+          <View style={{ height: 8 }} />
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => this.props.navigation.navigate('StudentHomePage')}>
-              <Text style={{color: '#949494'}}>CANCEL</Text>
+              <Text style={{ color: '#949494' }}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
                 this.checkname();
+                this.setState({ beaconInClass })
                 // this.setModalVisible();
               }}>
-              <Text style={{color: 'white'}}>CHECK</Text>
+              <Text style={{ color: 'white' }}>CHECK</Text>
             </TouchableHighlight>
           </View>
         </View>

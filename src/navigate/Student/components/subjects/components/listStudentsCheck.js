@@ -38,6 +38,7 @@ class StudentListCheckName extends Component {
     const {
       subject_name,
       section_number,
+      token
     } = this.props.navigation.state.params;
     const { history: {fetching, stdHistory} } = this.props
      
@@ -104,7 +105,9 @@ class StudentListCheckName extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('StudentListSubject')
+                this.props.navigation.navigate('StudentListSubject',{
+                  token
+                })
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
