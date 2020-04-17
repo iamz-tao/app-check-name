@@ -741,15 +741,12 @@ async function getStudentChecknameInClass(params) {
   });
 }
 async function checkname(params) {
-  console.log("Function Checkname");
   const token = params.token
   const check = params.check;
-  // let beaconinclass = await GetBeaconClass(token,params.class_id)
-  // console.log(beaconinclass)
   let error = {};
   return new Promise(async (resolve, reject) => {
     if (check === true) {
-      error.message = "No Detect Beacon In this Area. Please Check Again"
+      error.message = "Application dosen't detect beacon in this area. Please Check Again"
       error.status = { dataStatus: 'FAILURE' }
       reject(error)
     }
@@ -777,7 +774,6 @@ async function checkname(params) {
           resolve(responseJson)
         }
         else{
-          console.log(responseJson)
           reject(responseJson)
         }
       }

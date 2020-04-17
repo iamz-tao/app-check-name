@@ -112,7 +112,6 @@ class StudentCheckName extends Component {
     this.beacondidRange = DeviceEventEmitter.addListener(
       'beaconsDidRange',
       (data) => {
-        //  console.log(data.beacons)
         if (data.beacons.length > 0) {
           this.setState({
             beacon:data.beacons,
@@ -152,6 +151,7 @@ class StudentCheckName extends Component {
   }
 
   scan = async () => {
+    //Set Scan Beacon 3 s
     Beacons.setForegroundScanPeriod(3000);
     Beacons.setRssiFilter(0, 2000);
     Beacons.startRangingBeaconsInRegion('REGION')
@@ -186,23 +186,6 @@ class StudentCheckName extends Component {
       class_id = pickerValues;
     }
     return class_id;
-  }
-
-  getBeaconInClass = () => {
-    const { GetBeaconClass } = this.props;
-    GetBeaconClass();
-    // const { openingClass: { openingClass }} = this.props;
-    // let beacon = [];
-    // if(openingClass.length === 1){
-    //    beacon.push({
-    //       uuid : openingClass[0].beacon.uuid,
-    //       major : openingClass[0].beacon.major,
-    //       minor : openingClass[0].beacon.minor
-    //    })
-    // }
-    // else{
-
-    // }
   }
 
   checkname = async () => {
@@ -368,7 +351,6 @@ class StudentCheckName extends Component {
                         // this.props.navigation.navigate('StudentListCheckName');
                       }
                       else {
-                        console.log("KKOKOKo")
                       }
 
                     }}>

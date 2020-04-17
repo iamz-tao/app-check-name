@@ -33,7 +33,6 @@ export default (state = initialState, action) => {
     }
 
     case CHECKNAME_FAILURE : {
-      console.log("CHECKNAME_FAILURE")
       const data = JSON.parse(action.payload);
       return {...state,ischecking:false,error_message: data.message,status:"FAILURE"}
     }
