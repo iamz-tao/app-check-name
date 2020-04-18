@@ -158,7 +158,6 @@ class OpenSection extends Component {
       time_absent: absent_time,
       total_mark,
     };
-    // console.log(payload)
     LecturerOpenSection({
       token,
       payload,
@@ -191,7 +190,6 @@ class OpenSection extends Component {
         </View>
       );
     }
-    console.log(e_time);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View>
@@ -211,10 +209,10 @@ class OpenSection extends Component {
                       />
                       <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
-                        OPEN SECTION SUCCESS
+                        OPEN SECTION SUCCEEDED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You can check list subjects your teach in MY SUBJECT
+                        You can check list of subjects you teach in MY SUBJECTS
                         page.
                       </Text>
                     </View>
@@ -230,7 +228,7 @@ class OpenSection extends Component {
                         OPEN SECTION FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        ERROR! Could not handle the request.
+                        Error: Could not handle the request.
                       </Text>
                     </View>
                   )}
@@ -239,7 +237,7 @@ class OpenSection extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({modalVisibleSubmit: !modalVisibleSubmit});
-                      this.props.navigation.navigate('MySubject', {
+                      this.props.navigation.navigate('My Subjects', {
                         token,
                       });
                     }}>
@@ -267,7 +265,7 @@ class OpenSection extends Component {
             <Text style={styles.styleHeader}>OPEN SECTION</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : {year} / {semester}
+                  YEAR / SEMESTER :{' '}{year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
@@ -371,7 +369,7 @@ class OpenSection extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
@@ -394,7 +392,7 @@ class OpenSection extends Component {
             <TouchableHighlight
               style={styles.buttonAddSubject}
               onPress={() =>
-                this.props.navigation.navigate('CreateSubject', {token})
+                this.props.navigation.navigate('Create New Subject', {token})
               }>
               <Text style={{textDecorationLine: 'underline', color: '#738497'}}>
                 New Subject?

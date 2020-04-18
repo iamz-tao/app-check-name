@@ -96,7 +96,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={{justifyContent: 'center', alignItems: 'center'}}
                 onPress={() => {
-                  this.props.navigation.navigate('UpdateProfile', {
+                  this.props.navigation.navigate('Update Profile', {
                     token,
                     role: user.role,
                   });
@@ -107,14 +107,14 @@ class LecturerHomePage extends Component {
                 />
               </TouchableHighlight>
             </View>
-            <Text style={styles.styleText}>LECTURER</Text>
+            <Text style={styles.styleText}>Lecturer</Text>
 
             <View style={{height: 24}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('OpenSection', {
+                  this.props.navigation.navigate('Open Section', {
                     token,
                   })
                 }>
@@ -124,7 +124,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonOpenClass}
                 onPress={() =>
-                  this.props.navigation.navigate('OpenClass', {
+                  this.props.navigation.navigate('Open Class', {
                     token,
                   })
                 }>
@@ -134,7 +134,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonCloseClass}
                 onPress={() => {
-                  this.props.navigation.navigate('LecturerCloseClass', {
+                  this.props.navigation.navigate('Close Class', {
                     token,
                   });
                 }}>
@@ -146,27 +146,27 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMySubject}
                 onPress={() => {
-                  this.props.navigation.navigate('MySubject', {
+                  this.props.navigation.navigate('My Subjects', {
                     token,
                   });
                 }}>
-                <Text style={styles.LabelText}>MY SUBJECT</Text>
+                <Text style={styles.LabelText}>MY SUBJECTS</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonBeacon}
                 onPress={() => {
-                  this.props.navigation.navigate('Beacon', {
+                  this.props.navigation.navigate('Beacons', {
                     token,
                   });
                 }}>
-                <Text style={styles.LabelText}>BEACON</Text>
+                <Text style={styles.LabelText}>BEACONS</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
                 style={styles.buttonStudentApprove}
                 onPress={() => {
-                  this.props.navigation.navigate('StudentApprove', {
+                  this.props.navigation.navigate('Student Approve', {
                     token,
                   });
                 }}>

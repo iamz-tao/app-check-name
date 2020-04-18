@@ -150,7 +150,7 @@ class StudentApprove extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
@@ -158,7 +158,7 @@ class StudentApprove extends Component {
               style={styles.btnReq}
               disabled={pickerValues === '' || section === ''}
               onPress={() => {
-                this.props.navigation.navigate('ListStudentApprove',{
+                this.props.navigation.navigate('List of Students',{
                   id: section,
                   token,
                 });

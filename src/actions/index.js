@@ -482,7 +482,6 @@ export const GetCurrentYear = params => {
         dispatch(setCurrentYear(JSON.stringify(result)));
       })
       .catch(err => {
-        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };
@@ -497,7 +496,6 @@ export const StudentGetSubjectRegis = params => {
         dispatch(studentSetSubjectRegis(JSON.stringify(result)));
       })
       .catch(err => {
-        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };
@@ -563,7 +561,6 @@ export const StudentGetHistory = params => {
         dispatch(studentSetHistory(JSON.stringify(result)));
       })
       .catch(err => {
-        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };
@@ -578,7 +575,6 @@ export const GetSubjectsApprove = params => {
         dispatch(setSubjectsApprove(JSON.stringify(result)));
       })
       .catch(err => {
-        // console.log('error>>>',err)
         dispatch(requestError(err));
       });
   };

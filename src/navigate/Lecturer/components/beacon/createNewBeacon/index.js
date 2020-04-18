@@ -256,13 +256,13 @@ class CreateNewBeacon extends Component {
             <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
           </View> :
             <View>
-              <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon</Text>
+              <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon.</Text>
             </View>}
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('Beacon')
+                this.props.navigation.navigate('Beacons')
               }>
               <Text style={{ color: '#949494' }}>BACK</Text>
             </TouchableHighlight>

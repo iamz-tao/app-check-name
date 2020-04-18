@@ -37,7 +37,7 @@ class LoginScreen extends Component {
           source={require('../../android/statics/images/ku_logo.png')}
         />
         <View style={{height: 24}} />
-        <Text style={styles.LabelTitle}>CHECK NAME</Text>
+        <Text style={styles.LabelTitle}>ATTENDANCE ROLL</Text>
         <View style={{height: 12}} />
         <Text style={styles.LabelText}>YOUR EMAIL :</Text>
         <View style={styles.inputContainer}>
@@ -66,7 +66,7 @@ class LoginScreen extends Component {
 
         <TouchableHighlight
           style={styles.buttonForget}
-          onPress={() => this.props.navigation.navigate('ForgotPassword')}>
+          onPress={() => this.props.navigation.navigate('Forgot Password')}>
           <Text style={{textDecorationLine: 'underline' }}>
             Forgot your password?
           </Text>
@@ -77,9 +77,6 @@ class LoginScreen extends Component {
           onPress={() => {
             const {email, password} = this.state;
             props.Login({email: email, password: password});
-            // this.props.navigation.navigate('StudentHomePage')
-            // this.props.navigation.navigate('LecturerHomePage')
-            // NavigationServices.navigate('StudentHomePage')
           }}>
           <Text style={styles.loginText}>Login</Text>
         </TouchableHighlight>

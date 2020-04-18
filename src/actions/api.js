@@ -26,9 +26,9 @@ async function Login(data) {
     if (responseJson.message === 'PASS') {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
-        NavigationServices.navigate('LecturerHomePage');
+        NavigationServices.navigate('Lecturer Home Page');
       } else if (responseJson.data.user.role === 'NISIT') {
-        NavigationServices.navigate('StudentHomePage');
+        NavigationServices.navigate('Student Home Page');
       } else {
         Alert.alert(
           'Login failed!',
@@ -741,23 +741,22 @@ async function getStudentChecknameInClass(params) {
   });
 }
 async function checkname(params) {
-  const token = params.token
+  const token = params.token;
   const check = params.check;
   const beacon_flag = params.beacon_flag;
   let error = {};
   return new Promise(async (resolve, reject) => {
     if (check === true) {
-      error.message = "Application dosen't detect beacon in this area. Please Check Again"
-      error.status = { dataStatus: 'FAILURE' }
-      reject(error)
-    }
-    else if(beacon_flag === false){
-      error.message = "This Beacon doesn't use in this class. Please Check Again"
-      error.status = {dataStatus : 'FAILURE'}
-      reject(error)
-    }
-    else {
-      const response = await fetch('https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
+      error.message = "Beacon isn't detected. Please try again.";
+      error.status = {dataStatus: 'FAILURE'};
+      reject(error);
+    } else if (beacon_flag === false) {
+      error.message = 'Beacon is invalid.';
+      error.status = {dataStatus: 'FAILURE'};
+      reject(error);
+    } else {
+      const response = await fetch(
+        'https://us-central1-kpscheckin.cloudfunctions.net/api/CheckName',
         {
           method: 'POST',
           headers: {
@@ -772,39 +771,41 @@ async function checkname(params) {
             distance: params.distance,
             macAddress: params.macAddress,
             rssi: params.rssi,
-            class_id : params.class_id
-          })
-        })
-        const responseJson = await response.json();
-        if(responseJson.status.dataStatus === 'SUCCESS'){
-          resolve(responseJson)
-        }
-        else{
-          reject(responseJson)
-        }
+            class_id: params.class_id,
+          }),
+        },
+      );
+      const responseJson = await response.json();
+      if (responseJson.status.dataStatus === 'SUCCESS') {
+        resolve(responseJson);
+      } else {
+        reject(responseJson);
       }
-    })
+    }
+  });
 }
 
-async function getBeaconInClass(params){
-   console.log("get Beacon in class");
-   const token = params.token;
-   const class_id = params.class_id;
+async function getBeaconInClass(params) {
+  //  console.log("get Beacon in c                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            lass");
+  const token = params.token;
+  const class_id = params.class_id;
   //  console.log(token)
   //  console.log(class_id)
-   return new Promise(async (resolve,reject) => {
-      const response = await fetch(`https://us-central1-kpscheckin.cloudfunctions.net/api/getBeaconByClass/${class_id}`,
+  return new Promise(async (resolve, reject) => {
+    const response = await fetch(
+      `https://us-central1-kpscheckin.cloudfunctions.net/api/getBeaconByClass/${class_id}`,
       {
-        method:"GET",
-        headers:{
+        method: 'GET',
+        headers: {
           Accept: 'application/json',
           'Content-Type': 'application/json',
           token,
-        }
-      })
-      const responseJson = await response.json();
-      console.log(responseJson);
-   })
+        },
+      },
+    );
+    const responseJson = await response.json();
+    console.log(responseJson);
+  });
 }
 
 async function getAttandanceRealTime(params) {
@@ -887,5 +888,5 @@ export const Api = {
   getStudentChecknameInClass,
   checkname,
   getBeaconInClass,
-  getAttandanceRealTime
+  getAttandanceRealTime,
 };

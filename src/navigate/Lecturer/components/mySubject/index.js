@@ -63,7 +63,6 @@ class ListMySubject extends Component {
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
-    // console.log('subjects',subjects)
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -77,14 +76,14 @@ class ListMySubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>MY SUBJECT</Text>
+            <Text style={styles.styleHeader}>MY SUBJECTS</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR : &nbsp; &nbsp; {year} / {semester}
+            YEAR : {' '}{year} / {semester}
           </Text>
 
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            LECTURER NAME : &nbsp; &nbsp; {name}
+            LECTURER : {' '}{name}
           </Text>
 
           {subjects !== null && subjects.lenght === 0 ? (
@@ -93,7 +92,7 @@ class ListMySubject extends Component {
                 style={styles.CustomImg}
                 source={require('../../../../../android/statics/images/nodata.png')}
               />
-              <Text>There are no students in this class.</Text>
+              <Text>There aren't students in this class.</Text>
             </View>
           ) : (
             <View style={styles.containerTest}>
@@ -124,10 +123,11 @@ class ListMySubject extends Component {
                             style={{textDecorationLine: 'underline'}}
                             onPress={() => {
                               this.props.navigation.navigate(
-                                'StudentInSection',
+                                'Students in Section',
                                 {
                                   token,
                                   subject_name: s.Subject.subject_name,
+                                  subject_code: s.Subject.subject_code,
                                   section_number: sec.section_number,
                                   year,
                                   semester,
@@ -147,11 +147,12 @@ class ListMySubject extends Component {
                             style={{textDecorationLine: 'underline'}}
                             onPress={() => {
                               this.props.navigation.navigate(
-                                'TeachingHistory',
+                                'Teaching History',
                                 {
                                   token,
                                   section_id : sec.id,
                                   subject_name: s.Subject.subject_name,
+                                  subject_code: s.Subject.subject_code,
                                   section_number: sec.section_number,
                                   year,
                                   semester,
@@ -180,7 +181,7 @@ class ListMySubject extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>

@@ -67,6 +67,7 @@ class ListTeachingHistory extends Component {
     const {
       token,
       subject_name,
+      subject_code,
       section_number,
     } = this.props.navigation.state.params;
 
@@ -80,7 +81,7 @@ class ListTeachingHistory extends Component {
         </View>
       );
     }
-    // console.log(classes[0].class.length)
+    
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -97,8 +98,8 @@ class ListTeachingHistory extends Component {
             <Text style={styles.styleHeader}>TEACHING HISTORY</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
-            <Text>SECTION : {section_number}</Text>
+            <Text>SUBJECT :{' '}{subject_code} {subject_name}</Text>
+            <Text>SECTION :{' '}{section_number}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -114,7 +115,7 @@ class ListTeachingHistory extends Component {
                     style={styles.CustomImg}
                     source={require('../../../../../android/statics/images/nodata.png')}
                   />
-                  <Text>There are no students checked name.</Text>
+                  <Text>There aren't students attendance in this class.</Text>
                 </View>
               )}
               {classes !== null &&
@@ -127,7 +128,7 @@ class ListTeachingHistory extends Component {
                           style={{textDecorationLine: 'underline'}}
                           onPress={() => {
                             this.props.navigation.navigate(
-                              'ListStudentsCheckName',
+                              'List of Students Attendance',
                               {
                                 token,
                                 class_id: d.class_id,
@@ -166,7 +167,7 @@ class ListTeachingHistory extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('MySubject')}>
+              onPress={() => this.props.navigation.navigate('My Subjects')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>

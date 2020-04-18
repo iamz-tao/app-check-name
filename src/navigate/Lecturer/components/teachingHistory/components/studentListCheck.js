@@ -60,19 +60,19 @@ class StudentListCheck extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
+            <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
+            <Text>SUBJECT : {subject_name}</Text>
             <Text>DATE : {date}</Text>
-              <Text>TIME : {' '}
+              <Text>TIME :
                 {time.includes('OPENING') ? (
                   <Text style={{color: '#1AB433'}}>{' '}{time}</Text>
                 ):(
                   <Text>{time}</Text>
                 )}
                 </Text>
-            <Text>AMOUNT : {stdInClass.amount}</Text>
+            <Text>NUMBER OF STUDENTS : {stdInClass.amount}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -90,7 +90,7 @@ class StudentListCheck extends Component {
                 style={styles.CustomImg}
                 source={require('../../../../../../android/statics/images/nodata.png')}
               />
-              <Text>There are no students checked name.</Text>
+              <Text>There aren't students attendance now.</Text>
             </View>
                 )}
               {stdInClass.students !== null &&
@@ -118,7 +118,7 @@ class StudentListCheck extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('TeachingHistory')}>
+              onPress={() => this.props.navigation.navigate('Teaching History')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>

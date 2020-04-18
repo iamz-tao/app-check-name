@@ -304,7 +304,6 @@ class ListStudentApprove extends Component {
     // this.setState({
     //   checkedArr: newArr,
     // })
-    // console.log('qqqqqqqqqqqqqqqqq')
   };
 
   handleMultiReject = () => {
@@ -314,7 +313,6 @@ class ListStudentApprove extends Component {
     const id = checkedArr
       .filter(c => c.checked === true)
       .map(idCheck => idCheck.id);
-    // console.log('reject>>', id);
     RejectStudent({
       id,
       token,
@@ -322,12 +320,10 @@ class ListStudentApprove extends Component {
   };
 
   handleChecked = (index, id) => {
-    // console.log('handleChecked', index, id);
     const {checkedArr} = this.state;
     const newChecked = {checked: !checkedArr[index].checked};
     Object.assign(checkedArr[index], newChecked);
     const newState = [...checkedArr.slice(0)];
-    // console.log(newState)
     this.setState({
       checkedArr: newState,
     });
@@ -372,7 +368,7 @@ class ListStudentApprove extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>STUDENTS LIST</Text>
+            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
             SUBJECT : &nbsp; &nbsp; <Text>{subject}</Text>
@@ -388,7 +384,7 @@ class ListStudentApprove extends Component {
                 style={styles.CustomImg}
                 source={require('../../../../../../../android/statics/images/nodata.png')}
               />
-              <Text>There are no students in this class.</Text>
+              <Text>There aren't students waiting for approve.</Text>
             </View>
           ) }
           {students.students !== null && students.students.length > 0 && (
@@ -416,7 +412,7 @@ class ListStudentApprove extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('StudentApprove')}>
+              onPress={() => this.props.navigation.navigate('Student Approve')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
