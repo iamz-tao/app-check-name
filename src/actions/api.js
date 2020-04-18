@@ -537,7 +537,7 @@ async function RegisterBeacon(params) {
     const responseJson = await response.json();
     if (responseJson.status.dataStatus === 'SUCCESS') {
       resolve(responseJson);
-      Alert.alert('Add Beacon Success');
+      Alert.alert('Add Beacon Succeeded');
     } else {
       reject(responseJson);
       Alert.alert(responseJson.message);
@@ -844,7 +844,7 @@ async function getAttandanceRealTime(params) {
             }
           });
           await Promise.all(promise);
-          response.message = 'Get Data Success';
+          response.message = 'Get Data Succeeded';
           response.status = {dataStatus: 'SUCCESS'};
           response.data = users;
           resolve(response);
