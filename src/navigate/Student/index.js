@@ -96,7 +96,7 @@ class StudentHomePage extends Component {
                 />
               </TouchableHighlight>
             </View>
-            <Text style={styles.styleText}>STUDENT</Text>
+            <Text style={styles.styleText}>Student</Text>
 
             <View style={{height: 24}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
@@ -119,7 +119,7 @@ class StudentHomePage extends Component {
                     LoginReducer,
                   });
                 }}>
-                <Text style={styles.LabelText}>ATTEND CLASS</Text>
+                <Text style={styles.LabelText}>ATTENDANCE ROLL</Text>
               </TouchableHighlight>
             </View>
 
@@ -128,7 +128,7 @@ class StudentHomePage extends Component {
               onPress={() => {
                 this.props.navigation.navigate('StudentListSubject', {token});
               }}>
-              <Text style={styles.LabelText}>MY SUBJECT</Text>
+              <Text style={styles.LabelText}>MY SUBJECTS</Text>
             </TouchableHighlight>
           </View>
         </View>

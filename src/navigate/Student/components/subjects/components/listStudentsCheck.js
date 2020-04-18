@@ -37,6 +37,7 @@ class StudentListCheckName extends Component {
   render() {
     const {
       subject_name,
+      subject_code,
       section_number,
       token
     } = this.props.navigation.state.params;
@@ -63,11 +64,11 @@ class StudentListCheckName extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>CHECK NAME HISTORY</Text>
+            <Text style={styles.styleHeader}>ATTENDANCE HISTORY</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
-            <Text>SECTION : {section_number}</Text>
+            <Text>SUBJECT :{' '} {subject_code} {subject_name}</Text>
+            <Text>SECTION :{' '}{section_number}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -79,7 +80,7 @@ class StudentListCheckName extends Component {
               </View>
               {stdHistory !== null && stdHistory.length === 0 && (
                 <View style={(styles.StyleRow, {alignItems: 'center'})}>
-                  <Text>You have never check name in this class.</Text>
+                  <Text>You have never attendance roll in this class.</Text>
                 </View>
               )}
               {stdHistory !== null &&

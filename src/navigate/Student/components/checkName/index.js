@@ -313,7 +313,7 @@ class StudentCheckName extends Component {
       const classDetail = openingClass.filter(
         s => s.class_id === pickerValues,
       )[0].Section;
-      subject_name = classDetail.subject_name;
+      subject_name = `${classDetail.subject_code} ${classDetail.subject_name}`;
       sectionId = classDetail.section_number;
       time = `${classDetail.Time[0].day} ${classDetail.Time[0].start_time} - ${
         classDetail.Time[0].end_time
@@ -351,10 +351,10 @@ class StudentCheckName extends Component {
                       />
                       <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
-                        CHECK NAME SUCCESS
+                        ATTENDANCE ROLL SUCCEEDED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You can check history in MY SUBJECT page.{'\n'}
+                        Check your attendance history in MY SUBJECTS page.{'\n'}
                         Time : {time_check}. {'\n'}
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
@@ -377,7 +377,7 @@ class StudentCheckName extends Component {
                       />
                       <View style={{ height: 36 }} />
                       <Text style={styles.styleLabelFail}>
-                        CHECK NAME FAILED
+                        ATTENDANCE ROLL FAILED
                       </Text>
                       <Text style={styles.styleLabel}>{error_message}</Text>
                     </View>
@@ -415,29 +415,29 @@ class StudentCheckName extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>CHECK NAME</Text>
+            <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
           </View>
           <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
-            YEAR / SEMESTER : {year} / {semester}
+            YEAR / SEMESTER :{' '}{year} / {semester}
           </Text>
           <View style={{ height: 21 }} />
           {openingClass !== null && openingClass.length === 1 && (
             <View>
               <Text
                 style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
-                SUBJECT NAME : {openingClass[0].Section.subject_code}{' '}
+                SUBJECT :{' '}{openingClass[0].Section.subject_code}{' '}
                 {openingClass[0].Section.subject_name}
               </Text>
               <Text
                 style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
-                SECTION : {openingClass[0].Section.section_number}
+                SECTION :{' '}{openingClass[0].Section.section_number}
               </Text>
               <View style={{ display: 'flex', flexDirection: 'column' }}>
                 <Text
                   style={
                     (styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })
                   }>
-                  TIME : {openingClass[0].Section.Time[0].day}{' '}
+                  TIME :{' '}{openingClass[0].Section.Time[0].day}{' '}
                   {openingClass[0].Section.Time[0].start_time} -{' '}
                   {openingClass[0].Section.Time[0].end_time}
                 </Text>
@@ -484,14 +484,14 @@ class StudentCheckName extends Component {
                     style={
                       (styles.styleLabel, { width: 116, alignSelf: 'center' })
                     }>
-                    Subject Name :{' '}
+                    Subject :{' '}
                   </Text>
                   <Text style={{ flex: 3 }}>{subject_name}</Text>
                 </View>
                 <View style={{ height: 8 }} />
                 <View style={{ flexDirection: 'row' }}>
                   <Text style={(styles.styleLabel, { width: 100 })}>
-                    Date/Time :
+                    Date/Time :{' '}
                   </Text>
                   <View style={{ display: 'flex', flexDirection: 'column' }}>
                     <Text style={styles.styleLabel}>{time}</Text>

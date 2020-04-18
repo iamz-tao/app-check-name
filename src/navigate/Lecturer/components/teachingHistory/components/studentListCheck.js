@@ -72,7 +72,7 @@ class StudentListCheck extends Component {
                   <Text>{time}</Text>
                 )}
                 </Text>
-            <Text>AMOUNT : {stdInClass.amount}</Text>
+            <Text>NUMBER OF STUDENTS : {stdInClass.amount}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -90,7 +90,7 @@ class StudentListCheck extends Component {
                 style={styles.CustomImg}
                 source={require('../../../../../../android/statics/images/nodata.png')}
               />
-              <Text>There are no students checked name.</Text>
+              <Text>There aren't students attendance now.</Text>
             </View>
                 )}
               {stdInClass.students !== null &&

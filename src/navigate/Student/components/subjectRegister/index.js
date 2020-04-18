@@ -164,10 +164,10 @@ class StudentSubjectRegister extends Component {
                       />
                       <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
-                        SUBJECT REGISTER SUCCESS
+                        REGISTRATION SUCCEEDED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You have permission to check name in this subject.
+                        You have permission to attendance roll in this subject.
                       </Text>
                     </View>
                   )}
@@ -179,7 +179,7 @@ class StudentSubjectRegister extends Component {
                       />
                       <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
-                        SUBJECT REGISTER FAILED
+                         REGISTRATION FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
                         You have already registered with subject.

@@ -117,7 +117,7 @@ class StudentListSubject extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>MY SUBJECT</Text>
+            <Text style={styles.styleHeader}>MY SUBJECTS</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.btnWrapper}>

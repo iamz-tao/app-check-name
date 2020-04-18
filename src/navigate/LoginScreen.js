@@ -37,7 +37,7 @@ class LoginScreen extends Component {
           source={require('../../android/statics/images/ku_logo.png')}
         />
         <View style={{height: 24}} />
-        <Text style={styles.LabelTitle}>CHECK NAME</Text>
+        <Text style={styles.LabelTitle}>ATTENDANCE ROLL</Text>
         <View style={{height: 12}} />
         <Text style={styles.LabelText}>YOUR EMAIL :</Text>
         <View style={styles.inputContainer}>

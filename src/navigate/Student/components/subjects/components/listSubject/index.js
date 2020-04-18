@@ -42,6 +42,7 @@ const SubjectList = props => {
                           NavigationServices.navigate('StudentListCheckName', {
                             token,
                             subject_name: s.subject_name,
+                            subject_code: s.subject_code,
                             section_number: s.section_number,
                             section_id: s.section_id,
                           });

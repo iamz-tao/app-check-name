@@ -114,7 +114,7 @@ class ListTeachingHistory extends Component {
                     style={styles.CustomImg}
                     source={require('../../../../../android/statics/images/nodata.png')}
                   />
-                  <Text>There are no students checked name.</Text>
+                  <Text>There aren't students attendance in this class.</Text>
                 </View>
               )}
               {classes !== null &&
