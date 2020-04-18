@@ -61,6 +61,12 @@ async function Login(data) {
   });
 }
 
+async function saveTokenTodatabase(token){
+
+  // await firestore().collection('users').doc()
+
+}
+
 async function updateProfile(data) {
   const {token, dataUser} = data;
   return new Promise(async (resolve, reject) => {
@@ -752,7 +758,7 @@ async function checkname(params) {
       reject(error)
     }
     else if(beacon_flag === false){
-      error.message = "This Beacon doesn't use in this class. Please Check Again"
+      error.message = "ฺBeacon is invalid"
       error.status = {dataStatus : 'FAILURE'}
       reject(error)
     }
@@ -843,6 +849,7 @@ async function getAttandanceRealTime(params) {
             }
           });
           await Promise.all(promise);
+          // console.log(users)
           response.message = 'Get Data Success';
           response.status = {dataStatus: 'SUCCESS'};
           response.data = users;

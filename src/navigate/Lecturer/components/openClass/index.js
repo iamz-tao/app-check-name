@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {DotsLoader, TextLoader} from 'react-native-indicator';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { DotsLoader, TextLoader } from 'react-native-indicator';
 
 import {
   StyleSheet,
@@ -12,10 +12,11 @@ import {
   Image,
   TextInput,
 } from 'react-native';
-import {CheckBox} from 'react-native-elements';
+import { CheckBox } from 'react-native-elements';
 
-import {Table, TableWrapper} from 'react-native-table-component';
+import { Table, TableWrapper } from 'react-native-table-component';
 import SuccessModal from '../../../../components/successModal';
+import firestore from '@react-native-firebase/firestore';
 
 import {
   GetCurrentYear,
@@ -29,19 +30,19 @@ import {
 
 const Header = props => {
   return (
-    <View style={{display: 'flex'}}>
-      <View style={{display: 'flex', flexDirection: 'row'}}>
+    <View style={{ display: 'flex' }}>
+      <View style={{ display: 'flex', flexDirection: 'row' }}>
         <View style={styles.Header}>
-          <View style={(styles.HeaderWrapper, {width: 96})}>
-            <Text style={{paddingLeft: 8}}>ID</Text>
+          <View style={(styles.HeaderWrapper, { width: 96 })}>
+            <Text style={{ paddingLeft: 8 }}>ID</Text>
           </View>
           <View style={styles.HeaderWrapper}>
             <Text>NAME</Text>
           </View>
-          <View style={(styles.HeaderWrapper, {width: 56, paddingLeft: 8})}>
+          <View style={(styles.HeaderWrapper, { width: 56, paddingLeft: 8 })}>
             <Text>TIME</Text>
           </View>
-          <View style={(styles.HeaderWrapper, {width: 50})}>
+          <View style={(styles.HeaderWrapper, { width: 50 })}>
             <Text>STATUS</Text>
           </View>
           {/* <View style={{width: '4%'}} /> */}
@@ -66,12 +67,14 @@ class OpenClass extends Component {
       checked: false,
       distance: 3,
       class_id: null,
+      users:[]
     };
+
   }
 
   componentDidMount() {
-    const {token} = this.props.navigation.state.params;
-    const {class_id} = this.state;
+    const { token } = this.props.navigation.state.params;
+    const { class_id } = this.state;
     const {
       GetCurrentYear,
       GetSubjectsApprove,
@@ -91,26 +94,60 @@ class OpenClass extends Component {
     GetAllBeacon({
       token,
     });
-    GetClass({token});
+    GetClass({ token });
 
     if (class_id) {
       getAttandance({
         class_id,
       });
     }
+
+    console.log("KKKK")
+    
+    this.onsubscribe();
+  }
+
+  onsubscribe = async () => {
+    let promise = [];
+    // let users = [];
+      //     changes.forEach(change => {
+      //       console.log(change.type)
+      //        if(change.type === 'added'){
+      //         let user_id = change.doc.data().uid;
+      //         promise.push(
+      //           firestore()
+      //             .collection('users')
+      //             .doc(user_id)
+      //             .get()
+      //             .then(user => {
+      //               users.push({
+      //                 id: user.data().id,
+      //                 firstname: user.data().firstname,
+      //                 lastname: user.data().lastname,
+      //                 status: change.doc.data().status,
+      //               });
+      //             }),
+      //         );
+      //        }
+      //     })
+      //     this.setState({users})
+      // })
+      // await Promise.all(promise)
+      // this.setState({users})
+      
   }
 
   static getDerivedStateFromProps(props, state) {
     if (props.subjects.openClass && props.subjects.openClass.length > 0) {
       const class_id = props.subjects.openClass[0].class_id;
-      return {class_id: class_id}
+      return { class_id: class_id }
     }
   }
 
   handleSubmit = (section_id, beacon_id) => {
-    const {token} = this.props.navigation.state.params;
-    const {LecturerOpenClass, GetClass} = this.props;
-    const {distance} = this.state;
+    const { token } = this.props.navigation.state.params;
+    const { LecturerOpenClass, GetClass } = this.props;
+    const { distance } = this.state;
     const payload = {
       section_id,
       beacon_id,
@@ -121,18 +158,18 @@ class OpenClass extends Component {
       token,
       payload,
     });
-    GetClass({token});
+    GetClass({ token });
   };
 
   handleLogout = () => {
-    const {Logout} = this.props;
+    const { Logout } = this.props;
     Logout({});
   };
 
   setModalVisible = () => {
-    const {token} = this.props.navigation.state.params;
-    const {GetAllBeacon} = this.props;
-    const {modalVisible} = this.state;
+    const { token } = this.props.navigation.state.params;
+    const { GetAllBeacon } = this.props;
+    const { modalVisible } = this.state;
     this.setState({
       modalVisible: !modalVisible,
       section_id: '',
@@ -145,7 +182,7 @@ class OpenClass extends Component {
   };
 
   handleChecked = () => {
-    const {checked, distance} = this.state;
+    const { checked, distance } = this.state;
     this.setState({
       checked: !checked,
     });
@@ -156,6 +193,10 @@ class OpenClass extends Component {
     }
   };
 
+  componentWillUnmount(){
+    this.onsubscribe = null;
+  }
+
   render() {
     const {
       pickerValues,
@@ -163,20 +204,23 @@ class OpenClass extends Component {
       beacon_id,
       modalVisible,
       checked,
+      users,
+      dd
     } = this.state;
+    console.log(dd)
     const {
-      currentYear: {year, semester},
+      currentYear: { year, semester },
       fetching,
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjectsApprove;
-    const {
-      studentsAttendance: {users},
-    } = this.props;
-    const {beacons, status, openClass} = this.props.subjects;
+    // const {
+    //   studentsAttendance: { users },
+    // } = this.props;
+    console.log(users)
+    const { beacons, status, openClass } = this.props.subjects;
     const subjectsArr = [];
     const sectionArr = [];
     const beaconArr = [];
-
     if (subjects !== null) {
       subjects.map((s, i) => {
         subjectsArr.push({
@@ -218,24 +262,24 @@ class OpenClass extends Component {
     if (openClass.length > 0) {
       const name = this.props.subjects.openClass[0].Lecturer_name;
       return (
-        <ScrollView style={{backgroundColor: '#ffffff'}}>
+        <ScrollView style={{ backgroundColor: '#ffffff' }}>
           <View style={styles.container}>
-            <View style={{display: 'flex', alignItems: 'flex-end'}}>
+            <View style={{ display: 'flex', alignItems: 'flex-end' }}>
               <TouchableHighlight
                 style={styles.btnLogout}
                 onPress={() => {
                   this.handleLogout();
                 }}>
-                <Text style={{color: 'white'}}>Logout</Text>
+                <Text style={{ color: 'white' }}>Logout</Text>
               </TouchableHighlight>
             </View>
             <View style={styles.containerWrapper}>
               <Text style={styles.styleHeader}>STUDENTS IN CLASS</Text>
             </View>
-            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+            <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
               YEAR : {year} / {semester}
             </Text>
-            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+            <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
               LECTURER NAME : {name}
             </Text>
             {users !== null && users.lenght === 0 ? (
@@ -244,57 +288,57 @@ class OpenClass extends Component {
                   style={styles.CustomImg}
                   source={require('../../../../../android/statics/images/nodata.png')}
                 />
-                <View style={{height: 4}} />
+                <View style={{ height: 4 }} />
                 <Text>There are no students in this class.</Text>
               </View>
             ) : (
-              <View style={styles.containerTest}>
-                <Table>
-                  <Header />
-                  {users.map((s, index) => (
-                    <TableWrapper style={styles.row}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          margin: 6,
-                          width: '100%',
-                        }}>
-                        <View style={{width: 86}}>
-                          <Text>{s.id}</Text>
+                <View style={styles.containerTest}>
+                  <Table>
+                    <Header />
+                    {users.map((s, index) => (
+                      <TableWrapper style={styles.row}>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            margin: 6,
+                            width: '100%',
+                          }}>
+                          <View style={{ width: 86 }}>
+                            <Text>{s.id}</Text>
+                          </View>
+                          <View style={{ flex: 1 }}>
+                            <Text>
+                              {s.firstname} {s.lastname}
+                            </Text>
+                          </View>
+                          <View style={{ width: 58, paddingLeft: 8 }}>
+                            <Text>{s.time}</Text>
+                          </View>
+                          <View style={{ width: 66 }}>
+                            {s.status === 'ABSENT' && (
+                              <Text style={{ color: '#FF0000' }}>Absent</Text>
+                            )}
+                            {s.status === 'LATE' && (
+                              <Text style={{ color: '#0029FF' }}>Absent</Text>
+                            )}
+                            {s.status === 'ONTIME' && (
+                              <Text style={{ color: '#green' }}>On Time</Text>
+                            )}
+                          </View>
                         </View>
-                        <View style={{flex: 1}}>
-                          <Text>
-                            {s.firstname} {s.lastname}
-                          </Text>
-                        </View>
-                        <View style={{width: 58, paddingLeft: 8}}>
-                          <Text>{s.time}</Text>
-                        </View>
-                        <View style={{width: 66}}>
-                          {s.status === 'ABSENT' && (
-                            <Text style={{color: '#FF0000'}}>Absent</Text>
-                          )}
-                          {s.status === 'LATE' && (
-                            <Text style={{color: '#0029FF'}}>Absent</Text>
-                          )}
-                          {s.status === 'ONTIME' && (
-                            <Text style={{color: '#green'}}>On Time</Text>
-                          )}
-                        </View>
-                      </View>
-                    </TableWrapper>
-                  ))}
-                </Table>
-              </View>
-            )}
+                      </TableWrapper>
+                    ))}
+                  </Table>
+                </View>
+              )}
             <View style={styles.btnWrapper}>
               <TouchableHighlight
                 style={styles.btnCancel}
                 onPress={() =>
                   this.props.navigation.navigate('LecturerHomePage')
                 }>
-                <Text style={{color: '#949494'}}>BACK</Text>
+                <Text style={{ color: '#949494' }}>BACK</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -302,7 +346,7 @@ class OpenClass extends Component {
       );
     } else {
       return (
-        <ScrollView style={{backgroundColor: '#ffffff'}}>
+        <ScrollView style={{ backgroundColor: '#ffffff' }}>
           <SuccessModal
             msg={
               status === 'SUCCESS'
@@ -315,19 +359,19 @@ class OpenClass extends Component {
             path={'LecturerHomePage'}
           />
           <View style={styles.container}>
-            <View style={{display: 'flex', alignItems: 'flex-end'}}>
+            <View style={{ display: 'flex', alignItems: 'flex-end' }}>
               <TouchableHighlight
                 style={styles.btnLogout}
                 onPress={() => {
                   this.handleLogout();
                 }}>
-                <Text style={{color: 'white'}}>Logout</Text>
+                <Text style={{ color: 'white' }}>Logout</Text>
               </TouchableHighlight>
             </View>
             <View style={styles.containerWrapper}>
               <Text style={styles.styleHeader}>OPEN CLASS</Text>
             </View>
-            <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+            <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
               YEAR / SEMESTER : {year} / {semester}
             </Text>
             <View style={styles.styleInputWrapper}>
@@ -335,7 +379,7 @@ class OpenClass extends Component {
                 <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
                 <View style={styles.stylePicker}>
                   <Picker
-                    style={{height: 45}}
+                    style={{ height: 45 }}
                     selectedValue={pickerValues}
                     onValueChange={(itemValue, itemIndex) =>
                       this.setState({
@@ -357,7 +401,7 @@ class OpenClass extends Component {
                 <Text style={styles.styleLabel}>SELECT SECTION :</Text>
                 <View style={styles.stylePicker}>
                   <Picker
-                    style={{height: 45}}
+                    style={{ height: 45 }}
                     selectedValue={section_id}
                     onValueChange={(itemValue, itemIndex) => {
                       this.setState({
@@ -379,7 +423,7 @@ class OpenClass extends Component {
                 <Text style={styles.styleLabel}>SELECT BEACON :</Text>
                 <View style={styles.stylePicker}>
                   <Picker
-                    style={{height: 45}}
+                    style={{ height: 45 }}
                     selectedValue={beacon_id}
                     onValueChange={(itemValue, itemIndex) => {
                       this.setState({
@@ -396,9 +440,9 @@ class OpenClass extends Component {
                 </View>
               </View>
             </View>
-            <View style={{marginTop: 0, marginLeft: 28}}>
-              <View style={(styles.inputContainer, {flexDirection: 'row'})}>
-                <Text style={{display: 'flex', lineHeight: 66}}>
+            <View style={{ marginTop: 0, marginLeft: 28 }}>
+              <View style={(styles.inputContainer, { flexDirection: 'row' })}>
+                <Text style={{ display: 'flex', lineHeight: 66 }}>
                   CUSTOM DISTANCE :
                 </Text>
                 <CheckBox
@@ -408,19 +452,19 @@ class OpenClass extends Component {
                   }}
                   // size={10}
                   // style={{flex: 1}}
-                  textStyle={{fontWeight: '100'}}
+                  textStyle={{ fontWeight: '100' }}
                   containerStyle={styles.containerCheckbox}
                   uncheckedColor="black"
                   uncheckedIcon={
                     <Image
                       source={require('../../../../../android/statics/images/unchecked.jpg')}
-                      style={{width: 30, height: 30}}
+                      style={{ width: 30, height: 30 }}
                     />
                   }
                   checkedIcon={
                     <Image
                       source={require('../../../../../android/statics/images/check.png')}
-                      style={{width: 30, height: 30}}
+                      style={{ width: 30, height: 30 }}
                     />
                   }
                 />
@@ -435,11 +479,11 @@ class OpenClass extends Component {
                 </Text>
               </View>
               {checked === true && (
-                <View style={{display: 'flex', flexDirection: 'column'}}>
+                <View style={{ display: 'flex', flexDirection: 'column' }}>
                   <TextInput
                     style={styles.inputs}
                     placeholder="1-70 m."
-                    onChangeText={distance => this.setState({distance})}
+                    onChangeText={distance => this.setState({ distance })}
                   />
                 </View>
               )}
@@ -450,7 +494,7 @@ class OpenClass extends Component {
                 onPress={() =>
                   this.props.navigation.navigate('LecturerHomePage')
                 }>
-                <Text style={{color: '#949494'}}>CANCEL</Text>
+                <Text style={{ color: '#949494' }}>CANCEL</Text>
               </TouchableHighlight>
               <TouchableHighlight
                 style={styles.btnReq}
@@ -461,7 +505,7 @@ class OpenClass extends Component {
                   this.handleSubmit(section_id, beacon_id);
                   this.setModalVisible();
                 }}>
-                <Text style={{color: 'white'}}>OPEN</Text>
+                <Text style={{ color: 'white' }}>OPEN</Text>
               </TouchableHighlight>
             </View>
           </View>
@@ -536,8 +580,8 @@ const styles = StyleSheet.create({
     height: 116,
     top: 20,
   },
-  text: {margin: 6, color: '#525252'},
-  textHeader: {margin: 6, color: '#000000'},
+  text: { margin: 6, color: '#525252' },
+  textHeader: { margin: 6, color: '#000000' },
   row: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
