@@ -382,7 +382,7 @@ class ListStudentApprove extends Component {
             SECTION : &nbsp; &nbsp; <Text>{section}</Text>
           </Text>
 
-          {students.students !== null && students.students.size === 0 ? (
+          {students.students !== null && students.students.length === 0 && (
             <View style={styles.NotFound}>
               <Image
                 style={styles.CustomImg}
@@ -390,7 +390,8 @@ class ListStudentApprove extends Component {
               />
               <Text>There aren't students waiting for approve.</Text>
             </View>
-          ) : (
+          ) }
+          {students.students !== null && students.students.length > 0 && (
             <View style={styles.containerTest}>
               <View style={styles.btnWrapper}>
                 <Header
