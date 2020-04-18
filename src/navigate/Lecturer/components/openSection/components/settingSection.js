@@ -386,7 +386,6 @@ class SettingSection extends Component {
   };
 
   handleSelectStartTime = props => {
-    // console.log('prop>>',props)
   };
 
   render() {

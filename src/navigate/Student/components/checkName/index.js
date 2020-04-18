@@ -330,8 +330,6 @@ class StudentCheckName extends Component {
       beaconInClass = openingClass[0].Section.beacon;
     }
 
-    // this.setState({beaconInClass})
-    // console.log('beaconInClass>>', status);
     return (
       <ScrollView style={{ backgroundColor: '#ffffff' }}>
         <View>
@@ -388,7 +386,7 @@ class StudentCheckName extends Component {
                     onPress={() => {
                       this.setState({ modalVisible: !this.state.modalVisible });
                       if (status === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentListCheckName', {
+                        this.props.navigation.navigate('Attendance History', {
                           token,
                           subject_name: openingClass[0].Section.subject_name,
                           section_number: openingClass[0].Section.section_number,
@@ -505,7 +503,7 @@ class StudentCheckName extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('StudentHomePage')}>
+              onPress={() => this.props.navigation.navigate('Student Home Page')}>
               <Text style={{ color: '#949494' }}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight

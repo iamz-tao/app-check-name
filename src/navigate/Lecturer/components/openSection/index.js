@@ -158,7 +158,6 @@ class OpenSection extends Component {
       time_absent: absent_time,
       total_mark,
     };
-    // console.log(payload)
     LecturerOpenSection({
       token,
       payload,
@@ -191,7 +190,6 @@ class OpenSection extends Component {
         </View>
       );
     }
-    // console.log(e_time);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View>
@@ -239,7 +237,7 @@ class OpenSection extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({modalVisibleSubmit: !modalVisibleSubmit});
-                      this.props.navigation.navigate('MySubject', {
+                      this.props.navigation.navigate('My Subjects', {
                         token,
                       });
                     }}>
@@ -371,7 +369,7 @@ class OpenSection extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
@@ -394,7 +392,7 @@ class OpenSection extends Component {
             <TouchableHighlight
               style={styles.buttonAddSubject}
               onPress={() =>
-                this.props.navigation.navigate('CreateSubject', {token})
+                this.props.navigation.navigate('Create New Subject', {token})
               }>
               <Text style={{textDecorationLine: 'underline', color: '#738497'}}>
                 New Subject?

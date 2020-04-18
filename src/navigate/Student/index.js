@@ -85,7 +85,7 @@ class StudentHomePage extends Component {
               <TouchableHighlight
                 style={{justifyContent: 'center', alignItems: 'center'}}
                 onPress={() => {
-                  this.props.navigation.navigate('UpdateProfile', {
+                  this.props.navigation.navigate('Update Profile', {
                     token,
                     role: user.role,
                   });
@@ -103,7 +103,7 @@ class StudentHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('StudentSubjectRegister', {
+                  this.props.navigation.navigate('Subject Register', {
                     LoginReducer,
                     StudentGetSubjectRegis,
                   })
@@ -114,7 +114,7 @@ class StudentHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonCheckIn}
                 onPress={() => {
-                  this.props.navigation.navigate('StudentCheckName', {
+                  this.props.navigation.navigate('Attendance Roll', {
                     token,
                     LoginReducer,
                   });
@@ -126,7 +126,7 @@ class StudentHomePage extends Component {
             <TouchableHighlight
               style={styles.buttonMySubject}
               onPress={() => {
-                this.props.navigation.navigate('StudentListSubject', {token});
+                this.props.navigation.navigate('Registered Subject', {token});
               }}>
               <Text style={styles.LabelText}>MY SUBJECTS</Text>
             </TouchableHighlight>

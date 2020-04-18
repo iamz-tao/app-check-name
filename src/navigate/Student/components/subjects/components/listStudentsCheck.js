@@ -106,7 +106,7 @@ class StudentListCheckName extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('StudentListSubject',{
+                this.props.navigation.navigate('Registered Subject',{
                   token
                 })
               }>

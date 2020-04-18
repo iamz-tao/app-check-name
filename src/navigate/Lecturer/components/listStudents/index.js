@@ -62,7 +62,6 @@ class StudentInSection extends Component {
   handelDelete = id => {
     const {DeleteStudentFromSec} = this.props;
     const {token} = this.props.navigation.state.params;
-    // console.log(id)
     DeleteStudentFromSec({token, id});
   };
 
@@ -150,7 +149,7 @@ class StudentInSection extends Component {
                           style={styles.btnDrop}
                           onPress={() => {
                             this.handelDelete(s.regis_id);
-                            this.props.navigation.navigate('StudentInSection', {
+                            this.props.navigation.navigate('Students in Section', {
                               token,
                               subject_name,
                               section_number,
@@ -172,7 +171,7 @@ class StudentInSection extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('MySubject', {token})
+                this.props.navigation.navigate('My Subjects', {token})
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>

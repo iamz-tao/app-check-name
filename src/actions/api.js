@@ -26,9 +26,9 @@ async function Login(data) {
     if (responseJson.message === 'PASS') {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
-        NavigationServices.navigate('LecturerHomePage');
+        NavigationServices.navigate('Lecturer Home Page');
       } else if (responseJson.data.user.role === 'NISIT') {
-        NavigationServices.navigate('StudentHomePage');
+        NavigationServices.navigate('Student Home Page');
       } else {
         Alert.alert(
           'Login failed!',
@@ -751,7 +751,7 @@ async function checkname(params) {
       error.status = {dataStatus: 'FAILURE'};
       reject(error);
     } else if (beacon_flag === false) {
-      error.message = 'You are outside the attendance area. Please try again.';
+      error.message = 'Beacon is invalid.';
       error.status = {dataStatus: 'FAILURE'};
       reject(error);
     } else {

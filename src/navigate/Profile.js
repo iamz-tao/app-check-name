@@ -161,10 +161,10 @@ class UpdateProfile extends Component {
                 onPress={() =>
                   {
                     if(role === 'PROFESSOR'){
-                      this.props.navigation.navigate('LecturerHomePage')
+                      this.props.navigation.navigate('Lecturer Home Page')
                     }
                     if(role === 'NISIT'){
-                      this.props.navigation.navigate('StudentHomePage')
+                      this.props.navigation.navigate('Student Home Page')
                     }
                   }
                 }>

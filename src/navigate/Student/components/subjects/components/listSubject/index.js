@@ -39,7 +39,7 @@ const SubjectList = props => {
                       <TouchableHighlight
                         style={{textDecorationLine: 'underline', top: 6}}
                         onPress={() => {
-                          NavigationServices.navigate('StudentListCheckName', {
+                          NavigationServices.navigate('Attendance History', {
                             token,
                             subject_name: s.subject_name,
                             subject_code: s.subject_code,

@@ -69,7 +69,7 @@ class LecturerCloseClass extends Component {
           setModalVisible={this.setModalVisible}
           modalVisible={modalVisible}
           status={status}
-          path={'LecturerHomePage'}
+          path={'Lecturer Home Page'}
         />
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
@@ -149,7 +149,7 @@ class LecturerCloseClass extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>

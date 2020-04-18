@@ -292,7 +292,7 @@ class OpenClass extends Component {
               <TouchableHighlight
                 style={styles.btnCancel}
                 onPress={() =>
-                  this.props.navigation.navigate('LecturerHomePage')
+                  this.props.navigation.navigate('Lecturer Home Page')
                 }>
                 <Text style={{color: '#949494'}}>BACK</Text>
               </TouchableHighlight>
@@ -306,13 +306,13 @@ class OpenClass extends Component {
           <SuccessModal
             msg={
               status === 'SUCCESS'
-                ? 'Open Class Success.'
+                ? 'Open Class Succeeded.'
                 : 'Open Class Failed.'
             }
             setModalVisible={this.setModalVisible}
             modalVisible={modalVisible}
             status={status}
-            path={'LecturerHomePage'}
+            path={'Lecturer Home Page'}
           />
           <View style={styles.container}>
             <View style={{display: 'flex', alignItems: 'flex-end'}}>
@@ -448,7 +448,7 @@ class OpenClass extends Component {
               <TouchableHighlight
                 style={styles.btnCancel}
                 onPress={() =>
-                  this.props.navigation.navigate('LecturerHomePage')
+                  this.props.navigation.navigate('Lecturer Home Page')
                 }>
                 <Text style={{color: '#949494'}}>CANCEL</Text>
               </TouchableHighlight>

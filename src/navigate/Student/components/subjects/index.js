@@ -84,7 +84,6 @@ class StudentListSubject extends Component {
 
   handleDrop = (id) => {
     const {StudentDrop} = this.props
-    // console.log(id)
     const {token} = this.props.navigation.state.params;
     StudentDrop({
       token,
@@ -95,7 +94,6 @@ class StudentListSubject extends Component {
   render() {
     const {token} = this.props.navigation.state.params;
     const {subjectsRegistration,fetching} = this.props.subjects
-    // console.log(this.props.subjects.subjectsRegistration)
     if (!subjectsRegistration) {
       return (
         <View style={styles.loadingWrapper}>
@@ -129,7 +127,7 @@ class StudentListSubject extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => {
-                this.props.navigation.navigate('StudentHomePage')
+                this.props.navigation.navigate('Student Home Page')
               }}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>

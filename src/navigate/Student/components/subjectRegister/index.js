@@ -192,7 +192,7 @@ class StudentSubjectRegister extends Component {
                     onPress={() => {
                       this.setState({modalVisible: !this.state.modalVisible});
                       if (statusReq === 'SUCCESS') {
-                        this.props.navigation.navigate('StudentListSubject',{
+                        this.props.navigation.navigate('Registered Subject',{
                           token,
                         })
                       }
@@ -289,7 +289,7 @@ class StudentSubjectRegister extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('StudentHomePage')}>
+              onPress={() => this.props.navigation.navigate('Student Home Page')}>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight

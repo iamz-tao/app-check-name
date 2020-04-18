@@ -96,7 +96,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={{justifyContent: 'center', alignItems: 'center'}}
                 onPress={() => {
-                  this.props.navigation.navigate('UpdateProfile', {
+                  this.props.navigation.navigate('Update Profile', {
                     token,
                     role: user.role,
                   });
@@ -114,7 +114,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMenu}
                 onPress={() =>
-                  this.props.navigation.navigate('OpenSection', {
+                  this.props.navigation.navigate('Open Section', {
                     token,
                   })
                 }>
@@ -124,7 +124,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonOpenClass}
                 onPress={() =>
-                  this.props.navigation.navigate('OpenClass', {
+                  this.props.navigation.navigate('Open Class', {
                     token,
                   })
                 }>
@@ -134,7 +134,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonCloseClass}
                 onPress={() => {
-                  this.props.navigation.navigate('LecturerCloseClass', {
+                  this.props.navigation.navigate('Close Class', {
                     token,
                   });
                 }}>
@@ -146,7 +146,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonMySubject}
                 onPress={() => {
-                  this.props.navigation.navigate('MySubject', {
+                  this.props.navigation.navigate('My Subjects', {
                     token,
                   });
                 }}>
@@ -156,7 +156,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonBeacon}
                 onPress={() => {
-                  this.props.navigation.navigate('Beacon', {
+                  this.props.navigation.navigate('Beacons', {
                     token,
                   });
                 }}>
@@ -166,7 +166,7 @@ class LecturerHomePage extends Component {
               <TouchableHighlight
                 style={styles.buttonStudentApprove}
                 onPress={() => {
-                  this.props.navigation.navigate('StudentApprove', {
+                  this.props.navigation.navigate('Student Approve', {
                     token,
                   });
                 }}>

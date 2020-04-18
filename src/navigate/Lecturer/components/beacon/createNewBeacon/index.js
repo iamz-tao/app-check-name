@@ -262,7 +262,7 @@ class CreateNewBeacon extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('Beacon')
+                this.props.navigation.navigate('Beacons')
               }>
               <Text style={{ color: '#949494' }}>BACK</Text>
             </TouchableHighlight>

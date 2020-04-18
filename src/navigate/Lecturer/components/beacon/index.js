@@ -110,14 +110,14 @@ class Beacon extends Component {
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() =>
-                this.props.navigation.navigate('LecturerHomePage')
+                this.props.navigation.navigate('Lecturer Home Page')
               }>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
             <TouchableHighlight
               style={styles.btnReq}
               onPress={() => {
-                this.props.navigation.navigate('CreateNewBeacon',{
+                this.props.navigation.navigate('Create New Beacon',{
                   token,
                 });
                 //    this.handleSubmit(token,section_id)

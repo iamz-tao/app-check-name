@@ -60,12 +60,12 @@ class StudentListCheck extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
+            <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
+            <Text>SUBJECT : {subject_name}</Text>
             <Text>DATE : {date}</Text>
-              <Text>TIME : {' '}
+              <Text>TIME :
                 {time.includes('OPENING') ? (
                   <Text style={{color: '#1AB433'}}>{' '}{time}</Text>
                 ):(
@@ -118,7 +118,7 @@ class StudentListCheck extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('TeachingHistory')}>
+              onPress={() => this.props.navigation.navigate('Teaching History')}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
           </View>
