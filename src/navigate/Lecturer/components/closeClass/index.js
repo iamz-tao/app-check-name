@@ -94,14 +94,14 @@ class LecturerCloseClass extends Component {
               <View style={styles.inputContainer}>
                 <View style={{flex: 1, paddingBottom: 8}}>
                   <Text style={styles.styleLabel}>
-                    SUBJECT CODE :{' '}
+                    SUBJECT :{' '}
                     <Text style={{color: '#525252'}}>
                       {' '}
-                      {openClass[0].subject_code}{' '}
+                      {openClass[0].subject_code} {openClass[0].subject_name}
                     </Text>
                   </Text>
                 </View>
-                <View style={{flex: 1, paddingBottom: 8}}>
+                {/* <View style={{flex: 1, paddingBottom: 8}}>
                   <Text style={styles.styleLabel}>
                     SUBJECT NAME :{' '}
                     <Text style={{color: '#525252'}}>
@@ -109,7 +109,7 @@ class LecturerCloseClass extends Component {
                       {openClass[0].subject_name}{' '}
                     </Text>
                   </Text>
-                </View>
+                </View> */}
                 <View style={{flex: 1, paddingBottom: 8}}>
                   <Text style={styles.styleLabel}>
                     SECTION :{' '}

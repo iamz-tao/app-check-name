@@ -230,13 +230,13 @@ class OpenClass extends Component {
               </TouchableHighlight>
             </View>
             <View style={styles.containerWrapper}>
-              <Text style={styles.styleHeader}>STUDENTS IN CLASS</Text>
+              <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
             </View>
             <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-              YEAR : {year} / {semester}
+              YEAR :{' '}{year} / {semester}
             </Text>
             <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-              LECTURER NAME : {name}
+              LECTURER :{' '}{name}
             </Text>
             {users !== null && users.lenght === 0 ? (
               <View style={styles.NotFound}>
@@ -245,7 +245,7 @@ class OpenClass extends Component {
                   source={require('../../../../../android/statics/images/nodata.png')}
                 />
                 <View style={{height: 4}} />
-                <Text>There are no students in this class.</Text>
+                <Text>There aren't students attendance in this class.</Text>
               </View>
             ) : (
               <View style={styles.containerTest}>
@@ -276,7 +276,7 @@ class OpenClass extends Component {
                             <Text style={{color: '#FF0000'}}>Absent</Text>
                           )}
                           {s.status === 'LATE' && (
-                            <Text style={{color: '#0029FF'}}>Absent</Text>
+                            <Text style={{color: '#0029FF'}}>Late</Text>
                           )}
                           {s.status === 'ONTIME' && (
                             <Text style={{color: '#green'}}>On Time</Text>

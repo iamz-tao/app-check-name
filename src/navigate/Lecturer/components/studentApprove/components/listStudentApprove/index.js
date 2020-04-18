@@ -372,7 +372,7 @@ class ListStudentApprove extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>STUDENTS LIST</Text>
+            <Text style={styles.styleHeader}>LIST OF STUDENTS</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
             SUBJECT : &nbsp; &nbsp; <Text>{subject}</Text>
@@ -388,7 +388,7 @@ class ListStudentApprove extends Component {
                 style={styles.CustomImg}
                 source={require('../../../../../../../android/statics/images/nodata.png')}
               />
-              <Text>There are no students in this class.</Text>
+              <Text>There aren't students waiting for approve.</Text>
             </View>
           ) : (
             <View style={styles.containerTest}>

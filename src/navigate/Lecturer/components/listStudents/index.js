@@ -74,6 +74,7 @@ class StudentInSection extends Component {
       token,
       subject_name,
       section_number,
+      subject_code,
     } = this.props.navigation.state.params;
     if (!studentsInSection) {
       return (
@@ -96,11 +97,11 @@ class StudentInSection extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>STUDENTS IN SECTION</Text>
+            <Text style={styles.styleHeader}>STUDENTS ENROLLED</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
-            <Text>SECTION : {section_number}</Text>
+            <Text>SUBJECT :{' '} {subject_code}{' '}{subject_name}</Text>
+            <Text>SECTION :{' '} {section_number}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>
@@ -116,7 +117,7 @@ class StudentInSection extends Component {
                   style={styles.CustomImg}
                   source={require('../../../../../android/statics/images/nodata.png')}
                 />
-                <Text>There are no students in section.</Text>
+                <Text>There aren't students enrolled in section.</Text>
               </View>
               )}
               {studentsInSection !== null &&

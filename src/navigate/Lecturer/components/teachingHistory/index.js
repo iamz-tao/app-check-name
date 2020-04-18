@@ -95,8 +95,8 @@ class ListTeachingHistory extends Component {
             <Text style={styles.styleHeader}>TEACHING HISTORY</Text>
           </View>
           <View style={{marginLeft: 16}}>
-            <Text>SUBJECT NAME : {subject_name}</Text>
-            <Text>SECTION : {section_number}</Text>
+            <Text>SUBJECT :{' '}{subject_name}</Text>
+            <Text>SECTION :{' '}{section_number}</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>

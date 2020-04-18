@@ -191,7 +191,7 @@ class OpenSection extends Component {
         </View>
       );
     }
-    console.log(e_time);
+    // console.log(e_time);
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View>
@@ -211,10 +211,10 @@ class OpenSection extends Component {
                       />
                       <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
-                        OPEN SECTION SUCCESS
+                        OPEN SECTION SUCCEEDED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You can check list subjects your teach in MY SUBJECT
+                        You can check list of subjects you teach in MY SUBJECTS
                         page.
                       </Text>
                     </View>
@@ -230,7 +230,7 @@ class OpenSection extends Component {
                         OPEN SECTION FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        ERROR! Could not handle the request.
+                        Error: Could not handle the request.
                       </Text>
                     </View>
                   )}
@@ -267,7 +267,7 @@ class OpenSection extends Component {
             <Text style={styles.styleHeader}>OPEN SECTION</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-            YEAR / SEMESTER : {year} / {semester}
+                  YEAR / SEMESTER :{' '}{year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>

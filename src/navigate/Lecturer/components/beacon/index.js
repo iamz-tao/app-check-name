@@ -78,7 +78,7 @@ class Beacon extends Component {
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
-            <Text style={styles.styleHeader}>BEACON</Text>
+            <Text style={styles.styleHeader}>LIST OF BEACONS</Text>
           </View>
           <View style={{height: 16}} />
           <View style={styles.StyleWrapper}>

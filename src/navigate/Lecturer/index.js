@@ -103,7 +103,7 @@ class LecturerHomePage extends Component {
                 />
               </TouchableHighlight>
             </View>
-            <Text style={styles.styleText}>LECTURER</Text>
+            <Text style={styles.styleText}>Lecturer</Text>
 
             <View style={{height: 24}} />
             <View style={{display: 'flex', flexDirection: 'row'}}>
@@ -146,7 +146,7 @@ class LecturerHomePage extends Component {
                     token,
                   });
                 }}>
-                <Text style={styles.LabelText}>MY SUBJECT</Text>
+                <Text style={styles.LabelText}>MY SUBJECTS</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
@@ -156,7 +156,7 @@ class LecturerHomePage extends Component {
                     token,
                   });
                 }}>
-                <Text style={styles.LabelText}>BEACON</Text>
+                <Text style={styles.LabelText}>BEACONS</Text>
               </TouchableHighlight>
               <View style={{width: 16}} />
               <TouchableHighlight
