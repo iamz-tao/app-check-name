@@ -99,7 +99,17 @@ class StudentSubjectRegister extends Component {
     let secondTime = '';
     let day2: '';
     let section_id: '';
-    if (subjects !== null) {
+
+    if (subjects === null || statusReq === null) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+
+    if (subjects !== undefined) {
       subjects.map((s, i) => {
         subjectsArr.push({
           label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
@@ -137,17 +147,10 @@ class StudentSubjectRegister extends Component {
         }
       }
     }
-    if (subjects === null || statusReq === null) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <DotsLoader color="#CA5353" />
-          <TextLoader text="Loading" />
-        </View>
-      );
-    }
+   
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
-        <View>
+       <View>
           <Modal
             animationType="slide"
             transparent={false}

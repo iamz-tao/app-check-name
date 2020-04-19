@@ -43,23 +43,6 @@ const Header = props => {
       <View style={{display: 'flex', flexDirection: 'row'}}>
         <View
           style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-          {/* <CheckBox
-            size={6}
-            containerStyle={styles.containerCheckbox}
-            uncheckedIcon={
-              <Image
-                source={require('../../../../../../../android/statics/images/unchecked.jpg')}
-                style={{width: 20, height: 20}}
-              />
-            }
-            checkedIcon={
-              <Image
-                source={require('../../../../../../../android/statics/images/check-icon.jpg')}
-                style={{width: 20, height: 20}}
-              />
-            }
-          /> */}
-          {/* <Image source={require('../../../../../../../android/statics/images/unchecked.jpg')} style={{width: 12, height: 12}} /> */}
           <Text>Select {count} item(s)</Text>
         </View>
         <View
@@ -115,7 +98,6 @@ const StudentList = props => {
     checkedArr,
     handleCount,
   } = props;
-
   return (
     <View style={styles.Column}>
       <View style={styles.Wrapper}>
@@ -172,7 +154,7 @@ const StudentList = props => {
                         <TouchableHighlight
                           style={styles.btnApprove}
                           onPress={() => {
-                            handleApprove(s.request_id);
+                            handleApprove(s.id);
                           }}>
                           <Text style={{color: 'white', fontSize: 10}}>
                             APPROVE
@@ -182,7 +164,7 @@ const StudentList = props => {
                         <TouchableHighlight
                           style={styles.btnDrop}
                           onPress={() => {
-                            handleReject(s.request_id);
+                            handleReject(s.id);
                           }}>
                           <Text style={{color: 'white', fontSize: 10}}>
                             REJECT
@@ -212,13 +194,33 @@ class ListStudentApprove extends Component {
       checked: [],
       checkedArr: [],
       count: 0,
+      test: [],
     };
+  }
+
+  static getDerivedStateFromProps(prevProps, prevState) {
+    if (
+      prevProps.subjects.studentsInSection !== null &&
+      prevState.count === 0
+    ) {
+      const data = [];
+      prevProps.subjects.studentsInSection.students
+        .filter(std => std.status !== 'DROP')
+        .map((s, i) => {
+          data.push({
+            id: s.request_id,
+            status: s.status,
+            checked: false,
+            firstname: s.firstname,
+            lastname: s.lastname,
+          });
+        });
+      return {checkedArr: data};
+    }
   }
 
   componentDidMount() {
     const {token, id} = this.props.navigation.state.params;
-    const students = this.props.subjects.studentsInSection;
-    const {checkedArr} = this.state;
     const {GetCurrentYear, GetStudentsApprove} = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
@@ -230,17 +232,6 @@ class ListStudentApprove extends Component {
       token,
       id,
     });
-    if (students) {
-      students.students.map((s, i) => {
-        checkedArr[i] = {
-          id: s.request_id,
-          status: s.status,
-          checked: false,
-          firstname: s.firstname,
-          lastname: s.lastname,
-        };
-      });
-    }
   }
 
   handleLogout = () => {
@@ -283,7 +274,7 @@ class ListStudentApprove extends Component {
     const {token} = this.props.navigation.state.params;
     const {ApproveStudents} = this.props;
     const {checkedArr} = this.state;
-    let newArr = []
+    let newArr = [];
     const id = checkedArr
       .filter(c => c.checked === true)
       .map(idCheck => idCheck.id);
@@ -291,19 +282,9 @@ class ListStudentApprove extends Component {
       id,
       token,
     });
-   
-    // students.students.map((s, i) => {
-    //   newArr[i] = {
-    //     id: s.request_id,
-    //     status: s.status,
-    //     checked: false,
-    //     firstname: s.firstname,
-    //     lastname: s.lastname,
-    //   };
-    // });
-    // this.setState({
-    //   checkedArr: newArr,
-    // })
+    this.setState({
+      count: 0,
+    })
   };
 
   handleMultiReject = () => {
@@ -317,6 +298,9 @@ class ListStudentApprove extends Component {
       id,
       token,
     });
+    this.setState({
+      count: 0,
+    })
   };
 
   handleChecked = (index, id) => {
@@ -340,8 +324,9 @@ class ListStudentApprove extends Component {
 
   render() {
     const students = this.props.subjects.studentsInSection;
-    const {checkedArr, count} = this.state;
-    if (!students) {
+    const {count, test, checkedArr} = this.state;
+    // const checkedArr = [];
+    if (!students || this.props.subjects.fetching) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -349,8 +334,6 @@ class ListStudentApprove extends Component {
         </View>
       );
     }
-
-    // console.log('students',checkedArr)
 
     const subject = students === null ? '-' : students.subject_name;
     const section = students === null ? '-' : students.section_number;
@@ -386,7 +369,7 @@ class ListStudentApprove extends Component {
               />
               <Text>There aren't students waiting for approve.</Text>
             </View>
-          ) }
+          )}
           {students.students !== null && students.students.length > 0 && (
             <View style={styles.containerTest}>
               <View style={styles.btnWrapper}>
