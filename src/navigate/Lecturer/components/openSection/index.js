@@ -342,7 +342,7 @@ class OpenSection extends Component {
           <View style={{display: 'flex', paddingLeft: 36, width: '100%'}}>
             <View style={{flexDirection: 'row'}}>
               <Text style={(styles.styleLabel, {flex: 1, alignSelf: 'center'})}>
-                DETAIL :{' '}
+                DETAIL :
               </Text>
               {fday !== null &&
                 e_time !== 'null:undefined null' &&

@@ -43,10 +43,10 @@ const SuccessModal = ({msg, setModalVisible, modalVisible, status, path}) => {
 
               <View style={{height: 36}} />
               {status === 'SUCCESS' && (
-                <Text style={styles.styleLabelFail}>SUCCESS</Text>
+                <Text style={styles.styleLabelFail}>SUCCEEDED</Text>
               )}
               {status === 'FAILURE' && (
-                <Text style={styles.styleLabelFail}>FAILURE</Text>
+                <Text style={styles.styleLabelFail}>FAILED</Text>
               )}
               <Text style={styles.styleLabel}>{msg}</Text>
               <View style={{height: 26}} />

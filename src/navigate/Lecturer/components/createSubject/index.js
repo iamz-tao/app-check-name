@@ -68,6 +68,7 @@ class LecturerCreateSubject extends Component {
           setModalVisible={this.setModalVisible}
           modalVisible={modalVisible}
           status={status}
+          path={'Open Section'}
         />
         <View style={styles.container}>
           <View style={{display: 'flex', alignItems: 'flex-end'}}>
