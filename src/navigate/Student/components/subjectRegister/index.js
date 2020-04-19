@@ -60,7 +60,7 @@ class StudentSubjectRegister extends Component {
   }
 
   setModalVisible() {
-      this.setState({modalVisible: true});
+    this.setState({modalVisible: true});
   }
 
   handleSelect = () => {
@@ -99,7 +99,17 @@ class StudentSubjectRegister extends Component {
     let secondTime = '';
     let day2: '';
     let section_id: '';
-    if (subjects !== null) {
+
+    if (subjects === null || statusReq === null) {
+      return (
+        <View style={styles.loadingWrapper}>
+          <DotsLoader color="#CA5353" />
+          <TextLoader text="Loading" />
+        </View>
+      );
+    }
+
+    if (subjects !== undefined) {
       subjects.map((s, i) => {
         subjectsArr.push({
           label: `${s.Subject.subject_code} ${s.Subject.subject_name}`,
@@ -137,17 +147,10 @@ class StudentSubjectRegister extends Component {
         }
       }
     }
-    if (subjects === null || statusReq === null) {
-      return (
-        <View style={styles.loadingWrapper}>
-          <DotsLoader color="#CA5353" />
-          <TextLoader text="Loading" />
-        </View>
-      );
-    }
+   
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
-        <View>
+       <View>
           <Modal
             animationType="slide"
             transparent={false}
@@ -167,7 +170,7 @@ class StudentSubjectRegister extends Component {
                         REGISTRATION SUCCEEDED
                       </Text>
                       <Text style={styles.styleLabel}>
-                        You have permission to attendance roll in this subject.
+                        Please wait for approval by lecturer.
                       </Text>
                     </View>
                   )}
@@ -179,7 +182,7 @@ class StudentSubjectRegister extends Component {
                       />
                       <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
-                         REGISTRATION FAILED
+                        REGISTRATION FAILED
                       </Text>
                       <Text style={styles.styleLabel}>
                         You have already registered with subject.
@@ -192,9 +195,9 @@ class StudentSubjectRegister extends Component {
                     onPress={() => {
                       this.setState({modalVisible: !this.state.modalVisible});
                       if (statusReq === 'SUCCESS') {
-                        this.props.navigation.navigate('Registered Subject',{
+                        this.props.navigation.navigate('Registered Subject', {
                           token,
-                        })
+                        });
                       }
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
@@ -289,7 +292,9 @@ class StudentSubjectRegister extends Component {
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('Student Home Page')}>
+              onPress={() =>
+                this.props.navigation.navigate('Student Home Page')
+              }>
               <Text style={{color: '#949494'}}>CANCEL</Text>
             </TouchableHighlight>
             <TouchableHighlight

@@ -297,6 +297,7 @@ const styles = StyleSheet.create({
     width: 116,
     height: 116,
     top: 20,
+    marginBottom: 8,
   },
   NotFound: {
     display: 'flex',

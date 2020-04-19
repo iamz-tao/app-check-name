@@ -40,6 +40,8 @@ export default class Register extends Component {
   };
 
   Event_Register = async () => {
+    const {email, firstname, id, lastname, mobile, password, role} = this.state;
+    // console.log(this.state)
     const response = await fetch(
       'https://us-central1-kpscheckin.cloudfunctions.net/api/register',
       {
@@ -49,22 +51,24 @@ export default class Register extends Component {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          id: this.state.id,
-          firstname: this.state.firstname,
-          lastname: this.state.lastname,
-          email: this.state.email,
-          password: this.state.password,
-          role: this.state.role,
-          mobile: this.state.mobile,
+          id,
+          firstname,
+          lastname,
+          email,
+          password,
+          role,
+          mobile,
         }),
       },
     );
     const responseJson = await response.json();
-    if (responseJson.Error === undefined) {
-      // Alert.alert('ADD Success');
+    // console.log(responseJson)
+    if (responseJson.status.dataStatus === 'SUCCESS') {
+      Alert.alert('Registration Succeeded.');
       this.props.navigation.navigate('Login');
     } else {
-      Alert.alert(`${responseJson.Error}`);
+      console.log(responseJson)
+      Alert.alert(`${responseJson.message}`);
     }
   };
   render() {

@@ -103,7 +103,7 @@ class OpenClass extends Component {
   static getDerivedStateFromProps(props, state) {
     if (props.subjects.openClass && props.subjects.openClass.length > 0) {
       const class_id = props.subjects.openClass[0].class_id;
-      return {class_id: class_id}
+      return {class_id: class_id};
     }
   }
 
@@ -171,6 +171,7 @@ class OpenClass extends Component {
     const subjects = this.props.subjects.subjectsApprove;
     const {
       studentsAttendance: {users},
+      studentsAttendance,
     } = this.props;
     const {beacons, status, openClass} = this.props.subjects;
     const subjectsArr = [];
@@ -206,7 +207,10 @@ class OpenClass extends Component {
           });
         });
     }
-    if (!subjects || !openClass || !users) {
+    
+    // console.log('users',studentsAttendance.users.length)
+
+    if (!subjects) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -214,8 +218,21 @@ class OpenClass extends Component {
         </View>
       );
     }
+    if (subjects && !openClass) {
+      <View style={styles.loadingWrapper}>
+        <DotsLoader color="#CA5353" />
+        <TextLoader text="Loading" />
+      </View>;
+    }
 
-    if (openClass.length > 0) {
+    if (subjects && openClass && !studentsAttendance.users) {
+      <View style={styles.loadingWrapper}>
+        <DotsLoader color="#CA5353" />
+        <TextLoader text="Loading" />
+      </View>;
+    }
+
+    if (openClass !== null && openClass.length > 0) {
       const name = this.props.subjects.openClass[0].Lecturer_name;
       return (
         <ScrollView style={{backgroundColor: '#ffffff'}}>
@@ -233,61 +250,64 @@ class OpenClass extends Component {
               <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
             </View>
             <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-              YEAR :{' '}{year} / {semester}
+              YEAR : {year} / {semester}
             </Text>
             <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-              LECTURER :{' '}{name}
+              LECTURER : {name}
             </Text>
-            {users !== null && users.lenght === 0 ? (
-              <View style={styles.NotFound}>
-                <Image
-                  style={styles.CustomImg}
-                  source={require('../../../../../android/statics/images/nodata.png')}
-                />
-                <View style={{height: 4}} />
-                <Text>There aren't students attendance in this class.</Text>
-              </View>
-            ) : (
-              <View style={styles.containerTest}>
-                <Table>
-                  <Header />
-                  {users.map((s, index) => (
-                    <TableWrapper style={styles.row}>
-                      <View
-                        style={{
-                          display: 'flex',
-                          flexDirection: 'row',
-                          margin: 6,
-                          width: '100%',
-                        }}>
-                        <View style={{width: 86}}>
-                          <Text>{s.id}</Text>
+            {studentsAttendance.users !== null &&
+              studentsAttendance.users.length === 0 && (
+                <View style={styles.NotFound}>
+                  <Image
+                    style={styles.CustomImg}
+                    source={require('../../../../../android/statics/images/nodata.png')}
+                  />
+                  <View style={{height: 4}} />
+                  <Text>There aren't students attendance in this class.</Text>
+                </View>
+              )}
+            {studentsAttendance.users !== null &&
+              studentsAttendance.users.length > 0 && (
+                <View style={styles.containerTest}>
+                  <Table>
+                    <Header />
+                    {users.map((s, index) => (
+                      <TableWrapper style={styles.row}>
+                        <View
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'row',
+                            margin: 6,
+                            width: '100%',
+                          }}>
+                          <View style={{width: 86}}>
+                            <Text>{s.id}</Text>
+                          </View>
+                          <View style={{flex: 1}}>
+                            <Text>
+                              {s.firstname} {s.lastname}
+                            </Text>
+                          </View>
+                          <View style={{width: 58, paddingLeft: 8}}>
+                            <Text>{s.time}</Text>
+                          </View>
+                          <View style={{width: 66}}>
+                            {s.status === 'ABSENT' && (
+                              <Text style={{color: '#FF0000'}}>Absent</Text>
+                            )}
+                            {s.status === 'LATE' && (
+                              <Text style={{color: '#0029FF'}}>Late</Text>
+                            )}
+                            {s.status === 'ONTIME' && (
+                              <Text style={{color: '#green'}}>On Time</Text>
+                            )}
+                          </View>
                         </View>
-                        <View style={{flex: 1}}>
-                          <Text>
-                            {s.firstname} {s.lastname}
-                          </Text>
-                        </View>
-                        <View style={{width: 58, paddingLeft: 8}}>
-                          <Text>{s.time}</Text>
-                        </View>
-                        <View style={{width: 66}}>
-                          {s.status === 'ABSENT' && (
-                            <Text style={{color: '#FF0000'}}>Absent</Text>
-                          )}
-                          {s.status === 'LATE' && (
-                            <Text style={{color: '#0029FF'}}>Late</Text>
-                          )}
-                          {s.status === 'ONTIME' && (
-                            <Text style={{color: '#green'}}>On Time</Text>
-                          )}
-                        </View>
-                      </View>
-                    </TableWrapper>
-                  ))}
-                </Table>
-              </View>
-            )}
+                      </TableWrapper>
+                    ))}
+                  </Table>
+                </View>
+              )}
             <View style={styles.btnWrapper}>
               <TouchableHighlight
                 style={styles.btnCancel}

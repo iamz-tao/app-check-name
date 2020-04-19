@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Avatar, ButtonGroup } from 'react-native-elements';
-import { connect } from 'react-redux';
-import { DotsLoader, TextLoader } from 'react-native-indicator';
+import React, {Component} from 'react';
+import {Avatar, ButtonGroup} from 'react-native-elements';
+import {connect} from 'react-redux';
+import {DotsLoader, TextLoader} from 'react-native-indicator';
 import Device from 'react-native-device-info';
 import Beacons from 'react-native-beacons-manager';
-import { checkLocationStatus } from '../../../../AuthBeacon/func';
+import {checkLocationStatus} from '../../../../AuthBeacon/func';
 
 import {
   StyleSheet,
@@ -73,14 +73,14 @@ class StudentCheckName extends Component {
       hasbeacon: false,
       rssi: '',
       isBluetooth: true,
-      beaconInClass: []
+      beaconInClass: [],
     };
   }
 
   async componentDidMount() {
     const {
       LoginReducer: {
-        data: { token },
+        data: {token},
       },
     } = this.props.navigation.state.params;
     const {
@@ -127,7 +127,7 @@ class StudentCheckName extends Component {
   }
 
   setModalVisible() {
-    this.setState({ modalVisible: true });
+    this.setState({modalVisible: true});
   }
 
   handleSelect = () => {
@@ -141,7 +141,7 @@ class StudentCheckName extends Component {
   getMacAddress = () => {
     Device.getMacAddress()
       .then(address => {
-        this.setState({ macAddress: address });
+        this.setState({macAddress: address});
       })
       .catch(err => {
         console.warn(err);
@@ -158,27 +158,25 @@ class StudentCheckName extends Component {
   };
 
   CheckBeacon = async () => {
-    const { beaconInClass, beacon } = this.state;
+    const {beaconInClass, beacon} = this.state;
     if (beacon.length > 1) {
       const arr = beacon.filter(b => {
-        return b.uuid === beaconInClass.uuid
-      })
+        return b.uuid === beaconInClass.uuid;
+      });
       return arr;
-    }
-    else {
+    } else {
       const chk = beacon.filter(b => {
         return b.uuid === beaconInClass.uuid;
-      })
-      if(chk.length < 1){
+      });
+      if (chk.length < 1) {
         return false;
-      }
-      else{
+      } else {
         return beacon;
       }
     }
-  }
+  };
 
-  setBeacon = (beacon) => {
+  setBeacon = beacon => {
     beacon.map(b => {
       this.setState({
         uuid: b.uuid,
@@ -191,9 +189,9 @@ class StudentCheckName extends Component {
   };
 
   getClassId = () => {
-    const { pickerValues } = this.state;
+    const {pickerValues} = this.state;
     const {
-      openingClass: { openingClass },
+      openingClass: {openingClass},
     } = this.props;
     let class_id;
     if (openingClass.length === 1) {
@@ -206,21 +204,20 @@ class StudentCheckName extends Component {
 
   checkname = async () => {
     this.scan();
-    this.setState({ ischecking: true });
+    this.setState({ischecking: true});
     setTimeout(async () => {
       const beacon_flag = await this.CheckBeacon();
-      if(beacon_flag !== false){
+      if (beacon_flag !== false) {
         this.setBeacon(beacon_flag);
       }
       await this.handleCheck(beacon_flag);
-      this.setState({ ischecking: false, modalVisible: true });
+      this.setState({ischecking: false, modalVisible: true});
     }, 3500);
   };
 
-
-  handleCheck = async (beacon_flag) => {
-    const { Checkname } = this.props;
-    const { macAddress, token, uuid, major, minor, distance, rssi } = this.state;
+  handleCheck = async beacon_flag => {
+    const {Checkname} = this.props;
+    const {macAddress, token, uuid, major, minor, distance, rssi} = this.state;
     const check = this.checkBeaconEmpty();
     const class_id = this.getClassId();
     Checkname({
@@ -233,12 +230,12 @@ class StudentCheckName extends Component {
       rssi,
       check,
       class_id,
-      beacon_flag
+      beacon_flag,
     });
   };
 
   checkBeaconEmpty = () => {
-    const { beacon } = this.state;
+    const {beacon} = this.state;
     if (beacon.length < 1) {
       return true;
     } else {
@@ -247,7 +244,7 @@ class StudentCheckName extends Component {
   };
 
   checkBeaconLength = async () => {
-    const { beacon } = this.state;
+    const {beacon} = this.state;
     if (beacon.length > 1) {
       return true;
     } else {
@@ -261,7 +258,7 @@ class StudentCheckName extends Component {
   }
 
   handleLogout = () => {
-    const { Logout } = this.props;
+    const {Logout} = this.props;
     Logout({});
   };
 
@@ -276,10 +273,10 @@ class StudentCheckName extends Component {
       hasbeacon,
     } = this.state;
     const {
-      currentYear: { year, semester },
+      currentYear: {year, semester},
     } = this.props.currentYear;
     const {
-      openingClass: { fetching, openingClass },
+      openingClass: {fetching, openingClass},
     } = this.props;
 
     const {
@@ -295,7 +292,7 @@ class StudentCheckName extends Component {
     let time = '';
     let time2 = '';
     let beaconInClass = [];
-    if (fetching || !openingClass || ischecking) {
+    if (fetching || !openingClass || ischecking || !year) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -317,11 +314,11 @@ class StudentCheckName extends Component {
       sectionId = classDetail.section_number;
       time = `${classDetail.Time[0].day} ${classDetail.Time[0].start_time} - ${
         classDetail.Time[0].end_time
-        }`;
+      }`;
       time2 =
         classDetail.Time.length === 2 &&
         `${classDetail.Time[1].day} ${classDetail.Time[1].start_time} - ${
-        classDetail.Time[1].end_time
+          classDetail.Time[1].end_time
         }}`;
       beaconInClass = classDetail.beacon;
     }
@@ -331,7 +328,7 @@ class StudentCheckName extends Component {
     }
 
     return (
-      <ScrollView style={{ backgroundColor: '#ffffff' }}>
+      <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View>
           <Modal
             animationType="slide"
@@ -340,14 +337,14 @@ class StudentCheckName extends Component {
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
-                <View style={{ width: '100%', alignItems: 'center' }}>
+                <View style={{width: '100%', alignItems: 'center'}}>
                   {status === 'SUCCESS' && (
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{alignItems: 'center'}}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/success.png')}
                       />
-                      <View style={{ height: 36 }} />
+                      <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
                         ATTENDANCE ROLL SUCCEEDED
                       </Text>
@@ -356,46 +353,47 @@ class StudentCheckName extends Component {
                         Time : {time_check}. {'\n'}
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
-                          <Text style={{ color: 'green' }}>On Time</Text>
+                          <Text style={{color: 'green'}}>On Time</Text>
                         )}
                         {statusCheckin === 'LATE' && (
-                          <Text style={{ color: '#0029FF' }}>Late</Text>
+                          <Text style={{color: '#0029FF'}}>Late</Text>
                         )}
                         {statusCheckin === 'ABSENT' && (
-                          <Text style={{ color: '#FF0000' }}>Absent</Text>
+                          <Text style={{color: '#FF0000'}}>Absent</Text>
                         )}
                       </Text>
                     </View>
                   )}
                   {status === 'FAILURE' && (
-                    <View style={{ alignItems: 'center' }}>
+                    <View style={{alignItems: 'center'}}>
                       <Image
                         style={styles.CustomImg}
                         source={require('../../../../../android/statics/images/icon-failure.png')}
                       />
-                      <View style={{ height: 36 }} />
+                      <View style={{height: 36}} />
                       <Text style={styles.styleLabelFail}>
                         ATTENDANCE ROLL FAILED
                       </Text>
                       <Text style={styles.styleLabel}>{error_message}</Text>
                     </View>
                   )}
-                  <View style={{ height: 16 }} />
+                  <View style={{height: 16}} />
                   <TouchableHighlight
                     style={styles.btnReq}
                     onPress={() => {
-                      this.setState({ modalVisible: !this.state.modalVisible });
+                      this.setState({modalVisible: !this.state.modalVisible});
                       if (status === 'SUCCESS') {
                         this.props.navigation.navigate('Attendance History', {
                           token,
                           subject_name: openingClass[0].Section.subject_name,
-                          section_number: openingClass[0].Section.section_number,
+                          section_number:
+                            openingClass[0].Section.section_number,
                           section_id: openingClass[0].Section.section_id,
                         });
                       } else {
                       }
                     }}>
-                    <Text style={{ color: 'white' }}>OK</Text>
+                    <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
                 </View>
               </View>
@@ -403,46 +401,46 @@ class StudentCheckName extends Component {
           </Modal>
         </View>
         <View style={styles.container}>
-          <View style={{ display: 'flex', alignItems: 'flex-end' }}>
+          <View style={{display: 'flex', alignItems: 'flex-end'}}>
             <TouchableHighlight
               style={styles.btnLogout}
               onPress={() => {
                 this.handleLogout();
               }}>
-              <Text style={{ color: 'white' }}>Logout</Text>
+              <Text style={{color: 'white'}}>Logout</Text>
             </TouchableHighlight>
           </View>
           <View style={styles.containerWrapper}>
             <Text style={styles.styleHeader}>ATTENDANCE ROLL</Text>
           </View>
-          <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
-            YEAR / SEMESTER :{' '}{year} / {semester}
+          <Text style={(styles.styleLabel, {paddingLeft: 16})}>
+            YEAR / SEMESTER : {year} / {semester}
           </Text>
-          <View style={{ height: 21 }} />
+          <View style={{height: 21}} />
           {openingClass !== null && openingClass.length === 1 && (
             <View>
               <Text
-                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
-                SUBJECT :{' '}{openingClass[0].Section.subject_code}{' '}
+                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                SUBJECT : {openingClass[0].Section.subject_code}{' '}
                 {openingClass[0].Section.subject_name}
               </Text>
               <Text
-                style={(styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })}>
-                SECTION :{' '}{openingClass[0].Section.section_number}
+                style={(styles.styleLabel, {paddingLeft: 16, marginBottom: 6})}>
+                SECTION : {openingClass[0].Section.section_number}
               </Text>
-              <View style={{ display: 'flex', flexDirection: 'column' }}>
+              <View style={{display: 'flex', flexDirection: 'column'}}>
                 <Text
                   style={
-                    (styles.styleLabel, { paddingLeft: 16, marginBottom: 6 })
+                    (styles.styleLabel, {paddingLeft: 16, marginBottom: 6})
                   }>
-                  TIME :{' '}{openingClass[0].Section.Time[0].day}{' '}
+                  TIME : {openingClass[0].Section.Time[0].day}{' '}
                   {openingClass[0].Section.Time[0].start_time} -{' '}
                   {openingClass[0].Section.Time[0].end_time}
                 </Text>
                 {openingClass[0].Section.Time[1] && (
                   <Text
                     style={
-                      (styles.styleLabel, { paddingLeft: 58, marginBottom: 6 })
+                      (styles.styleLabel, {paddingLeft: 58, marginBottom: 6})
                     }>
                     TIME : {openingClass[0].Section.Time[1].day}{' '}
                     {openingClass[0].Section.Time[1].start_time} -{' '}
@@ -459,7 +457,7 @@ class StudentCheckName extends Component {
                   <Text style={styles.styleLabel}>SELECT SUBJECT :</Text>
                   <View style={styles.stylePicker}>
                     <Picker
-                      style={{ height: 45 }}
+                      style={{height: 45}}
                       selectedValue={pickerValues}
                       onValueChange={(itemValue, itemIndex) =>
                         this.setState({
@@ -476,22 +474,22 @@ class StudentCheckName extends Component {
                   </View>
                 </View>
               </View>
-              <View style={{ display: 'flex', paddingLeft: 21, width: 340 }}>
-                <View style={{ flexDirection: 'row' }}>
+              <View style={{display: 'flex', paddingLeft: 21, width: 340}}>
+                <View style={{flexDirection: 'row'}}>
                   <Text
                     style={
-                      (styles.styleLabel, { width: 116, alignSelf: 'center' })
+                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
                     }>
                     Subject :{' '}
                   </Text>
-                  <Text style={{ flex: 3 }}>{subject_name}</Text>
+                  <Text style={{flex: 3}}>{subject_name}</Text>
                 </View>
-                <View style={{ height: 8 }} />
-                <View style={{ flexDirection: 'row' }}>
-                  <Text style={(styles.styleLabel, { width: 100 })}>
+                <View style={{height: 8}} />
+                <View style={{flexDirection: 'row'}}>
+                  <Text style={(styles.styleLabel, {width: 100})}>
                     Date/Time :{' '}
                   </Text>
-                  <View style={{ display: 'flex', flexDirection: 'column' }}>
+                  <View style={{display: 'flex', flexDirection: 'column'}}>
                     <Text style={styles.styleLabel}>{time}</Text>
                     <Text style={styles.styleLabel}>{time2}</Text>
                   </View>
@@ -499,23 +497,49 @@ class StudentCheckName extends Component {
               </View>
             </View>
           )}
-          <View style={{ height: 8 }} />
-          <View style={styles.btnWrapper}>
-            <TouchableHighlight
-              style={styles.btnCancel}
-              onPress={() => this.props.navigation.navigate('Student Home Page')}>
-              <Text style={{ color: '#949494' }}>CANCEL</Text>
-            </TouchableHighlight>
-            <TouchableHighlight
-              style={styles.btnReq}
-              onPress={() => {
-                this.checkname();
-                this.setState({ beaconInClass })
-                // this.setModalVisible();
+          {openingClass !== null && openingClass.length === 0 && (
+            <View
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
-              <Text style={{ color: 'white' }}>CHECK</Text>
-            </TouchableHighlight>
-          </View>
+              <Text style={{color: '#525252'}}>
+                There aren't any class openings.
+              </Text>
+            </View>
+          )}
+          <View style={{height: 8}} />
+          {openingClass !== null && openingClass.length === 0 ? (
+            <View style={styles.btnWrapper}>
+              <TouchableHighlight
+                style={styles.btnCancel}
+                onPress={() =>
+                  this.props.navigation.navigate('Student Home Page')
+                }>
+                <Text style={{color: '#949494'}}>BACK</Text>
+              </TouchableHighlight>
+            </View>
+          ) : (
+            <View style={styles.btnWrapper}>
+              <TouchableHighlight
+                style={styles.btnCancel}
+                onPress={() =>
+                  this.props.navigation.navigate('Student Home Page')
+                }>
+                <Text style={{color: '#949494'}}>CANCEL</Text>
+              </TouchableHighlight>
+              <TouchableHighlight
+                style={styles.btnReq}
+                onPress={() => {
+                  this.checkname();
+                  this.setState({beaconInClass});
+                  // this.setModalVisible();
+                }}>
+                <Text style={{color: 'white'}}>CHECK</Text>
+              </TouchableHighlight>
+            </View>
+          )}
         </View>
       </ScrollView>
     );
