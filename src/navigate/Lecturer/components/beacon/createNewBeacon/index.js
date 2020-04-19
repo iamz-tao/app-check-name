@@ -172,7 +172,7 @@ class CreateNewBeacon extends Component {
         .then((resp) => {
           if (resp === '') {
             this.setState({ isScanning: false, hasbeacon: false })
-            Alert.alert("Not Found Beacon")
+            Alert.alert("Beacon not found.")
           }
           else {
             this.setState(
@@ -184,7 +184,7 @@ class CreateNewBeacon extends Component {
         })
         .catch(err => {
           console.log(err)
-          Alert.alert("Not Found Beacon");
+          Alert.alert("Beacon not found.");
           this.setState({ isScanning: false, hasbeacon: false })
         })
     }, 3000)
@@ -255,8 +255,8 @@ class CreateNewBeacon extends Component {
             <Text style={styles.styleLabel, { paddingLeft: 34 }}>MAJOR :{major}<Text></Text></Text>
             <Text style={styles.styleLabel, { paddingLeft: 34 }}>MINOR :{minor}<Text></Text></Text>
           </View> :
-            <View>
-              <Text style={styles.styleLabel, { paddingLeft: 34 }}> Beacon is exists or you are out of range of beacon.</Text>
+            <View style={{width: '100%'}}>
+              <Text style={styles.styleLabel}> Beacon is exists or you are out of range of beacon.</Text>
             </View>}
           <View style={styles.btnWrapper}>
             <TouchableHighlight
