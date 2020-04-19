@@ -27,7 +27,7 @@ async function Login(data) {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
         NavigationServices.navigate('Lecturer Home Page');
-      } else if (responseJson.data.user.role === 'NISIT') {
+      } else if (responseJson.data.user.role === 'STUDENT') {
         NavigationServices.navigate('Student Home Page');
       } else {
         Alert.alert(

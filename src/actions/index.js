@@ -609,13 +609,13 @@ export const CreateSubject = params => {
 export const ApproveStudent = params => {
   return dispatch => {
     dispatch(approveStudent());
-    // Api.ApproveStudent(params)
-    //   .then(result => {
+    Api.ApproveStudent(params)
+      .then(result => {
         dispatch(approveStudentSuccess(params));
-  //     })
-  //     .catch(err => {
-  //       dispatch(requestError(err));
-  //     });
+      })
+      .catch(err => {
+        dispatch(requestError(err));
+      });
   };
 };
 

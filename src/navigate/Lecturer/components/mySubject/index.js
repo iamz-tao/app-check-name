@@ -47,7 +47,7 @@ class ListMySubject extends Component {
 
   render() {
     const state = this.state;
-    const name = this.props.user.data.user.displayName  === undefined ? '-' : this.props.user.data.user.displayName
+    const name = this.props.navigation.state.displayName
     const subjects = this.props.subjects.subjectsApprove;
     
     const {token} = this.props.navigation.state.params;

@@ -148,6 +148,7 @@ class LecturerHomePage extends Component {
                 onPress={() => {
                   this.props.navigation.navigate('My Subjects', {
                     token,
+                    displayName,
                   });
                 }}>
                 <Text style={styles.LabelText}>MY SUBJECTS</Text>

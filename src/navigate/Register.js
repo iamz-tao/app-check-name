@@ -67,7 +67,8 @@ export default class Register extends Component {
       Alert.alert('Registration Succeeded.');
       this.props.navigation.navigate('Login');
     } else {
-      Alert.alert(`${responseJson.Error}`);
+      console.log(responseJson)
+      Alert.alert(`${responseJson.message}`);
     }
   };
   render() {
