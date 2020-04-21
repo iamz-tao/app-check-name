@@ -113,7 +113,6 @@ class CreateNewBeacon extends Component {
       this.beaconsDidRange = DeviceEventEmitter.addListener(
         'beaconsDidRange',
         (data) => {
-          console.log(data.beacons)
           if (data.beacons.length > 0) {
             let filterBeacon = data.beacons.filter(f => {
               return !beconFilter.includes(f.uuid)

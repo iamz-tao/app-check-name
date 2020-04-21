@@ -73,7 +73,6 @@ export default class Register extends Component {
   render() {
     const user_type = ['LECTURER', 'STUDENT'];
     const {selectedIndex,role} = this.state;
-    console.log(role)
 
     return (
       <ScrollView>

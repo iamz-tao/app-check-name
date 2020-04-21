@@ -853,15 +853,15 @@ export const GetBeaconClass = params => {
   }
 }
 
-export const getAttandance = params => {
-  return dispatch => {
-    dispatch(getstudentattandance(params));
-    Api.getAttandanceRealTime(params)
-      .then(result => {
-        dispatch(getstudentattandanceSuccess(JSON.stringify(result)));
-      })
-      .catch(err => {
-        dispatch(getstudentattandanceFailure(JSON.stringify(err)));
-      });
-  }
-};
+// export const getAttandance = params => {
+//   return dispatch => {
+//     dispatch(getstudentattandance(params));
+//     Api.getAttandanceRealTime(params)
+//       .then(result => {
+//         dispatch(getstudentattandanceSuccess(JSON.stringify(result)));
+//       })
+//       .catch(err => {
+//         dispatch(getstudentattandanceFailure(JSON.stringify(err)));
+//       });
+//   }
+// };

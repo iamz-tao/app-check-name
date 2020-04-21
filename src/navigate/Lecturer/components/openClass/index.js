@@ -25,7 +25,6 @@ import {
   GetAllBeacon,
   OpenClass as LecturerOpenClass,
   GetClass,
-  getAttandance,
 } from '../../../../actions';
 import firestore from '@react-native-firebase/firestore';
 
@@ -82,7 +81,6 @@ class OpenClass extends Component {
       GetSubjectsApprove,
       GetAllBeacon,
       GetClass,
-      getAttandance
     } = this.props;
     if (!token) {
       this.props.navigation.navigate('Login');
@@ -542,7 +540,6 @@ const mapDispatchToProps = {
   LecturerOpenClass,
   GetClass,
   Logout,
-  getAttandance,
 };
 
 export default connect(

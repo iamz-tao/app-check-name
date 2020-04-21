@@ -808,55 +808,55 @@ async function getBeaconInClass(params) {
   });
 }
 
-async function getAttandanceRealTime(params) {
-  console.log("attendance")
-  return new Promise(async (resolve, reject) => {
-    let response = {};
-    try {
-      let users = [];
-      let promise = [];
-      let class_id = params.class_id;
-      //edit fix value to class_id
-      // console.log(class_id)
-      firestore()
-        .collection('class_attendance')
-        .where('class_id', '==','MchuUU8lS4WhwNY9jcjx')
-        .onSnapshot(async function(snapshot) {
-          let changes = snapshot.docChanges();
-          let uid;
-          changes.forEach(change => {
-            if (change.type === 'added') {
-              uid = change.doc.data().uid;
-              promise.push(
-                firestore()
-                  .collection('users')
-                  .doc(uid)
-                  .get()
-                  .then(user => {
-                    users.push({
-                      id: user.data().id,
-                      firstname: user.data().firstname,
-                      lastname: user.data().lastname,
-                      status: change.doc.data().status,
-                    });
-                  }),
-              );
-            }
-          });
-          await Promise.all(promise);
-          response.message = 'Get Data Succeeded';
-          response.status = {dataStatus: 'SUCCESS'};
-          response.data = users;
-          // console.log(users)
-          resolve(response);
-        });
-    } catch (error) {
-      response.message = error.message;
-      response.status = {dataStatus: 'FAILURE'};
-      reject(response);
-    }
-  });
-}
+// async function getAttandanceRealTime(params) {
+//   console.log("attendance")
+//   return new Promise(async (resolve, reject) => {
+//     let response = {};
+//     try {
+//       let users = [];
+//       let promise = [];
+//       let class_id = params.class_id;
+//       //edit fix value to class_id
+//       // console.log(class_id)
+//       firestore()
+//         .collection('class_attendance')
+//         .where('class_id', '==','MchuUU8lS4WhwNY9jcjx')
+//         .onSnapshot(async function(snapshot) {
+//           let changes = snapshot.docChanges();
+//           let uid;
+//           changes.forEach(change => {
+//             if (change.type === 'added') {
+//               uid = change.doc.data().uid;
+//               promise.push(
+//                 firestore()
+//                   .collection('users')
+//                   .doc(uid)
+//                   .get()
+//                   .then(user => {
+//                     users.push({
+//                       id: user.data().id,
+//                       firstname: user.data().firstname,
+//                       lastname: user.data().lastname,
+//                       status: change.doc.data().status,
+//                     });
+//                   }),
+//               );
+//             }
+//           });
+//           await Promise.all(promise);
+//           response.message = 'Get Data Succeeded';
+//           response.status = {dataStatus: 'SUCCESS'};
+//           response.data = users;
+//           // console.log(users)
+//           resolve(response);
+//         });
+//     } catch (error) {
+//       response.message = error.message;
+//       response.status = {dataStatus: 'FAILURE'};
+//       reject(response);
+//     }
+//   });
+// }
 
 export const Api = {
   Login,
@@ -889,5 +889,5 @@ export const Api = {
   getStudentChecknameInClass,
   checkname,
   getBeaconInClass,
-  getAttandanceRealTime,
+  // getAttandanceRealTime,
 };
