@@ -809,18 +809,18 @@ async function getBeaconInClass(params) {
 }
 
 async function getAttandanceRealTime(params) {
+  console.log("attendance")
   return new Promise(async (resolve, reject) => {
     let response = {};
-
     try {
       let users = [];
       let promise = [];
       let class_id = params.class_id;
       //edit fix value to class_id
-
+      // console.log(class_id)
       firestore()
         .collection('class_attendance')
-        .where('class_id', '==', class_id)
+        .where('class_id', '==','MchuUU8lS4WhwNY9jcjx')
         .onSnapshot(async function(snapshot) {
           let changes = snapshot.docChanges();
           let uid;
@@ -847,6 +847,7 @@ async function getAttandanceRealTime(params) {
           response.message = 'Get Data Succeeded';
           response.status = {dataStatus: 'SUCCESS'};
           response.data = users;
+          // console.log(users)
           resolve(response);
         });
     } catch (error) {

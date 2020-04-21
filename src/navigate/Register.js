@@ -67,13 +67,13 @@ export default class Register extends Component {
       Alert.alert('Registration Succeeded.');
       this.props.navigation.navigate('Login');
     } else {
-      console.log(responseJson)
       Alert.alert(`${responseJson.message}`);
     }
   };
   render() {
     const user_type = ['LECTURER', 'STUDENT'];
-    const {selectedIndex} = this.state;
+    const {selectedIndex,role} = this.state;
+    console.log(role)
 
     return (
       <ScrollView>

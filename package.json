@@ -16,6 +16,7 @@
     "@react-native-firebase/app": "^6.4.0",
     "@react-native-firebase/firestore": "^6.4.0",
     "@react-navigation/native": "^5.0.7",
+    "moment-timezone": "^0.5.28",
     "react": "16.9.0",
     "react-native": "0.61.5",
     "react-native-android-location-services-dialog-box": "^2.8.2",
