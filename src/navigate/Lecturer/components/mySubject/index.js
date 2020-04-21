@@ -47,9 +47,8 @@ class ListMySubject extends Component {
 
   render() {
     const state = this.state;
-    const name = this.props.navigation.state.displayName
+    const name = this.props.navigation.state.params.displayName
     const subjects = this.props.subjects.subjectsApprove;
-    
     const {token} = this.props.navigation.state.params;
     if (this.props.currentYear === [] || !subjects) {
       return (

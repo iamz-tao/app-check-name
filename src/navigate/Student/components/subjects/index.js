@@ -21,17 +21,16 @@ import {Logout, GetSubjectRegistration, StudentDrop} from '../../../../actions';
 
 const Header = () => (
   <View style={styles.Header}>
-    <View style={styles.HeaderWrapper,{flex: 2}}>
+    <View style={(styles.HeaderWrapper, {flex: 2})}>
       <Text style={{paddingLeft: 8}}>SUBJECT</Text>
     </View>
-    <View style={styles.HeaderWrapper, {width: 66}}>
+    <View style={(styles.HeaderWrapper, {width: 66})}>
       <Text>SECTION</Text>
     </View>
     <View style={styles.HeaderWrapper}>
       <Text>STATUS</Text>
     </View>
-    <View style={styles.HeaderWrapper}>
-    </View>
+    <View style={styles.HeaderWrapper} />
   </View>
 );
 
@@ -56,7 +55,7 @@ class StudentListSubject extends Component {
     }
     GetSubjectRegistration({
       token,
-    })
+    });
   }
 
   setModalVisible(status) {
@@ -82,18 +81,19 @@ class StudentListSubject extends Component {
     Logout({});
   };
 
-  handleDrop = (id) => {
-    const {StudentDrop} = this.props
+  handleDrop = id => {
+    const {StudentDrop} = this.props;
     const {token} = this.props.navigation.state.params;
     StudentDrop({
       token,
       id,
-    })
-  }
+    });
+  };
 
   render() {
     const {token} = this.props.navigation.state.params;
-    const {subjectsRegistration,fetching} = this.props.subjects
+    const {subjectsRegistration, fetching} = this.props.subjects;
+    // console.log('subjectsRegistration',subjectsRegistration)
     if (!subjectsRegistration) {
       return (
         <View style={styles.loadingWrapper}>
@@ -118,16 +118,33 @@ class StudentListSubject extends Component {
             <Text style={styles.styleHeader}>MY SUBJECTS</Text>
           </View>
           <View style={{height: 16}} />
-          <View style={styles.btnWrapper}>
-          <Header />
-          </View>
-          <View style={{height: 8}} />
-          <SubjectList subjects={subjectsRegistration} handleDrop={this.handleDrop} token={token} />
+          {subjectsRegistration !== null && subjectsRegistration.length > 0 && (
+            <View>
+              <View style={styles.btnWrapper}>
+                <Header />
+              </View>
+              <View style={{height: 8}} />
+              <SubjectList
+                subjects={subjectsRegistration}
+                handleDrop={this.handleDrop}
+                token={token}
+              />
+            </View>
+          )}
+          {subjectsRegistration !== null && subjectsRegistration.length === 0 && (
+            <View style={styles.NotFound}>
+              <Image
+                style={styles.CustomImg}
+                source={require('../../../../../android/statics/images/nodata.png')}
+              />
+              <Text>You have never registered subject.</Text>
+            </View>
+          )}
           <View style={styles.btnWrapper}>
             <TouchableHighlight
               style={styles.btnCancel}
               onPress={() => {
-                this.props.navigation.navigate('Student Home Page')
+                this.props.navigation.navigate('Student Home Page');
               }}>
               <Text style={{color: '#949494'}}>BACK</Text>
             </TouchableHighlight>
@@ -166,6 +183,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     height: '100%',
   },
+  NotFound: {
+    display: 'flex',
+    width: '100%',
+    alignItems: 'center',
+    marginTop: 26,
+    marginBottom: 26,
+  },
   btnLogout: {
     alignItems: 'center',
     alignContent: 'flex-end',
@@ -184,6 +208,7 @@ const styles = StyleSheet.create({
     width: 116,
     height: 116,
     top: 20,
+    marginBottom: 8,
   },
   ModalWrapper: {
     display: 'flex',
