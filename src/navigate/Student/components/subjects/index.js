@@ -94,6 +94,7 @@ class StudentListSubject extends Component {
     const {token} = this.props.navigation.state.params;
     const {subjectsRegistration, fetching} = this.props.subjects;
     // console.log('subjectsRegistration',subjectsRegistration)
+
     if (!subjectsRegistration) {
       return (
         <View style={styles.loadingWrapper}>
@@ -102,6 +103,7 @@ class StudentListSubject extends Component {
         </View>
       );
     }
+
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -118,7 +120,7 @@ class StudentListSubject extends Component {
             <Text style={styles.styleHeader}>MY SUBJECTS</Text>
           </View>
           <View style={{height: 16}} />
-          {subjectsRegistration !== null && subjectsRegistration.length > 0 && (
+          {subjectsRegistration !== null && subjectsRegistration.registrations.length > 0 && (
             <View>
               <View style={styles.btnWrapper}>
                 <Header />
@@ -131,7 +133,7 @@ class StudentListSubject extends Component {
               />
             </View>
           )}
-          {subjectsRegistration !== null && subjectsRegistration.length === 0 && (
+          {subjectsRegistration !== null && subjectsRegistration.registrations.length === 0 && (
             <View style={styles.NotFound}>
               <Image
                 style={styles.CustomImg}
