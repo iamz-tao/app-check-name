@@ -11,7 +11,7 @@ import {
   Image,
 } from 'react-native';
 
-import {Logout, GetClass, CloseClass} from '../../actions';
+import {Logout, GetClass} from '../../actions';
 class LecturerHomePage extends Component {
   constructor(props) {
     super(props);
@@ -22,16 +22,11 @@ class LecturerHomePage extends Component {
   }
 
   componentDidMount() {
+    const {token} = this.props.navigation.state.params
     const {
-      LoginReducer: {
-        data: {token, user},
-      },
       GetClass,
     } = this.props;
-    // if (!token) {
-    //   this.props.navigation.navigate('Login');
-    // }
-    GetClass({token});
+      GetClass({token});
   }
 
   handleLogout = () => {
@@ -45,14 +40,11 @@ class LecturerHomePage extends Component {
         data: {token, user},
       },
       class: {openClass},
-    } = this.props;
-    const {
-      LoginReducer: {fetching},
+      LoginReducer: {fetching, displayName},
+      LoginReducer,
     } = this.props;
 
-    const {displayName} = this.props.LoginReducer;
-
-    if (fetching) {
+    if (!LoginReducer || !openClass) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />
@@ -60,7 +52,6 @@ class LecturerHomePage extends Component {
         </View>
       );
     }
-
     return (
       <ScrollView style={{backgroundColor: '#ffffff'}}>
         <View style={styles.container}>
@@ -126,6 +117,7 @@ class LecturerHomePage extends Component {
                 onPress={() =>
                   this.props.navigation.navigate('Open Class', {
                     token,
+                    openClass,
                   })
                 }>
                 <Text style={styles.LabelText}>OPEN CLASS</Text>

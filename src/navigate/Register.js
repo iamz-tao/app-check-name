@@ -15,7 +15,7 @@ export default class Register extends Component {
     super(props);
     this.state = {
       id: '',
-      role: '',
+      role: 'PROFESSOR',
       firstname: '',
       lastname: '',
       mobile: '',
