@@ -74,8 +74,8 @@ class OpenClass extends Component {
   }
 
   componentDidMount() {
-    const { token } = this.props.navigation.state.params;
-    const { class_id } = this.state;
+    const { token, openClass } = this.props.navigation.state.params;
+    // const { class_id } = this.state;
     const {
       GetCurrentYear,
       GetSubjectsApprove,
@@ -95,10 +95,11 @@ class OpenClass extends Component {
       token,
     });
     GetClass({ token });
-
-    if (class_id !== null) {
+// console.log(openClass && openClass[0].class_id)
+    if (openClass && openClass.length > 0) {
       const users = [];
       const promise = [];
+      const class_id = openClass[0].class_id
       let uid;
       this.subscribe = this.ref.where('class_id', '==',class_id).orderBy('time','asc').onSnapshot(async (query) => {
         let changes = query.docChanges();
@@ -127,16 +128,14 @@ class OpenClass extends Component {
         this.setState({users})     
       })
     }
-
-
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.subjects.openClass && props.subjects.openClass.length > 0) {
-      const class_id = props.subjects.openClass[0].class_id;
-      return { class_id: class_id };
-    }
-  }
+  // static getDerivedStateFromProps(props, state) {
+  //   if (props.subjects.openClass && props.subjects.openClass.length > 0) {
+  //     const class_id = props.subjects.openClass[0].class_id;
+  //     return { class_id: class_id };
+  //   }
+  // }
 
   handleSubmit = (section_id, beacon_id) => {
     const { token } = this.props.navigation.state.params;
@@ -201,12 +200,13 @@ class OpenClass extends Component {
       fetching,
     } = this.props.currentYear;
     const subjects = this.props.subjects.subjectsApprove;
+    const { openClass } = this.props.navigation.state.params;
     // const {
     //   studentsAttendance: { users },
     //   studentsAttendance,
     // } = this.props;
     // console.log(users)
-    const { beacons, status, openClass } = this.props.subjects;
+    const { beacons, status } = this.props.subjects;
     const subjectsArr = [];
     const sectionArr = [];
     const beaconArr = [];
@@ -264,9 +264,9 @@ class OpenClass extends Component {
         <TextLoader text="Loading" />
       </View>;
     }
-
+    // console.log('id>>',openClass[0].class_id)
     if (openClass !== null && openClass.length > 0) {
-      const name = this.props.subjects.openClass[0].Lecturer_name;
+      const name = openClass[0].Lecturer_name;
       return (
         <ScrollView style={{ backgroundColor: '#ffffff' }}>
           <View style={styles.container}>

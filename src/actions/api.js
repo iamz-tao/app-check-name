@@ -23,12 +23,12 @@ async function Login(data) {
     );
 
     const responseJson = await response.json();
-    if (responseJson.message === 'PASS') {
+    if (responseJson.status.dataStatus === 'SUCCESS') {
       resolve(responseJson);
       if (responseJson.data.user.role === 'PROFESSOR') {
-        NavigationServices.navigate('Lecturer Home Page');
+        NavigationServices.navigate('Lecturer Home Page',{token: responseJson.data.token});
       } else if (responseJson.data.user.role === 'STUDENT') {
-        NavigationServices.navigate('Student Home Page');
+        NavigationServices.navigate('Student Home Page', {token: responseJson.data.token});
       } else {
         Alert.alert(
           'Login failed!',
