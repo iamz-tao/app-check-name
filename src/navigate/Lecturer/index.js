@@ -1,6 +1,5 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {Avatar} from 'react-native-elements';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 import {
   StyleSheet,
