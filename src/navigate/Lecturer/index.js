@@ -50,7 +50,7 @@ class LecturerHomePage extends Component {
 
     const {displayName} = this.props.LoginReducer;
 
-    if (!LoginReducer) {
+    if (!LoginReducer && !openClass) {
       return (
         <View style={styles.loadingWrapper}>
           <DotsLoader color="#CA5353" />

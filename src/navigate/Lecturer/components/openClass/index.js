@@ -136,12 +136,12 @@ class OpenClass extends Component {
     }
   }
 
-  static getDerivedStateFromProps(props, state) {
-    if (props.subjects.openClass && props.subjects.openClass.length > 0) {
-      const class_id = props.subjects.openClass[0].class_id;
-      return {class_id: class_id};
-    }
-  }
+  // static getDerivedStateFromProps(props, state) {
+  //   if (props.subjects.openClass && props.subjects.openClass.length > 0) {
+  //     const class_id = props.subjects.openClass[0].class_id;
+  //     return {class_id: class_id};
+  //   }
+  // }
 
   handleSubmit = (section_id, beacon_id) => {
     const {token} = this.props.navigation.state.params;
