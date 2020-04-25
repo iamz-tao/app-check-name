@@ -92,6 +92,7 @@ class StudentCheckName extends Component {
       this.props.navigation.navigate('Login');
     } else {
       const request = await requestLocationPermission();
+      checkLocationStatus();
       if (request) {
         this.setState({
           token,
@@ -262,6 +263,12 @@ class StudentCheckName extends Component {
     Logout({});
   };
 
+  stop = () => {
+    Beacons.stopRangingBeaconsInRegion('REGION')
+    .then(() => {
+      console.log("---------Stop Scan -------------")
+    })
+  }
   render() {
     const {
       pickerValues,
@@ -390,8 +397,8 @@ class StudentCheckName extends Component {
                             openingClass[0].Section.section_number,
                           section_id: openingClass[0].Section.section_id,
                         });
-                      } else {
                       }
+                      this.stop(); 
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
