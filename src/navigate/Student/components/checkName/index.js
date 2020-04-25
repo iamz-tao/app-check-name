@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 import Device from 'react-native-device-info';
@@ -11,8 +10,6 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
   Picker,
   Modal,
@@ -92,7 +89,6 @@ class StudentCheckName extends Component {
       this.props.navigation.navigate('Login');
     } else {
       const request = await requestLocationPermission();
-      checkLocationStatus();
       if (request) {
         this.setState({
           token,
@@ -263,21 +259,11 @@ class StudentCheckName extends Component {
     Logout({});
   };
 
-  stop = () => {
-    Beacons.stopRangingBeaconsInRegion('REGION')
-    .then(() => {
-      console.log("---------Stop Scan -------------")
-    })
-  }
   render() {
     const {
       pickerValues,
-      section,
       token,
       ischecking,
-      uuid,
-      distance,
-      hasbeacon,
     } = this.state;
     const {
       currentYear: {year, semester},
@@ -397,8 +383,8 @@ class StudentCheckName extends Component {
                             openingClass[0].Section.section_number,
                           section_id: openingClass[0].Section.section_id,
                         });
+                      } else {
                       }
-                      this.stop(); 
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
@@ -485,11 +471,21 @@ class StudentCheckName extends Component {
                 <View style={{flexDirection: 'row'}}>
                   <Text
                     style={
-                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
+                      (styles.styleLabel, {width: 114, alignSelf: 'center'})
                     }>
                     Subject :{' '}
                   </Text>
                   <Text style={{flex: 3}}>{subject_name}</Text>
+                  </View>
+                <View style={{height: 8}} />
+                  <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={
+                      (styles.styleLabel, {width: 114, alignSelf: 'center'})
+                    }>
+                    Section :{' '}
+                  </Text>
+                  <Text style={{flex: 3}}>{sectionId}</Text>
                 </View>
                 <View style={{height: 8}} />
                 <View style={{flexDirection: 'row'}}>
