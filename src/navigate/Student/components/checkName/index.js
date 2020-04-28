@@ -344,7 +344,7 @@ class StudentCheckName extends Component {
                       </Text>
                       <Text style={styles.styleLabel}>
                         Check your attendance history in MY SUBJECTS page.{'\n'}
-                        Time : {time_check} {'\n'}
+                        Time : {time_check}. {'\n'}
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
                           <Text style={{color: 'green'}}>On Time</Text>
