@@ -264,6 +264,7 @@ class StudentCheckName extends Component {
       pickerValues,
       token,
       ischecking,
+      modalVisible,
     } = this.state;
     const {
       currentYear: {year, semester},
@@ -326,11 +327,11 @@ class StudentCheckName extends Component {
           <Modal
             animationType="slide"
             transparent={false}
-            visible={this.state.modalVisible}
+            visible={modalVisible}
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
-                <View style={{width: '100%', alignItems: 'center'}}>
+                <View style={{width: '100%', alignItems: 'center' }}>
                   {status === 'SUCCESS' && (
                     <View style={{alignItems: 'center'}}>
                       <Image
@@ -347,16 +348,16 @@ class StudentCheckName extends Component {
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
                           <Text style={{color: 'green'}}>On Time</Text>
-                        )}
+                         )}
                         {statusCheckin === 'LATE' && (
                           <Text style={{color: '#0029FF'}}>Late</Text>
                         )}
                         {statusCheckin === 'ABSENT' && (
                           <Text style={{color: '#FF0000'}}>Absent</Text>
-                        )}
+                        )} 
                       </Text>
                     </View>
-                  )}
+                 )} 
                   {status === 'FAILURE' && (
                     <View style={{alignItems: 'center'}}>
                       <Image
@@ -611,13 +612,13 @@ const styles = StyleSheet.create({
   },
   DetailModalWrapper: {
     width: 300,
-    height: 300,
+    minHeight: 300,
     backgroundColor: '#EBEAEA',
     borderRadius: 19,
   },
   DetailModalSuccessWrapper: {
     width: 300,
-    height: 300,
+    minHeight: 300,
     backgroundColor: '#F7F7F7',
     borderColor: '#EBEAEA',
     borderRadius: 19,
@@ -649,6 +650,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 46,
     borderRadius: 21,
+    marginBottom: 8,
   },
   btnCancel: {
     alignItems: 'center',
@@ -692,7 +694,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 21,
     display: 'flex',
-    paddingLeft: 12,
     color: '#CA5353',
   },
   styleInputWrapper: {
