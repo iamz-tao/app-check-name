@@ -26,7 +26,13 @@ class LecturerHomePage extends Component {
     const {
       GetClass,
     } = this.props;
-      GetClass({token});
+    this.willFocusSubscription = this.props.navigation.addListener(
+      'willFocus',
+      () => {
+        console.log("Focus Lecturer Home Page")
+        GetClass({token});
+      }
+    );
   }
 
   handleLogout = () => {

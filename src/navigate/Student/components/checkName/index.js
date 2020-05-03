@@ -149,11 +149,16 @@ class StudentCheckName extends Component {
       });
   };
 
+  getUUiD = async () => {
+    const {beaconInClass} = this.state;
+     return beaconInClass.uuid;
+  }
   scan = async () => {
     //Set Scan Beacon 3 s
+    // const {beaconInClass} = this.state;
     Beacons.setForegroundScanPeriod(3000);
     Beacons.setRssiFilter(0, 2000);
-    Beacons.startRangingBeaconsInRegion('REGION').then(() => {
+    Beacons.startRangingBeaconsInRegion('REGION',beaconInClass.uuid).then(() => {
       console.log('------scanning----------');
     });
   };
@@ -540,8 +545,7 @@ class StudentCheckName extends Component {
                 style={styles.btnReq}
                 onPress={() => {
                   this.checkname();
-                  this.setState({beaconInClass});
-                  // this.setModalVisible();
+                  this.setModalVisible();
                 }}>
                 <Text style={{color: 'white'}}>CHECK</Text>
               </TouchableHighlight>
