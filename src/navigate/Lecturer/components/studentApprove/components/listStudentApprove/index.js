@@ -199,10 +199,7 @@ class ListStudentApprove extends Component {
   }
 
   static getDerivedStateFromProps(prevProps, prevState) {
-    if (
-      prevProps.subjects.studentsInSection !== null &&
-      prevState.count === 0
-    ) {
+    if (prevProps.subjects.studentsInSection && prevState.count === 0) {
       const data = [];
       prevProps.subjects.studentsInSection.students
         .filter(std => std.status !== 'DROP')
@@ -284,7 +281,7 @@ class ListStudentApprove extends Component {
     });
     this.setState({
       count: 0,
-    })
+    });
   };
 
   handleMultiReject = () => {
@@ -300,7 +297,7 @@ class ListStudentApprove extends Component {
     });
     this.setState({
       count: 0,
-    })
+    });
   };
 
   handleChecked = (index, id) => {

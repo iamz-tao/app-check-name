@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import {Avatar, ButtonGroup} from 'react-native-elements';
 import {connect} from 'react-redux';
 import {DotsLoader, TextLoader} from 'react-native-indicator';
 import Device from 'react-native-device-info';
@@ -11,8 +10,6 @@ import {
   ScrollView,
   View,
   Text,
-  TextInput,
-  Alert,
   TouchableHighlight,
   Picker,
   Modal,
@@ -92,7 +89,6 @@ class StudentCheckName extends Component {
       this.props.navigation.navigate('Login');
     } else {
       const request = await requestLocationPermission();
-      checkLocationStatus();
       if (request) {
         this.setState({
           token,
@@ -268,21 +264,12 @@ class StudentCheckName extends Component {
     Logout({});
   };
 
-  stop = () => {
-    Beacons.stopRangingBeaconsInRegion('REGION')
-    .then(() => {
-      console.log("---------Stop Scan -------------")
-    })
-  }
   render() {
     const {
       pickerValues,
-      section,
       token,
       ischecking,
-      uuid,
-      distance,
-      hasbeacon,
+      modalVisible,
     } = this.state;
     const {
       currentYear: {year, semester},
@@ -345,11 +332,11 @@ class StudentCheckName extends Component {
           <Modal
             animationType="slide"
             transparent={false}
-            visible={this.state.modalVisible}
+            visible={modalVisible}
             presentationStyle="pageSheet">
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
-                <View style={{width: '100%', alignItems: 'center'}}>
+                <View style={{width: '100%', alignItems: 'center' }}>
                   {status === 'SUCCESS' && (
                     <View style={{alignItems: 'center'}}>
                       <Image
@@ -366,16 +353,16 @@ class StudentCheckName extends Component {
                         Status :{' '}
                         {statusCheckin === 'ONTIME' && (
                           <Text style={{color: 'green'}}>On Time</Text>
-                        )}
+                         )}
                         {statusCheckin === 'LATE' && (
                           <Text style={{color: '#0029FF'}}>Late</Text>
                         )}
                         {statusCheckin === 'ABSENT' && (
                           <Text style={{color: '#FF0000'}}>Absent</Text>
-                        )}
+                        )} 
                       </Text>
                     </View>
-                  )}
+                 )} 
                   {status === 'FAILURE' && (
                     <View style={{alignItems: 'center'}}>
                       <Image
@@ -402,8 +389,8 @@ class StudentCheckName extends Component {
                             openingClass[0].Section.section_number,
                           section_id: openingClass[0].Section.section_id,
                         });
+                      } else {
                       }
-                      this.stop(); 
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
@@ -490,11 +477,21 @@ class StudentCheckName extends Component {
                 <View style={{flexDirection: 'row'}}>
                   <Text
                     style={
-                      (styles.styleLabel, {width: 116, alignSelf: 'center'})
+                      (styles.styleLabel, {width: 114, alignSelf: 'center'})
                     }>
                     Subject :{' '}
                   </Text>
                   <Text style={{flex: 3}}>{subject_name}</Text>
+                  </View>
+                <View style={{height: 8}} />
+                  <View style={{flexDirection: 'row'}}>
+                  <Text
+                    style={
+                      (styles.styleLabel, {width: 114, alignSelf: 'center'})
+                    }>
+                    Section :{' '}
+                  </Text>
+                  <Text style={{flex: 3}}>{sectionId}</Text>
                 </View>
                 <View style={{height: 8}} />
                 <View style={{flexDirection: 'row'}}>
@@ -619,13 +616,13 @@ const styles = StyleSheet.create({
   },
   DetailModalWrapper: {
     width: 300,
-    height: 300,
+    minHeight: 300,
     backgroundColor: '#EBEAEA',
     borderRadius: 19,
   },
   DetailModalSuccessWrapper: {
     width: 300,
-    height: 300,
+    minHeight: 300,
     backgroundColor: '#F7F7F7',
     borderColor: '#EBEAEA',
     borderRadius: 19,
@@ -657,6 +654,7 @@ const styles = StyleSheet.create({
     width: 96,
     height: 46,
     borderRadius: 21,
+    marginBottom: 8,
   },
   btnCancel: {
     alignItems: 'center',
@@ -700,7 +698,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 21,
     display: 'flex',
-    paddingLeft: 12,
     color: '#CA5353',
   },
   styleInputWrapper: {

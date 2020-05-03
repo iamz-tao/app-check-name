@@ -267,6 +267,8 @@ class OpenClass extends Component {
     // console.log('id>>',openClass[0].class_id)
     if (openClass !== null && openClass.length > 0) {
       const name = openClass[0].Lecturer_name;
+      const subject = `${openClass[0].subject_code} ${openClass[0].subject_name}`;
+      const section = openClass[0].section_number
       return (
         <ScrollView style={{ backgroundColor: '#ffffff' }}>
           <View style={styles.container}>
@@ -284,6 +286,12 @@ class OpenClass extends Component {
             </View>
             <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
               YEAR : {year} / {semester}
+            </Text>
+            <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
+              SUBJECT : {subject}
+            </Text>
+            <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
+              SECTION : {section}
             </Text>
             <Text style={(styles.styleLabel, { paddingLeft: 16 })}>
               LECTURER : {name}

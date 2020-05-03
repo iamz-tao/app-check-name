@@ -225,7 +225,7 @@ const styles = StyleSheet.create({
   },
   ViewWrapper: {
     width: 300,
-    height: 300,
+    minHeight: 300,
     padding: 8,
     borderWidth: 1,
     borderRadius: 18,
