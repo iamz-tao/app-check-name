@@ -144,9 +144,10 @@ class StudentCheckName extends Component {
         console.warn(err);
       });
   };
-
   scan = async () => {
     //Set Scan Beacon 3 s
+    // const {beaconInClass} = this.state;
+    // console.log(beaconInClass.uuid)
     Beacons.setForegroundScanPeriod(3000);
     Beacons.setRssiFilter(0, 2000);
     Beacons.startRangingBeaconsInRegion('REGION').then(() => {
