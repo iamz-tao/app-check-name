@@ -542,7 +542,8 @@ class StudentCheckName extends Component {
                 style={styles.btnReq}
                 onPress={() => {
                   this.checkname();
-                  this.setModalVisible();
+                  this.setState({beaconInClass});
+                  // this.setModalVisible();
                 }}>
                 <Text style={{color: 'white'}}>CHECK</Text>
               </TouchableHighlight>
