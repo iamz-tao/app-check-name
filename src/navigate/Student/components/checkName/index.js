@@ -318,7 +318,7 @@ class StudentCheckName extends Component {
       beaconInClass = classDetail.beacon;
     }
 
-    if (openingClass !== null && openingClass.length === 1) {
+    else if (openingClass !== null && openingClass.length === 1) {
       beaconInClass = openingClass[0].Section.beacon;
     }
 
@@ -538,7 +538,7 @@ class StudentCheckName extends Component {
                 style={styles.btnReq}
                 onPress={() => {
                   this.checkname();
-                  this.setState({beaconInClass});
+                  this.setState({beaconInClass})
                   // this.setModalVisible();
                 }}>
                 <Text style={{color: 'white'}}>CHECK</Text>
