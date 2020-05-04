@@ -26,6 +26,7 @@ import {
   OPEN_CLASS_SUCCESS,
   OPEN_SECTION_SUCCESS,
   OPEN_SECTION_FAILED,
+  OPEN_SECTION,
   OPEN_CLASS_FAILED,
   APPROVE_STUDENTS_SUCCESS,
   REJECT_STUDENTS_SUCCESS,
@@ -55,6 +56,7 @@ const initialState = {
   isError: false,
   fetching: true,
   status: null,
+  openSectionStatus: null,
 };
 
 export default (state = initialState, action) => {
@@ -189,16 +191,20 @@ export default (state = initialState, action) => {
       return {...state, fetching: true, status: 'SUCCESS'};
     }
 
-    case OPEN_SECTION_FAILED: {
+    case OPEN_CLASS_FAILED: {
       return {...state, fetching: true, status: null};
     }
 
+    case OPEN_SECTION: {
+      return {...state, fetching: true, openSectionStatus: null};
+    }
+
     case OPEN_SECTION_SUCCESS: {
-      return {...state, fetching: true, status: 'SUCCESS'};
+      return {...state, fetching: false, openSectionStatus: 'SUCCESS'};
     }
 
     case OPEN_SECTION_FAILED: {
-      return {...state, fetching: true, status: 'FAILURE'};
+      return {...state, fetching: false, openSectionStatus: 'FAILURE'};
     }
 
     case GET_CLASS: {

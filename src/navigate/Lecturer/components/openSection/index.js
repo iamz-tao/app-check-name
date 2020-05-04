@@ -178,7 +178,7 @@ class OpenSection extends Component {
     } = this.state;
     const {token} = this.props.navigation.state.params;
     const subjects = this.props.subjects.subjects;
-    const statusReq = this.props.subjects.status;
+    const statusReq = this.props.subjects.openSectionStatus;
     const {
       currentYear: {year, semester},
     } = this.props.currentYear;
@@ -201,6 +201,14 @@ class OpenSection extends Component {
             <View style={styles.ModalWrapper}>
               <View style={styles.DetailModalSuccessWrapper}>
                 <View style={{width: '100%', alignItems: 'center'}}>
+                  {statusReq === null && (
+                    <View style={{alignItems: 'center'}}>
+                      <View style={styles.loadingWrapper}>
+                        <DotsLoader color="#CA5353" />
+                        <TextLoader text="Loading" />
+                      </View>
+                    </View>
+                  )}
                   {statusReq !== null && statusReq === 'SUCCESS' && (
                     <View style={{alignItems: 'center'}}>
                       <Image
@@ -237,9 +245,16 @@ class OpenSection extends Component {
                     style={styles.btnReq}
                     onPress={() => {
                       this.setState({modalVisibleSubmit: !modalVisibleSubmit});
-                      this.props.navigation.navigate('My Subjects', {
-                        token,
-                      });
+                      if (statusReq === 'SUCCESS') {
+                        this.props.navigation.navigate('My Subjects', {
+                          token,
+                        });
+                      } 
+                      if (statusReq === 'FAILURE') {
+                        this.props.navigation.navigate('Open Section', {
+                          token,
+                        });
+                      }
                     }}>
                     <Text style={{color: 'white'}}>OK</Text>
                   </TouchableHighlight>
@@ -265,7 +280,7 @@ class OpenSection extends Component {
             <Text style={styles.styleHeader}>OPEN SECTION</Text>
           </View>
           <Text style={(styles.styleLabel, {paddingLeft: 16})}>
-                  YEAR / SEMESTER :{' '}{year} / {semester}
+            YEAR / SEMESTER : {year} / {semester}
           </Text>
           <View style={styles.styleInputWrapper}>
             <View style={styles.inputContainer}>
