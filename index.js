@@ -2,7 +2,6 @@
  * @format
  */
 
-
 import React from 'react';
 import { AppRegistry } from 'react-native';
 import App from './src/App';
@@ -17,4 +16,5 @@ const ReduxApp = () => (
     </Provider>
 )
 
+console.disableYellowBox = true;
 AppRegistry.registerComponent(appName, () => ReduxApp);
