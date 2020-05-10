@@ -324,7 +324,7 @@ class OpenSection extends Component {
                 />
               </View>
               <View style={{flex: 1, paddingBottom: 12}}>
-                <Text style={styles.styleLabel}>TOTAL MARK :</Text>
+                <Text style={styles.styleLabel}>TOTAL MARK (%) :</Text>
                 <TextInput
                   style={styles.inputs}
                   placeholder="Total Mark"
